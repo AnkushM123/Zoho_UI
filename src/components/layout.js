@@ -18,16 +18,16 @@ return (
     <div class="collapse navbar-collapse" id="mynavbar" style={{marginLeft:"20px"}}>
       <ul class="navbar-nav me-auto">
         <li class="nav-item" style={{marginLeft:"20px"}}>
-          <Link class="nav-link font-weight-bold" to="/employee/home">Home</Link>
+          <Link class="nav-link font-weight-bold" to="/home">Home</Link>
         </li>
         <li class="nav-item" style={{marginLeft:"20px"}}>
-          <Link class="nav-link font-weight-bold" to="/employee/profile">Profile</Link>
+          <Link class="nav-link font-weight-bold" to="/profile">Profile</Link>
         </li>
         <li class="nav-item" style={{marginLeft:"20px"}}>
-          <Link class="nav-link font-weight-bold" to="/employee/leaveTracker">Leave Tracker</Link>
+          <Link class="nav-link font-weight-bold" to="/leaveTracker">Leave Tracker</Link>
         </li>
         <li class="nav-item" style={{marginLeft:"20px"}}>
-          <Link class="nav-link font-weight-bold" href="/employee/register">Register</Link>
+          <Link class="nav-link font-weight-bold" href="/register">Register</Link>
         </li>
       </ul>
     </div>

@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import VarifyEmail from "./components/varifyEmail";
 import SetPassword from "./components/setPassword";
 import Home from "./components/home";
+import Profile from "./components/profile";
 
 function App() {
     return (
@@ -36,6 +37,11 @@ function App() {
                         exact
                         path="/home"
                         element={<Home />}
+                    />
+                    <Route
+                        exact
+                        path="/profile"
+                        element={<Profile />}
                     />
                 </Routes>
             </Router>

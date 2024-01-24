@@ -9,7 +9,10 @@ const path = {
         setPassword: `http://localhost:3000/user/setPassword`
     },
     homeUi: {
-        getEmployees: `http://localhost:3000/user/getEmployee`
+        getEmployees: `http://localhost:3000/user/getEmployee`,
+    },
+    profileUi:{
+        loggedInUser: `http://localhost:3000/user`
     }
 }
 

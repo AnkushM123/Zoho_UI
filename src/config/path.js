@@ -1,8 +1,13 @@
 const path = {
     loginUi: {
-        login: "http://localhost:3000/auth/login"
+        login: `http://localhost:3000/auth/login`
+    },
+    varifyEmailUi:{
+        varifyEmail:`http://localhost:3000/user/isVarifyEmail`
+    },
+    setPasswordUi:{
+        setPassword:`http://localhost:3000/user/setPassword`
     }
-
 }
 
 export default path;

@@ -96,7 +96,7 @@ function Login() {
                                             <div class="text-center pt-1 mb-5 pb-1">
                                                 <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Log
                                                     in</button>
-                                                <Link class="text-muted" to="/forgotPassword">Forgot password?</Link>
+                                                <Link class="text-muted" to="/varifyEmail">Forgot password?</Link>
                                             </div>
                                         </form>
                                     </div>

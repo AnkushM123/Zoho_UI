@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import emailRegex from '../core/constants/emailRegex';
 import messages from "../core/constants/messages";
 import varifyEmailService from "../core/services/varifyEmail-service";
+import '../App.css';
 
 function VarifyEmail() {
     const navigate = useNavigate();

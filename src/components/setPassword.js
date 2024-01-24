@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import messages from "../core/constants/messages";
 import passwordRegex from "../core/constants/passwordRegex";
 import setPasswordService from "../core/services/setPassword-service";
+import '../App.css';
 
 function SetPassword() {
     const [Message, setMessage] = useState('');
@@ -53,7 +54,7 @@ function SetPassword() {
         setData({ password: inputData.password });
         const id = localStorage.getItem("id");
         try {
-            const result = await setPasswordService(inputData, id);
+            await setPasswordService(inputData, id);
             setMessage('');
             setTimeout(function () {
                 toast.options = {

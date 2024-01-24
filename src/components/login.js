@@ -51,6 +51,9 @@ function Login() {
                 };
                 toast.success(messages.loginUi.toastSuccess);
             })
+            if (localStorage.getItem('id')) {
+                localStorage.removeItem('id');
+            }
             navigate('/home');
         } catch (error) {
             toast.options = {

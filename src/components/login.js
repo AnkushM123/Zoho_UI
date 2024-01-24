@@ -35,7 +35,7 @@ function Login() {
         validation();
 
         if (!inputData.email.trim() || !inputData.password.trim()) {
-            return
+            return;
         }
 
         try {
@@ -51,6 +51,7 @@ function Login() {
                 };
                 toast.success(messages.loginUi.toastSuccess);
             })
+            navigate('/home');
         } catch (error) {
             toast.options = {
                 closeButton: true,
@@ -80,14 +81,14 @@ function Login() {
 
                                         <form method="post" onSubmit={loginData}>
                                             <div class="form-outline mb-4">
-                                                <label class="form-label" for="form2Example11">Email</label>
+                                                <label class="form-label">Email</label>
                                                 <input type="text" id="email" class="form-control"
                                                     placeholder="enter email address" name="email" onChange={handleChange} />
                                                 {Error.Email && <p style={{ color: "red" }}>{Error.Email}</p>}
                                             </div>
 
                                             <div class="form-outline mb-4">
-                                                <label class="form-label" for="form2Example22">Password</label>
+                                                <label class="form-label">Password</label>
                                                 <input type="password" id="password" class="form-control" name="password" placeholder="enter password" onChange={handleChange} />
                                                 {Error.Password && <p style={{ color: "red" }}>{Error.Password}</p>}
                                             </div>

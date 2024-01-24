@@ -1,12 +1,8 @@
 import axios from 'axios';
+import path from '../../config/path';
 
 const login = async (inputData) => {
-  try {
-    const result = await axios.post("http://localhost:3000/auth/login", inputData);
-    return result;
-  } catch (error) {
-    throw error;
-  }
+    return axios.post(path.loginUi.login, inputData);
 };
 
 export default login;

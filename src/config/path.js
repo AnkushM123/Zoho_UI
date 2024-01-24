@@ -1,6 +1,6 @@
-const path={
-    loginUi:{
-        login:"http://localhost:3000/auth/login"
+const path = {
+    loginUi: {
+        login: "http://localhost:3000/auth/login"
     }
 
 }

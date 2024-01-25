@@ -9,6 +9,7 @@ import VarifyEmail from "./components/varifyEmail";
 import SetPassword from "./components/setPassword";
 import Home from "./components/home";
 import Profile from "./components/profile";
+import Edit from "./components/edit";
 
 function App() {
     return (
@@ -42,6 +43,11 @@ function App() {
                         exact
                         path="/profile"
                         element={<Profile />}
+                    />
+                    <Route
+                        exact
+                        path="/edit"
+                        element={<Edit />}
                     />
                 </Routes>
             </Router>

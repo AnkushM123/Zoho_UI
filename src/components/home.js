@@ -13,7 +13,7 @@ function Home() {
         const fetchData = async () => {
             try {
                 const result = await homeService(jwtToken);
-                setEmployees(result.data);
+                localStorage.setItem('id',)
             } catch (error) {
                 setTimeout(function () {
                     toast.options = {

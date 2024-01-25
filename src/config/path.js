@@ -1,8 +1,5 @@
-const path = {
-    loginUi: {
-        login: "http://localhost:3000/auth/login"
-    }
-
+const urlPath = {
+    login:"http://localhost:3000/auth/login"
 }
 
-export default path;
+export default urlPath;

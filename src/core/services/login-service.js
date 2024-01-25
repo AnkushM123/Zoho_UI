@@ -1,8 +1,8 @@
 import axios from 'axios';
-import path from '../../config/path';
+import urlPath from '../../config/path';
 
 const login = async (inputData) => {
-    return axios.post(path.loginUi.login, inputData);
+    return axios.post(urlPath.login, inputData);
 };
 
 export default login;

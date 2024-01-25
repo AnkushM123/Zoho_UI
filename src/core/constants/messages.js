@@ -1,9 +1,13 @@
-const messages={
-    loginUi:{
-       "emailRequired":"Email is required",
-       "passwordRequired":"Password is required",
-       "toastSuccess":"Successful Login",
-       "toastError":"Credentials are invalid",
+const messages = {
+    login: {
+        success: {
+            "toastSuccess": "Successful Login",
+        },
+        error: {
+            "emailRequired": "Email is required",
+            "passwordRequired": "Password is required",
+            "toastError": "Credentials are invalid",
+        }
     }
 }
 

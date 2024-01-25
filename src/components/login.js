@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '../App.css';
 import messages from "../core/constants/messages";
 import loginService from '../core/services/login-service';
+import { configureToastOptions } from "../core/services/toast-service";
 
 function Login() {
     const navigate = useNavigate();
@@ -17,13 +18,16 @@ function Login() {
     const validation = () => {
         const error = {};
         if (!inputData.email.trim()) {
-            error.Email = messages.loginUi.emailRequired;
+            error.Email = messages.login.error.emailRequired;
         }
 
         if (!inputData.password.trim()) {
-            error.Password = messages.loginUi.passwordRequired;
+            error.Password = messages.login.error.passwordRequired;
         }
         setError(error);
+        if (!inputData.email.trim() || !inputData.password.trim()) {
+            return true;
+        }
     };
 
     const handleChange = (e) => {
@@ -32,9 +36,7 @@ function Login() {
 
     const loginData = async (e) => {
         e.preventDefault();
-        validation();
-
-        if (!inputData.email.trim() || !inputData.password.trim()) {
+        if (validation()) {
             return;
         }
 
@@ -43,23 +45,15 @@ function Login() {
             localStorage.setItem('authToken', result.data.token);
 
             setTimeout(function () {
-                toast.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    showMethod: 'slideDown',
-                    timeOut: 500
-                };
-                toast.success(messages.loginUi.toastSuccess);
+                const toastOptions = configureToastOptions();
+                toast.options = toastOptions;
+                toast.success(messages.login.success.toastSuccess);
             })
             navigate('/home');
         } catch (error) {
-            toast.options = {
-                closeButton: true,
-                progressBar: true,
-                showMethod: 'slideDown',
-                timeOut: 500
-            };
-            toast.error(messages.loginUi.toastError);
+            const toastOptions = configureToastOptions();
+            toast.options = toastOptions;
+            toast.error(messages.login.error.toastError);
         }
     }
 

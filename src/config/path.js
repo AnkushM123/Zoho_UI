@@ -1,5 +1,5 @@
 const urlPath = {
-    login:"http://localhost:3000/auth/login"
+    login:process.env.REACT_APP_DOMAIN_URL+"/auth/login"
 }
 
 export default urlPath;

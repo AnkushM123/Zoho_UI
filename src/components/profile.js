@@ -25,6 +25,7 @@ function Profile() {
                             setRole('Employee');
                         }
                     }
+                    localStorage.setItem('id', user._id);
                 })
             } catch (error) {
                 setTimeout(function () {

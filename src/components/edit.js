@@ -16,6 +16,7 @@ function Edit() {
     const [Avatar, setAvatar] = useState('');
     const [Error, setError] = useState({})
     const [EmailMessage, setEmailMessage] = useState('');
+    const [EmailExist,setEmailExist]=useState(false);
 
     useEffect(() => {
         axios.get(`http://localhost:3000/user`, {
@@ -54,16 +55,15 @@ function Edit() {
                 if (res.status === 200) {
                     setEmailMessage('Email is already registered');
                 }
+                setEmailExist(true);
             })
             .catch((err) => {
-                console.log(err)
                 setEmailMessage('');
             })
     }
 
     const validation = () => {
         const error = {}
-
         if (!User.name) {
             error.Name = "Name is required";
         }
@@ -138,16 +138,18 @@ function Edit() {
     const updateUser = (e) => {
         e.preventDefault();
         validation();
-
+        const id=localStorage.getItem('id');
         const formData = new FormData();
-        formData.append('avatar', file);
-        formData.append('name', Employee.name);
-        formData.append('address', Employee.address);
-        formData.append('age', Employee.age);
-        formData.append('mobile', Employee.mobile);
-        formData.append('is_active', isActive);
+        formData.append('name', User.name);
+        formData.append('age', User.age);
+        formData.append('mobile', User.mobile);
+        formData.append('email', Employee.email);
+        formData.append('updatedBy', id);
+        formData.append('address', address:{
+            
+        });
 
-        axios.put(`http://localhost:3000/employee/${id}`, formData, {
+        axios.put(`http://localhost:3000/user/${id}`, formData, {
             headers: {
                 'Authorization': `Bearer ${jwtToken}`,
                 'Content-Type': 'multipart/form-data',

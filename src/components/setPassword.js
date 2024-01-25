@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import messages from "../core/constants/messages";
 import passwordRegex from "../core/constants/passwordRegex";
 import setPasswordService from "../core/services/setPassword-service";
+import { configureToastOptions } from "../core/services/toast-service";
 
 function SetPassword() {
     const [Message, setMessage] = useState('');
@@ -20,17 +21,20 @@ function SetPassword() {
     const validation = () => {
         const error = {}
         if (!inputData.password.trim()) {
-            error.Password = messages.setPasswordUi.passwordRequired;
+            error.Password = messages.setPassword.error.passwordRequired;
         } else if (!passwordRegex.test(inputData.password)) {
-            error.Password = messages.setPasswordUi.passwordValidation;
+            error.Password = messages.setPassword.error.passwordValidation;
         }
 
         if (!inputData.confirmPassword.trim()) {
-            error.ConfirmPassword = messages.setPasswordUi.confirmPasswordRequired;
+            error.ConfirmPassword = messages.setPassword.error.confirmPasswordRequired;
         } else if (!passwordRegex.test(inputData.confirmPassword)) {
-            error.ConfirmPassword = messages.setPasswordUi.passwordValidation;
+            error.ConfirmPassword = messages.setPassword.error.passwordValidation;
         }
         setError(error);
+        if (!inputData.password.trim() || !passwordRegex.test(inputData.password) || !inputData.confirmPassword.trim() || !passwordRegex.test(inputData.confirmPassword)) {
+            return true;
+        }
     };
 
     const handleChange = (e) => {
@@ -39,14 +43,12 @@ function SetPassword() {
 
     const loginData = async (e) => {
         e.preventDefault();
-        validation();
-
-        if (!inputData.password.trim() || !passwordRegex.test(inputData.password) || !inputData.confirmPassword.trim() || !passwordRegex.test(inputData.confirmPassword)) {
+        if (validation()) {
             return;
         }
 
         if (inputData.password !== inputData.confirmPassword) {
-            setMessage(messages.setPasswordUi.passwordUnmatched);
+            setMessage(messages.setPassword.error.passwordUnmatched);
             return;
         }
 
@@ -56,24 +58,14 @@ function SetPassword() {
             const result = await setPasswordService(inputData, id);
             setMessage('');
             setTimeout(function () {
-                toast.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    showMethod: 'slideDown',
-                    timeOut: 500
-                };
-                toast.success(messages.setPasswordUi.passwordChanged);
+                const toastOptions = configureToastOptions();
+                toast.options = toastOptions;
+                toast.success(messages.setPassword.success.passwordChanged);
             });
         } catch (error) {
-            setTimeout(function () {
-                toast.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    showMethod: 'slideDown',
-                    timeOut: 500
-                };
-                toast.error(error);
-            })
+            const toastOptions = configureToastOptions();
+            toast.options = toastOptions;
+            toast.error(error);
         }
     }
 

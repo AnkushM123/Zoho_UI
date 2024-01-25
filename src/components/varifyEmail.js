@@ -1,10 +1,11 @@
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import emailRegex from '../core/constants/emailRegex';
 import messages from "../core/constants/messages";
 import varifyEmailService from "../core/services/varifyEmail-service";
+import { configureToastOptions } from "../core/services/toast-service";
 
 function VarifyEmail() {
     const navigate = useNavigate();
@@ -16,11 +17,14 @@ function VarifyEmail() {
     const validateEmail = () => {
         const error = {};
         if (!inputData.email.trim()) {
-            error.Email = messages.varifyEmailUi.emailRequired;
+            error.Email = messages.varifyEmail.error.emailRequired;
         } else if (!emailRegex.test(inputData.email)) {
-            error.Email = messages.varifyEmailUi.invalidEmail;
+            error.Email = messages.varifyEmail.error.invalidEmail;
         }
         setError(error);
+        if (!inputData.email.trim() || !emailRegex.test(inputData.email)) {
+            return true;
+        }
     };
 
     const handleChange = (e) => {
@@ -29,9 +33,7 @@ function VarifyEmail() {
 
     const varifyEmail = async (e) => {
         e.preventDefault();
-        validateEmail();
-
-        if (!inputData.email.trim() || !emailRegex.test(inputData.email)) {
+        if (validateEmail()) {
             return;
         }
 
@@ -40,13 +42,9 @@ function VarifyEmail() {
             localStorage.setItem("id", result.data[0]._id);
             navigate('/setPassword');
         } catch (error) {
-            toast.options = {
-                closeButton: true,
-                progressBar: true,
-                showMethod: 'slideDown',
-                timeOut: 500
-            };
-            toast.error(messages.varifyEmailUi.emailNotExist);
+            const toastOptions = configureToastOptions();
+            toast.options = toastOptions;
+            toast.error(messages.varifyEmail.error.emailNotExist);
         }
     }
 

@@ -3,33 +3,30 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import messages from "../core/constants/messages";
-import passwordRegex from "../core/constants/passwordRegex";
-import setPasswordService from "../core/services/setPassword-service";
+import passwordRegex from "../core/constants/password-regex";
+import auth from "../core/services/auth-service";
 import { configureToastOptions } from "../core/services/toast-service";
 
 function SetPassword() {
-    const [Message, setMessage] = useState('');
-    const [Data, setData] = useState({
-        password: ''
-    })
+    const [message, setMessage] = useState('');
     const [inputData, setInputData] = useState({
         password: '',
         confirmPassword: ''
     })
-    const [Error, setError] = useState({});
+    const [error, setError] = useState({});
 
     const validation = () => {
         const error = {}
         if (!inputData.password.trim()) {
-            error.Password = messages.setPassword.error.passwordRequired;
+            error.password = messages.setPassword.error.passwordRequired;
         } else if (!passwordRegex.test(inputData.password)) {
-            error.Password = messages.setPassword.error.passwordValidation;
+            error.password = messages.setPassword.error.passwordValidation;
         }
 
         if (!inputData.confirmPassword.trim()) {
-            error.ConfirmPassword = messages.setPassword.error.confirmPasswordRequired;
+            error.confirmPassword = messages.setPassword.error.confirmPasswordRequired;
         } else if (!passwordRegex.test(inputData.confirmPassword)) {
-            error.ConfirmPassword = messages.setPassword.error.passwordValidation;
+            error.confirmPassword = messages.setPassword.error.passwordValidation;
         }
         setError(error);
         if (!inputData.password.trim() || !passwordRegex.test(inputData.password) || !inputData.confirmPassword.trim() || !passwordRegex.test(inputData.confirmPassword)) {
@@ -52,10 +49,9 @@ function SetPassword() {
             return;
         }
 
-        setData({ password: inputData.password });
         const id = localStorage.getItem("id");
         try {
-            const result = await setPasswordService(inputData, id);
+            const result = await auth.setPassword(inputData, id);
             setMessage('');
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
@@ -79,12 +75,12 @@ function SetPassword() {
                             <div class="mb-3">
                                 <label for="password" class="form-label font-weight-bold" style={{ marginRight: "340px" }}>New Password:</label>
                                 <input type="password" class="form-control" id="password" name="password" placeholder="enter new password" onChange={handleChange} />
-                                {Error.Password && <p class="form-label font-weight-bold" style={{ color: "red" }}>{Error.Password}</p>}
+                                {error.password && <p class="form-label font-weight-bold" style={{ color: "red" }}>{error.password}</p>}
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label font-weight-bold" style={{ marginRight: "340px" }}>Confirm Password:</label>
                                 <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="enter confirm password" onChange={handleChange} />
-                                {Error.ConfirmPassword && <p class="form-label font-weight-bold" style={{ color: "red" }}>{Error.ConfirmPassword}</p>}
+                                {error.confirmPassword && <p class="form-label font-weight-bold" style={{ color: "red" }}>{error.confirmPassword}</p>}
                             </div>
                             <br></br>
                             <button type="submit" class="btn btn-primary w-100 gradient-custom-2">Change Password</button>
@@ -94,8 +90,8 @@ function SetPassword() {
                         </div>
                     </div>
                 </div>
-                {Error.Email && <p class="form-label font-weight-bold" style={{ color: "red" }}>{Error.Email}</p>}
-                {Message && <p className="form-label font-weight-bold" style={{ color: "red" }}>{Message}</p>}
+                {error.email && <p class="form-label font-weight-bold" style={{ color: "red" }}>{error.email}</p>}
+                {message && <p className="form-label font-weight-bold" style={{ color: "red" }}>{message}</p>}
             </center>
         </>
     )

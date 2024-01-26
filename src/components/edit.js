@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Layout from "./layout";
 import mobileRegex from "../core/constants/mobileRegex";
-import emailRegex from "../core/constants/emailRegex";
+import emailRegex from "../core/constants/email-regex";
 
 function Edit() {
     const navigate = useNavigate();
@@ -140,14 +140,14 @@ function Edit() {
         validation();
         const id=localStorage.getItem('id');
         const formData = new FormData();
-        formData.append('name', User.name);
-        formData.append('age', User.age);
-        formData.append('mobile', User.mobile);
-        formData.append('email', Employee.email);
-        formData.append('updatedBy', id);
-        formData.append('address', address:{
+        // formData.append('name', User.name);
+        // formData.append('age', User.age);
+        // formData.append('mobile', User.mobile);
+        // formData.append('email', Employee.email);
+        // formData.append('updatedBy', id);
+        // formData.append('address', address:{
             
-        });
+        // });
 
         axios.put(`http://localhost:3000/user/${id}`, formData, {
             headers: {

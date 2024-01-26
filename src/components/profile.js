@@ -4,40 +4,44 @@ import { Link } from "react-router-dom";
 import profileService from '../core/services/profile-service';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { configureToastOptions } from "../core/services/toast-service";
 
 function Profile() {
-    const [User, setUser] = useState([]);
-    const [Role, setRole] = useState('');
+    const [user, setUser] = useState([]);
+    const [role, setRole] = useState('');
     const jwtToken = localStorage.getItem('authToken');
+    const [manager, setManager] = useState([]);
+    const [managerDetails, setManagerDetails] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await profileService(jwtToken);
+                const result = await profileService.loggedInUser(jwtToken);
                 setUser(result.data);
-                User.map((user) => {
-                    if (user.roles.includes("658eacbb510f63f754e68d02")) {
+                const managerPromises = result.data.map(async (currentUser) => {
+                    if (currentUser.roles.includes("658eacbb510f63f754e68d02")) {
                         setRole('Admin');
                     } else {
-                        if (user.roles.includes("658eac9e510f63f754e68cfe")) {
+                        if (currentUser.roles.includes("658eac9e510f63f754e68cfe")) {
                             setRole('Manager');
                         } else {
                             setRole('Employee');
                         }
                     }
-                })
-            } catch (error) {
-                setTimeout(function () {
-                    toast.options = {
-                        closeButton: true,
-                        progressBar: true,
-                        showMethod: 'slideDown',
-                        timeOut: 500,
-                    };
-                    toast.error(error);
+                    const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId, jwtToken);                    
+                    setManager(managerDetailsResponse.data)
+               
                 });
+                await Promise.all(managerPromises);
+           
+            } catch (error) {
+                const toastOptions = configureToastOptions();
+                toast.options = toastOptions;
+                toast.error(error);
             }
+            
         }
+        
         fetchData();
     }, [jwtToken])
 
@@ -50,46 +54,40 @@ function Profile() {
                     <div class="col-lg-4">
                         <div class="card mb-4">
                             {
-                                User.map((user) =>
+                                user.map((user) =>
                                     <div class="card-body text-center">
-                                        <img src={`http://localhost:3000/${user.avatar}`} alt="avatar"
+                                        <img src={process.env.REACT_APP_DOMAIN_URL+`/${user.avatar}`} alt="avatar"
                                             class="rounded-circle img-fluid" style={{ width: "200px", height: "200px" }} />
                                         <h5 class="my-3">{user.name}</h5>
-                                        <p class="text-muted mb-1">{Role}</p>
+                                        <p class="text-muted mb-1">{role}</p>
                                         <p class="text-muted mb-4">{user.address.city}</p>
                                     </div>
                                 )
                             }
                         </div>
-                        <div class="card mb-4 mb-lg-0">
-                            <div class="card-body p-0">
-                                <ul class="list-group list-group-flush rounded-3">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fas fa-globe fa-lg text-warning"></i>
-                                        <p class="mb-0">https://mdbootstrap.com</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-github fa-lg" style={{ color: "#333333" }}></i>
-                                        <p class="mb-0">mdbootstrap</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-twitter fa-lg" style={{ color: "#55acee" }}></i>
-                                        <p class="mb-0">@mdbootstrap</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-instagram fa-lg" style={{ color: "#ac2bac" }}></i>
-                                        <p class="mb-0">mdbootstrap</p>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                        <i class="fab fa-facebook-f fa-lg" style={{ color: "#3b5998" }}></i>
-                                        <p class="mb-0">mdbootstrap</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                        
+                        <div className="card mb-4">
+  {manager.map((manager)=>
+        <div className="card-body text-center" key={manager._id}>
+            <h5 className="my-3">Reporting To:</h5>
+            <p style={{ color: "darkcyan" }}>
+                <img
+                    src={process.env.REACT_APP_DOMAIN_URL + `/${manager.avatar}`}
+                    alt="Manager"
+                    height="30px"
+                    width="30px"
+                    style={{ borderRadius: "50%" }}
+                />
+                {manager.name}
+            </p>
+        </div>
+  
+  )}
+                         </div>        
                     </div>
+                        
                     {
-                        User.map((user) =>
+                        user.map((user) =>
                             <div class="col-lg-8">
                                 <div class="card mb-4">
                                     <div class="card-body">

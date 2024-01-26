@@ -1,19 +1,7 @@
-const path = {
-    loginUi: {
-        login: `http://localhost:3000/auth/login`
-    },
-    varifyEmailUi: {
-        varifyEmail: `http://localhost:3000/user/isVarifyEmail`
-    },
-    setPasswordUi: {
-        setPassword: `http://localhost:3000/user/setPassword`
-    },
-    homeUi: {
-        getEmployees: `http://localhost:3000/user/getEmployee`,
-    },
-    profileUi:{
-        loggedInUser: `http://localhost:3000/user`
-    }
+const urlPath = {
+    login:process.env.REACT_APP_DOMAIN_URL+`/auth/login`,
+    varifyEmail:process.env.REACT_APP_DOMAIN_URL+`/user/isVarifyEmail`,
+    setPassword:process.env.REACT_APP_DOMAIN_URL+`/user/setPassword`
 }
 
-export default path;
+export default urlPath;

@@ -4,7 +4,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../App.css';
 import messages from "../core/constants/messages";
-import loginService from '../core/services/login-service';
+import auth from '../core/services/auth-service';
+import { configureToastOptions } from "../core/services/toast-service";
 
 function Login() {
     const navigate = useNavigate();
@@ -12,18 +13,21 @@ function Login() {
         email: '',
         password: ''
     });
-    const [Error, setError] = useState({});
+    const [error, setError] = useState({});
 
     const validation = () => {
         const error = {};
         if (!inputData.email.trim()) {
-            error.Email = messages.loginUi.emailRequired;
+            error.email = messages.login.error.emailRequired;
         }
 
         if (!inputData.password.trim()) {
-            error.Password = messages.loginUi.passwordRequired;
+            error.password = messages.login.error.passwordRequired;
         }
         setError(error);
+        if (!inputData.email.trim() || !inputData.password.trim()) {
+            return true;
+        }
     };
 
     const handleChange = (e) => {
@@ -32,42 +36,32 @@ function Login() {
 
     const loginData = async (e) => {
         e.preventDefault();
-        validation();
-
-        if (!inputData.email.trim() || !inputData.password.trim()) {
+        if (validation()) {
             return;
         }
 
         try {
-            const result = await loginService(inputData);
+            const result = await auth.login(inputData);
             localStorage.setItem('authToken', result.data.token);
 
             setTimeout(function () {
-                toast.options = {
-                    closeButton: true,
-                    progressBar: true,
-                    showMethod: 'slideDown',
-                    timeOut: 500
-                };
-                toast.success(messages.loginUi.toastSuccess);
+                const toastOptions = configureToastOptions();
+                toast.options = toastOptions;
+                toast.success(messages.login.success.toastSuccess);
             })
             if (localStorage.getItem('id')) {
                 localStorage.removeItem('id');
             }
             navigate('/home');
         } catch (error) {
-            toast.options = {
-                closeButton: true,
-                progressBar: true,
-                showMethod: 'slideDown',
-                timeOut: 500
-            };
-            toast.error(messages.loginUi.toastError);
+            const toastOptions = configureToastOptions();
+            toast.options = toastOptions;
+            toast.error(messages.login.error.toastError);
         }
     }
 
     return (
-        <section class="h-100 gradient-form" style={{ backgroundcolor: "#eee;" }}>
+        <section class="h-100 gradient-form" style={{ backgroundcolor: "#eee" }}>
             <div class="container py-3 h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col-xl-10">
@@ -87,13 +81,13 @@ function Login() {
                                                 <label class="form-label">Email</label>
                                                 <input type="text" id="email" class="form-control"
                                                     placeholder="enter email address" name="email" onChange={handleChange} />
-                                                {Error.Email && <p style={{ color: "red" }}>{Error.Email}</p>}
+                                                {error.email && <p style={{ color: "red" }}>{error.email}</p>}
                                             </div>
 
                                             <div class="form-outline mb-4">
                                                 <label class="form-label">Password</label>
                                                 <input type="password" id="password" class="form-control" name="password" placeholder="enter password" onChange={handleChange} />
-                                                {Error.Password && <p style={{ color: "red" }}>{Error.Password}</p>}
+                                                {error.password && <p style={{ color: "red" }}>{error.password}</p>}
                                             </div>
 
                                             <div class="text-center pt-1 mb-5 pb-1">

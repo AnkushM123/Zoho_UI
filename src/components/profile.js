@@ -27,6 +27,7 @@ function Profile() {
                             setRole('Employee');
                         }
                     }
+                    localStorage.setItem('id',currentUser._id);
                     const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId, jwtToken);
                     setManager(managerDetailsResponse.data)
 

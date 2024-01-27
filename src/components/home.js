@@ -14,8 +14,7 @@ function Home() {
         const fetchData = async () => {
             try {
                 const result = await homeService(jwtToken);
-                localStorage.setItem('id',)
-                setEmployees(result.data)
+                setEmployees(result.data);
             } catch (error) {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;

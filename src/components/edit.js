@@ -16,9 +16,9 @@ function Edit() {
     const [avatar, setAvatar] = useState('');
     const [error, setError] = useState({})
     const [emailMessage, setEmailMessage] = useState('');
-    const [emailExist, setEmailExist] = useState(false);
     const jwtToken = localStorage.getItem('authToken');
     const [manager, setManager] = useState([]);
+    const [oldEmail, setoldEmail] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,10 +39,10 @@ function Edit() {
                     });
 
                     setAvatar(user.avatar);
+                    setoldEmail(user.email);
                     const managerDetailsResponse = await profileService.getManagerDetail(user.managerId, jwtToken);
                     setManager(managerDetailsResponse.data)
                 })
-                // await Promise.all(managerPromises);
             }
             catch (error) {
                 const toastOptions = configureToastOptions();
@@ -55,8 +55,11 @@ function Edit() {
 
     const checkEmail = async () => {
         try {
-            await updateService.varifyEmail({ email: user.email });
+            const result = await updateService.varifyEmail({ email: user.email });
             setEmailMessage(messages.update.error.emailRegistered);
+            if (result.data[0].email !== oldEmail) {
+                return true;
+            }
         } catch (error) {
             setEmailMessage('');
         }
@@ -73,10 +76,6 @@ function Edit() {
         } else if (!emailRegex.test(user.email)) {
             error.email = messages.update.error.invalidEmail;
         }
-
-        // if (true) {
-        //    await checkEmail();
-        // }
 
         if (!user.age) {
             error.age = messages.update.error.ageRequired;
@@ -126,6 +125,11 @@ function Edit() {
             error.postalCode = messages.update.error.invalidPostalCode
         }
         setError(error);
+
+        if (await checkEmail()) {
+            return true;
+        }
+
         if (!user.name || !user.email || !emailRegex.test(user.email) || !user.age || !(0 < user.age && 60 >= user.age) || !user.mobile || !mobileRegex.test(user.mobile) || !user.addressLine1 || user.addressLine1.length > 200 || !user.addressLine2 || user.addressLine2.length > 200 || !user.city || user.city.length > 200 || !user.state || user.state.length > 200 || !user.country || user.country.length > 200 || !user.postalCode || user.postalCode.length > 200) {
             return true;
         }
@@ -133,15 +137,22 @@ function Edit() {
 
     const handleChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value });
-        // if (checkEmail()) {
-        //     return;
-        // }
+
     }
 
     const updateUser = async (e) => {
         e.preventDefault();
         if (await validation()) {
             return;
+        }
+
+        const address = {
+            'addressLine1': user.addressLine1,
+            'addressLine2': user.addressLine2,
+            'city': user.city,
+            'state': user.state,
+            'country': user.country,
+            'postalCode': user.postalCode,
         }
 
         const id = localStorage.getItem('id');
@@ -151,12 +162,7 @@ function Edit() {
         formData.append('mobile', user.mobile);
         formData.append('email', user.email);
         formData.append('updatedBy', id);
-        formData.append('address[addressLine1]', user.addressLine1);
-        formData.append('address[addressLine2]', user.addressLine2);
-        formData.append('address[city]', user.city);
-        formData.append('address[state]', user.state);
-        formData.append('address[country]', user.country);
-        formData.append('address[postalCode]', user.postalCode);
+        formData.append('address', JSON.stringify(address));
 
         try {
             await updateService.updateUser(id, formData, jwtToken);
@@ -179,10 +185,10 @@ function Edit() {
 
     return (
         <>
-        <form action="#" method="post" encType="multipart/form-data" onSubmit={updateUser}>
-            <Layout></Layout>
-            <div style={{ backgroundcolor: "#eee" }}>
-                <div class="container py-5">
+            <form action="#" method="post" encType="multipart/form-data" onSubmit={updateUser}>
+                <Layout></Layout>
+                <div style={{ backgroundcolor: "#eee" }}>
+                    <div class="container py-5">
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="card mb-4">
@@ -332,8 +338,8 @@ function Edit() {
                                 </div>
                             </div>
                         </div>
+                    </div>
                 </div>
-            </div>
             </form>
         </>)
 }

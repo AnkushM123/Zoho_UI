@@ -24,10 +24,10 @@ return (
           <Link class="nav-link font-weight-bold" to="/profile">Profile</Link>
         </li>
         <li class="nav-item" style={{marginLeft:"20px"}}>
-          <Link class="nav-link font-weight-bold" to="/leaveTracker">Leave Tracker</Link>
+          <Link class="nav-link font-weight-bold" to="/leaveTracker">Request</Link>
         </li>
         <li class="nav-item" style={{marginLeft:"20px"}}>
-          <Link class="nav-link font-weight-bold" href="/register">Register</Link>
+          <Link class="nav-link font-weight-bold" to="/register">Register</Link>
         </li>
       </ul>
     </div>

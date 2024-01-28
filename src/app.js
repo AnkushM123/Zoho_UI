@@ -10,6 +10,7 @@ import SetPassword from "./components/setPassword";
 import Home from "./components/home";
 import Profile from "./components/profile";
 import Edit from "./components/edit";
+import Register from "./components/register";
 
 function App() {
     return (
@@ -48,6 +49,11 @@ function App() {
                         exact
                         path="/edit"
                         element={<Edit />}
+                    />
+                    <Route
+                        exact
+                        path="/register"
+                        element={<Register />}
                     />
                 </Routes>
             </Router>

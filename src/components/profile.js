@@ -5,6 +5,7 @@ import profileService from '../core/services/profile-service';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { configureToastOptions } from "../core/services/toast-service";
+import EmployeeLayout from "./employeeLayout";
 
 function Profile() {
     const [user, setUser] = useState([]);
@@ -27,7 +28,7 @@ function Profile() {
                             setRole('Employee');
                         }
                     }
-                    localStorage.setItem('id',currentUser._id);
+                    localStorage.setItem('id', currentUser._id);
                     const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId, jwtToken);
                     setManager(managerDetailsResponse.data)
 
@@ -44,7 +45,12 @@ function Profile() {
     }, [jwtToken])
 
     return (<>
-        <Layout></Layout>
+        {localStorage.getItem('role') === 'Employee' ? (
+            <EmployeeLayout />
+        ) : (
+            <Layout />
+        )
+        }
         <div style={{ backgroundcolor: "#eee" }}>
             <div class="container py-5">
                 <Link to="/edit" class="link-primary font-weight-bold" style={{ marginLeft: "1050px" }}>Edit</Link>
@@ -63,7 +69,6 @@ function Profile() {
                                 )
                             }
                         </div>
-
                         <div className="card mb-4">
                             {manager.map((manager) =>
                                 <div className="card-body text-center" key={manager._id}>
@@ -79,11 +84,9 @@ function Profile() {
                                         {manager.name}
                                     </p>
                                 </div>
-
                             )}
                         </div>
                     </div>
-
                     {
                         user.map((user) =>
                             <div class="col-lg-8">

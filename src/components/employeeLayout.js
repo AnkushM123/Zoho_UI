@@ -1,7 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom"
 
-function Layout(){
+function EmployeeLayout(){
   const navigate = useNavigate()
   
   const navigateToLogin=()=>{
@@ -18,17 +18,12 @@ return (
     <div class="collapse navbar-collapse" id="mynavbar" style={{marginLeft:"20px"}}>
       <ul class="navbar-nav me-auto">
         <li class="nav-item" style={{marginLeft:"20px"}}>
-          <Link class="nav-link font-weight-bold" to="/home">Home</Link>
-        </li>
-        <li class="nav-item" style={{marginLeft:"20px"}}>
           <Link class="nav-link font-weight-bold" to="/profile">Profile</Link>
         </li>
         <li class="nav-item" style={{marginLeft:"20px"}}>
-          <Link class="nav-link font-weight-bold" to="/request">Request</Link>
+          <Link class="nav-link font-weight-bold" to="/leaveTracker">Leave Tracker</Link>
         </li>
-        <li class="nav-item" style={{marginLeft:"20px"}}>
-          <Link class="nav-link font-weight-bold" to="/register">Register</Link>
-        </li>
+
       </ul>
     </div>
     <button class="btn btn-danger" onClick={navigateToLogin}>Log Out</button>
@@ -38,4 +33,4 @@ return (
 )
 }
 
-export default Layout;
+export default EmployeeLayout;

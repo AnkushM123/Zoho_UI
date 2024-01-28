@@ -52,7 +52,16 @@ function Login() {
             if (localStorage.getItem('id')) {
                 localStorage.removeItem('id');
             }
+            let jwtData = result.data.token.split('.')[1]
+          let decodedJwtJsonData = window.atob(jwtData)
+          let decodedJwtData = JSON.parse(decodedJwtJsonData)
+            localStorage.setItem('id',decodedJwtData.id);
+            localStorage.setItem('role',decodedJwtData.role); 
+            if(decodedJwtData.role==='Manager'){
             navigate('/home');
+            }else{
+                navigate('/profile');
+            }
         } catch (error) {
             const toastOptions = configureToastOptions();
             toast.options = toastOptions;

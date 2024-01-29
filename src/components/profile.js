@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { configureToastOptions } from "../core/services/toast-service";
 import EmployeeLayout from "./employeeLayout";
+import decodeJwt from "../core/services/decodedJwtData-service";
 
 function Profile() {
     const [user, setUser] = useState([]);
@@ -28,7 +29,6 @@ function Profile() {
                             setRole('Employee');
                         }
                     }
-                    localStorage.setItem('id', currentUser._id);
                     const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId, jwtToken);
                     setManager(managerDetailsResponse.data)
 
@@ -45,12 +45,12 @@ function Profile() {
     }, [jwtToken])
 
     return (<>
-        {localStorage.getItem('role') === 'Employee' ? (
+         { decodeJwt().role === 'Employee' ? (
             <EmployeeLayout />
         ) : (
             <Layout />
         )
-        }
+        } 
         <div style={{ backgroundcolor: "#eee" }}>
             <div class="container py-5">
                 <Link to="/edit" class="link-primary font-weight-bold" style={{ marginLeft: "1050px" }}>Edit</Link>

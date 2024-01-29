@@ -85,7 +85,19 @@ const messages = {
             "genderRequired":"Gender is required",
             "imageRequired":"Image is required",
         }
-    }
+    },
+        applyLeave:{
+            success:{
+                "requestSuccess":"Request sent successfully"
+            },
+            error:{
+                "leaveTypeRequired":"select leave type",
+                "startDateRequired":"select start date of leave",
+                "endDateRequired":"select end date of leave",
+                "reasonForLeaveRequired":"select reason of leave"
+            }
+        }
+    
 }
 
 export default messages;

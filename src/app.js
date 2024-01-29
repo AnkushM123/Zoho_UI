@@ -11,6 +11,9 @@ import Home from "./components/home";
 import Profile from "./components/profile";
 import Edit from "./components/edit";
 import Register from "./components/register";
+import LeaveTracker from "./components/leaveTracker";
+import ApplyLeave from "./components/applyLeave";
+import Request from "./components/request";
 
 function App() {
     return (
@@ -54,6 +57,21 @@ function App() {
                         exact
                         path="/register"
                         element={<Register />}
+                    />
+                    <Route
+                        exact
+                        path="/leaveTracker"
+                        element={<LeaveTracker />}
+                    />
+                    <Route
+                        exact
+                        path="/applyLeave"
+                        element={<ApplyLeave />}
+                    />
+                    <Route
+                        exact
+                        path="/request"
+                        element={<Request />}
                     />
                 </Routes>
             </Router>

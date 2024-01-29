@@ -23,7 +23,6 @@ return (
         <li class="nav-item" style={{marginLeft:"20px"}}>
           <Link class="nav-link font-weight-bold" to="/leaveTracker">Leave Tracker</Link>
         </li>
-
       </ul>
     </div>
     <button class="btn btn-danger" onClick={navigateToLogin}>Log Out</button>

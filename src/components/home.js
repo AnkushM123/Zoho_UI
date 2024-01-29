@@ -28,7 +28,7 @@ function Home() {
         <div >
             <Layout></Layout>
             <div class="col-md-11 mb-11" style={{ marginLeft: "40px", marginTop: "40px" }}>
-                <div class="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
+                <div class="card example-1 scrollbar-ripe-malinka" style={{ height: "400px" }}>
                     <div class="card-body">
                         <h4 id="section1"><strong> Team Overview:</strong></h4>
                         <br></br>

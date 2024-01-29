@@ -158,3 +158,8 @@ div.content {
         border-bottom-right-radius: .3rem;
     }
 }
+
+.table-row-hover:hover {
+    background-color: #00bcd4; /* Change the background color on hover as per your preference */
+    cursor: pointer; /* Change the cursor to a pointer on hover */
+  }

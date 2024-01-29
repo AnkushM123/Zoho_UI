@@ -9,6 +9,7 @@ import profileService from '../core/services/profile-service';
 import { configureToastOptions } from "../core/services/toast-service";
 import messages from "../core/constants/messages";
 import updateService from '../core/services/update-service';
+import decodeJwt from "../core/services/decodedJwtData-service";
 
 function Edit() {
     const navigate = useNavigate();
@@ -19,8 +20,10 @@ function Edit() {
     const jwtToken = localStorage.getItem('authToken');
     const [manager, setManager] = useState([]);
     const [oldEmail, setoldEmail] = useState('');
+    const id = decodeJwt().id;
 
     useEffect(() => {
+        console.log(id)
         const fetchData = async () => {
             try {
                 const result = await profileService.loggedInUser(jwtToken);
@@ -155,7 +158,6 @@ function Edit() {
             'postalCode': user.postalCode,
         }
 
-        const id = localStorage.getItem('id');
         const formData = new FormData();
         formData.append('name', user.name);
         formData.append('age', user.age);

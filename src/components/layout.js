@@ -6,6 +6,8 @@ function Layout(){
   
   const navigateToLogin=()=>{
     localStorage.removeItem('authToken');
+    localStorage.removeItem('id');
+    localStorage.removeItem('role');
     navigate('/');
   }
 

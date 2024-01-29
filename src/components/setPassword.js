@@ -14,6 +14,7 @@ function SetPassword() {
         confirmPassword: ''
     })
     const [error, setError] = useState({});
+    const id = localStorage.getItem("id");
 
     const validation = () => {
         const error = {}
@@ -49,7 +50,6 @@ function SetPassword() {
             return;
         }
 
-        const id = localStorage.getItem("id");
         try {
             const result = await auth.setPassword(inputData, id);
             setMessage('');

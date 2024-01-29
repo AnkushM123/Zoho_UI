@@ -9,6 +9,7 @@ import emailRegex from "../core/constants/email-regex";
 import passwordRegex from "../core/constants/password-regex";
 import { configureToastOptions } from "../core/services/toast-service";
 import authService from "../core/services/auth-service";
+import decodeJwt from "../core/services/decodedJwtData-service";
 
 function Register() {
     const navigate = useNavigate();
@@ -32,7 +33,10 @@ function Register() {
     const [error, setError] = useState({})
     const [emailMessage, setEmailMessage] = useState('')
     const [gender, setGender] = useState('');
+    const [leaveId,setLeaveId]=useState(["659bc36c01e2f1640c26260e","659bc3ae01e2f1640c262612","659bc3b501e2f1640c262614","659bc3c101e2f1640c262616","659bc3c601e2f1640c262618","659bc3ce01e2f1640c26261a"])
     const jwtToken = localStorage.getItem('authToken');
+    const id = decodeJwt().id;
+    const [leaveRecord,setLeaveRecord]=useState({});
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -158,7 +162,6 @@ function Register() {
             return;
         }
 
-        const id = localStorage.getItem('id');
         const formData = new FormData();
         formData.append('avatar', file);
         formData.append('name', inputData.name);
@@ -174,7 +177,33 @@ function Register() {
         formData.append('updatedBy', id);
 
         try {
-            await authService.register(formData, jwtToken);
+        const result=await authService.register(formData, jwtToken);
+        const userId=result.data._id;
+
+        const leaveRecords = leaveId.map(async (id) => {
+            if (id === "659bc3c101e2f1640c262616") {
+                return {
+                    userId: userId,
+                    leaveId: id,
+                    balance: 1.5,
+                    createdBy: id,
+                    updatedBy: id
+                };
+            } else {
+                return {
+                    userId: userId,
+                    leaveId: id,
+                    balance: 0,
+                    createdBy: id,
+                    updatedBy: id
+                };
+            }
+        });
+
+        const leaveRecordsData = await Promise.all(leaveRecords);
+
+        await Promise.all(leaveRecordsData.map(record => authService.createLeaveRecord(record, jwtToken)));
+
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;

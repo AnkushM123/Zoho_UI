@@ -6,6 +6,7 @@ import '../App.css';
 import messages from "../core/constants/messages";
 import auth from '../core/services/auth-service';
 import { configureToastOptions } from "../core/services/toast-service";
+import decodeJwt from "../core/services/decodedJwtData-service";
 
 function Login() {
     const navigate = useNavigate();
@@ -52,12 +53,8 @@ function Login() {
             if (localStorage.getItem('id')) {
                 localStorage.removeItem('id');
             }
-            let jwtData = result.data.token.split('.')[1]
-          let decodedJwtJsonData = window.atob(jwtData)
-          let decodedJwtData = JSON.parse(decodedJwtJsonData)
-            localStorage.setItem('id',decodedJwtData.id);
-            localStorage.setItem('role',decodedJwtData.role); 
-            if(decodedJwtData.role==='Manager'){
+        
+            if(decodeJwt().role==='Manager'){
             navigate('/home');
             }else{
                 navigate('/profile');

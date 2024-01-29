@@ -22,4 +22,12 @@ const register = async (formData, jwtToken) => {
     })
 }
 
-export default { login, setPassword, varifyEmail, register };
+const createLeaveRecord = async (inputData, jwtToken) => {
+    return axios.post(path.createLeaveRecord, inputData, {
+        headers: {
+            'Authorization': `Bearer ${jwtToken}`,
+        },
+    })
+}
+
+export default { login, setPassword, varifyEmail, register, createLeaveRecord };

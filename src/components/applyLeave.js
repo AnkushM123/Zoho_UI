@@ -134,12 +134,6 @@ function ApplyLeave() {
                 setLeaveError(`You have '${result.data[0].balance}' leaves available`);
                 return
             } else {
-                const leaveRecord = {
-                    userId: id,
-                    balance: Math.abs(result.data[0].balance - totalDays),
-                    updatedBy: id
-                }
-                const updatedRecord = await leaveTrackerService.updateLeaveRecord(result.data[0].leaveId, leaveRecord, jwtToken);
                 const formData = new FormData();
                 formData.append('userId', id);
                 formData.append('managerId', managerId);

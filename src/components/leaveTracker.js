@@ -6,6 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import LeaveTrackerService from '../core/services/leaveTracker-service';
 import { configureToastOptions } from "../core/services/toast-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
+import requestService from "../core/services/request-service";
+import { NavbarBrand } from "react-bootstrap";
 
 function LeaveTracker() {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ function LeaveTracker() {
   const [unpaidLeave, setUnpaidLeave] = useState({});
   const [workFromHome, setWorkFromHome] = useState({});
   const jwtToken = localStorage.getItem('authToken');
+  const [request,setRequest]=useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +49,9 @@ function LeaveTracker() {
               break;
           }
         });
+        const requests=await requestService.getByUserId(id,jwtToken);
+        setRequest(requests.data);
+        console.log(request)
       } catch (error) {
         const toastOptions = configureToastOptions();
         toast.options = toastOptions;
@@ -55,8 +61,20 @@ function LeaveTracker() {
     fetchData();
   }, [jwtToken]);
 
+  const convertToDate = (timestamp) => {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
   const navigateToApplyLeave = () => {
     navigate('/applyLeave');
+  }
+
+  const navigateToLeaveDetails=(requestId)=>{
+    navigate(`/leaveDetail/${requestId}`);
   }
 
   return (
@@ -71,7 +89,7 @@ function LeaveTracker() {
               <br />
               <p>Available:{compensantoryOff.balance}</p>
               <br />
-              <p>Booked:0</p>
+              <p>Booked:{compensantoryOff.booked}</p>
             </div>
           </div>
         </div>
@@ -82,7 +100,7 @@ function LeaveTracker() {
               <br />
               <p>Available:{forgotIdCard.balance}</p>
               <br />
-              <p>Booked:0</p>
+              <p>Booked:{forgotIdCard.booked}</p>
             </div>
           </div>
         </div>
@@ -93,7 +111,7 @@ function LeaveTracker() {
               <br />
               <p>Available:{outOfOfficeOnDuty.balance}</p>
               <br />
-              <p>Booked:0</p>
+              <p>Booked:{outOfOfficeOnDuty.booked}</p>
             </div>
           </div>
         </div>
@@ -104,7 +122,7 @@ function LeaveTracker() {
               <br />
               <p>Available:{paidLeave.balance}</p>
               <br />
-              <p>Booked:0</p>
+              <p>Booked:{paidLeave.booked}</p>
             </div>
           </div>
         </div>
@@ -115,7 +133,7 @@ function LeaveTracker() {
               <br />
               <p>Available:0</p>
               <br />
-              <p>Booked:{unpaidLeave.balance}</p>
+              <p>Booked:{unpaidLeave.booked}</p>
             </div>
           </div>
         </div>
@@ -126,11 +144,39 @@ function LeaveTracker() {
               <br />
               <p>Available:{workFromHome.balance}</p>
               <br />
-              <p>Booked:0</p>
+              <p>Booked:{workFromHome.booked}</p>
             </div>
           </div>
         </div>
       </div>
+      <br></br>
+      <h4><strong>Leave History:</strong></h4>
+      <table className="table table-hover" style={{ marginTop: "20px" }}>
+                <thead>
+                    <tr>
+                        <th scope="col">Sr.No</th>
+                        <th scope="col">From-To</th>
+                        <th scope="col">Total Days</th>
+                        <th scope="col">Leave Name</th>
+                        <th scope="col">Reason</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {request.map((requestItem, index) => (
+                    (
+                            <tr key={requestItem._id} onClick={()=>navigateToLeaveDetails(requestItem._id)} className="table-row-hover">
+                                <th scope="row">{index + 1}</th>
+                                <td>{convertToDate(requestItem.startDate)}-{convertToDate(requestItem.endDate)}</td>
+                                <td>{requestItem.totalDays}</td>
+                                <td>{requestItem.leaveName}</td>
+                                <td>.....</td>
+                                <td>{requestItem.status}</td>
+                            </tr>
+                        )
+                    ))}
+                </tbody>
+            </table>
     </>
   )
 }

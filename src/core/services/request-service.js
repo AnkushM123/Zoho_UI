@@ -17,4 +17,28 @@ const getUser = async (id, jwtToken) => {
     })
 }
 
-export default { getRequestByManagerId, getUser };
+const getByRequestId = async (requestId, jwtToken) => {
+    return axios.get(path.getRequestByRequestId + `/${requestId}`, {
+        headers: {
+            'Authorization': `Bearer ${jwtToken}`
+        }
+    })
+}
+
+const changeRequestStatus = async (requestId, status, jwtToken) => {
+    return axios.put(path.changeRequestStatus + `/${requestId}`, status, {
+        headers: {
+            'Authorization': `Bearer ${jwtToken}`
+        }
+    })
+}
+
+const getByUserId = async (userId, jwtToken) => {
+    return axios.get(path.getRequestByUserId + `/${userId}`, {
+        headers: {
+            'Authorization': `Bearer ${jwtToken}`
+        }
+    })
+}
+
+export default { getRequestByManagerId, getUser, getByRequestId, changeRequestStatus, getByUserId };

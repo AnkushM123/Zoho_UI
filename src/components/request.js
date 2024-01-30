@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import '../App.css';
 
 function Request() {
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     const id = decodeJwt().id;
     const jwtToken = localStorage.getItem('authToken');
     const [request, setRequest] = useState([]);
@@ -36,14 +36,14 @@ function Request() {
         return `${year}-${month}-${day}`;
     }
 
-    const navigateToRequest=()=>{
-navigate('/requestDetails')
+    const navigateToRequest = (requestId) => {
+        navigate(`/requestDetail/${requestId}`);
     }
 
     return (
         <>
             <Layout></Layout>
-            <table className="table table-bordered" style={{ marginTop: "20px" }}>
+            <table className="table table-bordered table-hover" style={{ marginTop: "20px" }}>
                 <thead>
                     <tr>
                         <th scope="col">Sr.No</th>
@@ -52,22 +52,20 @@ navigate('/requestDetails')
                         <th scope="col">Total Days</th>
                         <th scope="col">Leave Name</th>
                         <th scope="col">Reason</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
                     </tr>
                 </thead>
                 <tbody>
                     {request.map((requestItem, index) => (
-                        <tr key={index} onClick={()=>{navigateToRequest(requestItem)}} className="table-row-hover">
-                            <th scope="row">{index + 1}</th>
-                            <td>{requestItem.name}</td>
-                            <td>{convertToDate(requestItem.startDate)}-{convertToDate(requestItem.endDate)}</td>
-                            <td>{requestItem.totalDays}</td>
-                            <td>{requestItem.leaveName}</td>
-                            <td>.....</td>
-                            <td><button type="button" className="btn btn-success">Approve</button></td>
-                            <td><button type="button" className="btn btn-danger">Decline</button></td>
-                        </tr>
+                        requestItem.status === 'Pending' && (
+                            <tr key={requestItem._id} onClick={() => navigateToRequest(requestItem._id)} className="table-row-hover">
+                                <th scope="row">{index + 1}</th>
+                                <td>{requestItem.name}</td>
+                                <td>{convertToDate(requestItem.startDate)}-{convertToDate(requestItem.endDate)}</td>
+                                <td>{requestItem.totalDays}</td>
+                                <td>{requestItem.leaveName}</td>
+                                <td>.....</td>
+                            </tr>
+                        )
                     ))}
                 </tbody>
             </table>

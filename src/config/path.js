@@ -13,6 +13,9 @@ const urlPath = {
     updateLeaveRecord: process.env.REACT_APP_DOMAIN_URL + `/leaveRecord`,
     applyLeaveRequest: process.env.REACT_APP_DOMAIN_URL + `/leaveRequest`,
     getRequestByManagerId: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest',
+    getRequestByRequestId: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest/getRequest',
+    changeRequestStatus: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest/changeStatus',
+    getRequestByUserId: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest/userRequest',
 }
 
 export default urlPath;

@@ -14,6 +14,8 @@ import Register from "./components/register";
 import LeaveTracker from "./components/leaveTracker";
 import ApplyLeave from "./components/applyLeave";
 import Request from "./components/request";
+import RequestDetails from "./components/requestDetails";
+import LeaveDetails from "./components/leaveDetails";
 
 function App() {
     return (
@@ -72,6 +74,16 @@ function App() {
                         exact
                         path="/request"
                         element={<Request />}
+                    />
+                    <Route
+                        exact
+                        path="/requestDetail/:requestId"
+                        element={<RequestDetails />}
+                    />
+                                        <Route
+                        exact
+                        path="/leaveDetail/:requestId"
+                        element={<LeaveDetails />}
                     />
                 </Routes>
             </Router>

@@ -37,7 +37,7 @@ function RequestDetails() {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        return `${day}/${month}/${year}`;
     }
 
     const changeRequestStatus = async () => {
@@ -86,17 +86,15 @@ function RequestDetails() {
                                     <p class="text-muted mb-0">{request.name}</p>
                                 </div>
                             </div>
-
                             <div className="row">
                                 <div className="col-sm-3">
                                     <p className="form-label font-weight-bold">From-To:</p>
                                     <br />
                                 </div>
                                 <div className="col-sm-9">
-                                    <p class="text-muted mb-0">{convertToDate(request.startDate)}-{convertToDate(request.endDate)}</p>
+                                    <p class="text-muted mb-0">{convertToDate(request.startDate)} - {convertToDate(request.endDate)}</p>
                                 </div>
                             </div>
-
                             <div className="row">
                                 <div className="col-sm-3">
                                     <p className="form-label font-weight-bold">Total Days:</p>

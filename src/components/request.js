@@ -33,7 +33,7 @@ function Request() {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        return `${day}/${month}/${year}`;
     }
 
     const navigateToRequest = (requestId) => {
@@ -60,7 +60,7 @@ function Request() {
                             <tr key={requestItem._id} onClick={() => navigateToRequest(requestItem._id)} className="table-row-hover">
                                 <th scope="row">{index + 1}</th>
                                 <td>{requestItem.name}</td>
-                                <td>{convertToDate(requestItem.startDate)}-{convertToDate(requestItem.endDate)}</td>
+                                <td>{convertToDate(requestItem.startDate)} - {convertToDate(requestItem.endDate)}</td>
                                 <td>{requestItem.totalDays}</td>
                                 <td>{requestItem.leaveName}</td>
                                 <td>.....</td>

@@ -45,12 +45,12 @@ function Profile() {
     }, [jwtToken])
 
     return (<>
-         { decodeJwt().role === 'Employee' ? (
+        {decodeJwt().role === 'Employee' ? (
             <EmployeeLayout />
         ) : (
             <Layout />
         )
-        } 
+        }
         <div style={{ backgroundcolor: "#eee" }}>
             <div class="container py-5">
                 <Link to="/edit" class="link-primary font-weight-bold" style={{ marginLeft: "1050px" }}>Edit</Link>
@@ -204,8 +204,7 @@ function Profile() {
                                     </div>
                                 </div>
                             </div>
-                        )
-                    }
+                        )}
                 </div>
             </div>
         </div>

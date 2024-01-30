@@ -96,6 +96,11 @@ const messages = {
                 "endDateRequired":"select end date of leave",
                 "reasonForLeaveRequired":"select reason of leave"
             }
+        },
+        protectedRoute:{
+            error:{
+                "loginRequired":"Login is required"
+            }
         }
     
 }

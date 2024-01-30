@@ -40,7 +40,6 @@ function Login() {
         if (validation()) {
             return;
         }
-
         try {
             const result = await auth.login(inputData);
             localStorage.setItem('authToken', result.data.token);
@@ -53,11 +52,11 @@ function Login() {
             if (localStorage.getItem('id')) {
                 localStorage.removeItem('id');
             }
-        
-            if(decodeJwt().role==='Manager'){
-            navigate('/home');
-            }else{
-                navigate('/profile');
+
+            if (decodeJwt().role === 'Manager') {
+                navigate('/home');
+            } else {
+                navigate('/leaveTracker');
             }
         } catch (error) {
             const toastOptions = configureToastOptions();

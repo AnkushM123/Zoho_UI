@@ -33,10 +33,10 @@ function Register() {
     const [error, setError] = useState({})
     const [emailMessage, setEmailMessage] = useState('')
     const [gender, setGender] = useState('');
-    const [leaveId,setLeaveId]=useState(["659bc36c01e2f1640c26260e","659bc3ae01e2f1640c262612","659bc3b501e2f1640c262614","659bc3c101e2f1640c262616","659bc3c601e2f1640c262618","659bc3ce01e2f1640c26261a"])
+    const [leaveId, setLeaveId] = useState(["659bc36c01e2f1640c26260e", "659bc3ae01e2f1640c262612", "659bc3b501e2f1640c262614", "659bc3c101e2f1640c262616", "659bc3c601e2f1640c262618", "659bc3ce01e2f1640c26261a"])
     const jwtToken = localStorage.getItem('authToken');
     const id = decodeJwt().id;
-    const [leaveRecord,setLeaveRecord]=useState({});
+    const [leaveRecord, setLeaveRecord] = useState({});
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -177,32 +177,32 @@ function Register() {
         formData.append('updatedBy', id);
 
         try {
-        const result=await authService.register(formData, jwtToken);
-        const userId=result.data._id;
+            const result = await authService.register(formData, jwtToken);
+            const userId = result.data._id;
 
-        const leaveRecords = leaveId.map(async (id) => {
-            if (id === "659bc3c101e2f1640c262616") {
-                return {
-                    userId: userId,
-                    leaveId: id,
-                    balance: 1.5,
-                    createdBy: id,
-                    updatedBy: id
-                };
-            } else {
-                return {
-                    userId: userId,
-                    leaveId: id,
-                    balance: 0,
-                    createdBy: id,
-                    updatedBy: id
-                };
-            }
-        });
+            const leaveRecords = leaveId.map(async (id) => {
+                if (id === "659bc3c101e2f1640c262616") {
+                    return {
+                        userId: userId,
+                        leaveId: id,
+                        balance: 1.5,
+                        createdBy: id,
+                        updatedBy: id
+                    };
+                } else {
+                    return {
+                        userId: userId,
+                        leaveId: id,
+                        balance: 0,
+                        createdBy: id,
+                        updatedBy: id
+                    };
+                }
+            });
 
-        const leaveRecordsData = await Promise.all(leaveRecords);
+            const leaveRecordsData = await Promise.all(leaveRecords);
 
-        await Promise.all(leaveRecordsData.map(record => authService.createLeaveRecord(record, jwtToken)));
+            await Promise.all(leaveRecordsData.map(record => authService.createLeaveRecord(record, jwtToken)));
 
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
@@ -254,7 +254,6 @@ function Register() {
                                             {error.age && <p style={{ color: "red" }}>{error.age}</p>}
                                         </div>
                                     </div>
-
                                     <br></br>
                                     <div class="row mb-3">
                                         <div class="col-md-6">

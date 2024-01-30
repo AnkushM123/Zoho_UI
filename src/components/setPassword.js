@@ -49,7 +49,6 @@ function SetPassword() {
             setMessage(messages.setPassword.error.passwordUnmatched);
             return;
         }
-
         try {
             const result = await auth.setPassword(inputData, id);
             setMessage('');

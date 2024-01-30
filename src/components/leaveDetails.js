@@ -3,13 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { configureToastOptions } from "../core/services/toast-service";
-import messages from "../core/constants/messages";
 import requestService from "../core/services/request-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
 import { useParams } from 'react-router-dom';
 import Layout from "./layout";
-import leaveTrackerService from "../core/services/leaveTracker-service";
-
 
 function LeaveDetails() {
     const navigate = useNavigate();
@@ -37,10 +34,10 @@ function LeaveDetails() {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        return `${day}/${month}/${year}`;
     }
 
-    const backToLeaveTracker=()=>{
+    const backToLeaveTracker = () => {
         navigate('/leaveTracker');
     }
 
@@ -57,10 +54,9 @@ function LeaveDetails() {
                                     <br />
                                 </div>
                                 <div className="col-sm-9">
-                                    <p class="text-muted mb-0">{convertToDate(request.startDate)}-{convertToDate(request.endDate)}</p>
+                                    <p class="text-muted mb-0">{convertToDate(request.startDate)} - {convertToDate(request.endDate)}</p>
                                 </div>
                             </div>
-
                             <div className="row">
                                 <div className="col-sm-3">
                                     <p className="form-label font-weight-bold">Total Days:</p>
@@ -86,6 +82,15 @@ function LeaveDetails() {
                                 </div>
                                 <div class="col-sm-9">
                                     <p class="text-muted mb-0">{request.reasonForLeave}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="form-label font-weight-bold">Status:</p>
+                                    <br></br>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">{request.status}</p>
                                 </div>
                             </div>
                             <button class="btn btn-danger" onClick={backToLeaveTracker}>Back</button>

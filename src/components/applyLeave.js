@@ -22,8 +22,8 @@ function ApplyLeave() {
     const [reasonForLeave, setReasonForLeave] = useState({});
     const [managerId, setManagerId] = useState('');
     const [name, setName] = useState('')
-    const [leaveError,setLeaveError]= useState('');
-    const [leaveName,setLeaveName]=useState('');
+    const [leaveError, setLeaveError] = useState('');
+    const [leaveName, setLeaveName] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -101,26 +101,26 @@ function ApplyLeave() {
         setReasonForLeave({ ...reasonForLeave, [e.target.name]: e.target.value });
         switch (leaveType) {
             case '659bc36c01e2f1640c26260e':
-              setLeaveName('Compensantory Leave');
-              break;
+                setLeaveName('Compensantory Leave');
+                break;
             case '659bc3ae01e2f1640c262612':
                 setLeaveName('Forgot IDCard');
-              break;
+                break;
             case '659bc3b501e2f1640c262614':
                 setLeaveName('Out Of Office OnDuty');
-              break;
+                break;
             case '659bc3c101e2f1640c262616':
                 setLeaveName('Paid Leave');
-              break;
+                break;
             case '659bc3c601e2f1640c262618':
                 setLeaveName('Unpaid Leave');
-              break;
+                break;
             case '659bc3ce01e2f1640c26261a':
                 setLeaveName('Work From Home');
-              break;
+                break;
             default:
-              break;
-          }
+                break;
+        }
     }
 
     const applyLeave = async (e) => {
@@ -130,7 +130,7 @@ function ApplyLeave() {
         }
         try {
             const result = await leaveTrackerService.getParticularRecord({ userId: id, leaveId: leaveType }, jwtToken);
-            if ((result.data[0].balance - totalDays) < 0 && leaveType!=='659bc3c601e2f1640c262618') {
+            if ((result.data[0].balance - totalDays) < 0 && leaveType !== '659bc3c601e2f1640c262618') {
                 setLeaveError(`You have '${result.data[0].balance}' leaves available`);
                 return
             } else {
@@ -259,12 +259,12 @@ function ApplyLeave() {
                         </div>
                     </div>
                     <center>
-                    {leaveError && <p style={{ color: "red" }}>{leaveError}</p>}
+                        {leaveError && <p style={{ color: "red" }}>{leaveError}</p>}
                     </center>
                 </div>
-                
+
             </form>
-           
+
         </>
     )
 }

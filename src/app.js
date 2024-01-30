@@ -16,6 +16,7 @@ import ApplyLeave from "./components/applyLeave";
 import Request from "./components/request";
 import RequestDetails from "./components/requestDetails";
 import LeaveDetails from "./components/leaveDetails";
+import ProtectedRoute from "./components/protectedRoute";
 
 function App() {
     return (
@@ -28,62 +29,60 @@ function App() {
                         path="/"
                         element={<Login />}
                     />
-                </Routes>
-                <Routes>
                     <Route
-                        exact
+
                         path="/varifyEmail"
                         element={<VarifyEmail />}
                     />
                     <Route
-                        exact
+
                         path="/setPassword"
                         element={<SetPassword />}
                     />
                     <Route
-                        exact
+
                         path="/home"
-                        element={<Home />}
+                        element={<ProtectedRoute Component={Home} />}
                     />
                     <Route
-                        exact
+
                         path="/profile"
-                        element={<Profile />}
+                        element={<ProtectedRoute Component={Profile} />}
                     />
                     <Route
-                        exact
+
                         path="/edit"
-                        element={<Edit />}
+                        element={<ProtectedRoute Component={Edit} />}
                     />
                     <Route
-                        exact
+
                         path="/register"
-                        element={<Register />}
+                        element={<ProtectedRoute Component={Register} />}
                     />
                     <Route
-                        exact
+
                         path="/leaveTracker"
-                        element={<LeaveTracker />}
+                        element={<ProtectedRoute Component={LeaveTracker} />}
                     />
                     <Route
-                        exact
+
                         path="/applyLeave"
-                        element={<ApplyLeave />}
+                        element={<ProtectedRoute Component={ApplyLeave} />}
                     />
                     <Route
-                        exact
+
                         path="/request"
-                        element={<Request />}
+                        element={<ProtectedRoute Component={Request} />}
                     />
                     <Route
-                        exact
+
                         path="/requestDetail/:requestId"
-                        element={<RequestDetails />}
+                        element={<ProtectedRoute Component={RequestDetails} />}
                     />
-                                        <Route
-                        exact
+                    <Route
+
                         path="/leaveDetail/:requestId"
-                        element={<LeaveDetails />}
+                        element={<ProtectedRoute Component={LeaveDetails} />}
                     />
                 </Routes>
             </Router>

@@ -16,6 +16,8 @@ const urlPath = {
     getRequestByRequestId: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest/getRequest',
     changeRequestStatus: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest/changeStatus',
     getRequestByUserId: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest/userRequest',
+    addCommentInRequest: process.env.REACT_APP_DOMAIN_URL + `/leaveRequest`,
+    getByRole: process.env.REACT_APP_DOMAIN_URL + `/user/getByRole`,
 }
 
 export default urlPath;

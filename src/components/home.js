@@ -5,6 +5,9 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../App.css';
 import { configureToastOptions } from "../core/services/toast-service";
+import EmployeeLayout from "./employeeLayout";
+import decodeJwt from "../core/services/decodedJwtData-service";
+import AdminLayout from "./adminLayout";
 
 function Home() {
     const [employees, setEmployees] = useState([]);
@@ -20,28 +23,43 @@ function Home() {
                 toast.options = toastOptions;
                 toast.error(error);
             }
+
         };
         fetchData();
+
     }, [jwtToken]);
 
     return (
-        <div >
-            <Layout></Layout>
-            <div class="col-md-11 mb-11" style={{ marginLeft: "40px", marginTop: "40px" }}>
-                <div class="card example-1 scrollbar-ripe-malinka" style={{ height: "400px" }}>
-                    <div class="card-body">
-                        <h4 id="section1"><strong> Team Overview:</strong></h4>
-                        <br></br>
-                        {
-                            employees.map((employee, index) =>
-                                <p style={{ color: "darkcyan" }}>{index + 1}.<img src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`} alt="Employee" height="30px" width="30px" style={{ borderRadius: "50%" }} /> {employee.name}</p>
-                            )
-                        }
+        <>
+            {decodeJwt().role === 'Employee' ? (
+                <EmployeeLayout />
+            ) : decodeJwt().role === 'Manager' ? (
+                <Layout />
+            ) : (
+                <AdminLayout />
+            )}
+            <div className="col-md-11 mb-11" style={{ marginLeft: "40px", marginTop: "40px" }}>
+                <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "400px" }}>
+                    <div className="card-body">
+                        <h4 className="my-3">Team Overview:</h4>
+                        <br />
+                        {employees.map((employee, index) => (
+                            <p key={index}>
+                                <img
+                                    src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`}
+                                    alt="Employee"
+                                    height="30px"
+                                    width="30px"
+                                    style={{ borderRadius: "50%" }}
+                                />{' '}
+                                {employee.employeeId}-<span className="font-weight-bold">{employee.name}</span>
+                            </p>
+                        ))}
                     </div>
                 </div>
             </div>
-        </div>
-    )
+        </>
+    );
 }
 
 export default Home

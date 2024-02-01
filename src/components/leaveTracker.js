@@ -7,6 +7,9 @@ import LeaveTrackerService from '../core/services/leaveTracker-service';
 import { configureToastOptions } from "../core/services/toast-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
 import requestService from "../core/services/request-service";
+import { BiCalendarCheck } from 'react-icons/bi';
+import Layout from "./layout";
+import AdminLayout from "./adminLayout";
 
 function LeaveTracker() {
   const navigate = useNavigate();
@@ -76,106 +79,140 @@ function LeaveTracker() {
     navigate(`/leaveDetail/${requestId}`);
   }
 
+  const divStyle = {
+    marginTop: "40px",
+    cursor: "pointer",
+  };
+
   return (
     <>
-      <EmployeeLayout></EmployeeLayout>
-      <button type="button" class="btn btn-success" style={{ marginTop: "20px", marginLeft: "1200px" }} onClick={navigateToApplyLeave}>Apply Leave</button>
-      <div className="row">
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>Compensantory Off</strong></p>
-              <br />
-              <p>Available:{compensantoryOff.balance}</p>
-              <br />
-              <p>Booked:{compensantoryOff.booked}</p>
+                {decodeJwt().role === 'Employee' ? (
+            <EmployeeLayout />
+          ) : decodeJwt().role === 'Manager' ? (
+            <Layout />
+          ) :  (
+            <AdminLayout />
+          )}
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-12">
+            <button type="button" class="btn btn-success float-right" onClick={navigateToApplyLeave}>Apply Leave</button>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-2 col-md-4 col-12 mb-2">
+            <div className="card">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Compensantory Off</strong></div>
+                <center>
+                  <BiCalendarCheck size={50} className="iconmargin"/>
+                  <p>Available  :{compensantoryOff.balance}</p>
+                  <p>Booked   :{compensantoryOff.booked}</p>
+                </center>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-2 col-md-4 col-12 mb-2">
+            <div className="card">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Forgot Id-Card</strong></div>
+                <center>
+                  <BiCalendarCheck size={50} className="iconmargin"/>
+                  <p>Available  :{forgotIdCard.balance}</p>
+                  <p>Booked  :0</p>
+                </center>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-2 col-md-4 col-12 mb-2">
+            <div className="card ">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Out Of Office On-Duty</strong></div>
+                <center>
+                  <BiCalendarCheck size={50} className="iconmargin"/>
+                  <p>Available  :{outOfOfficeOnDuty.balance}</p>
+                  <p>Booked  :0</p>
+                </center>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-2 col-md-4 col-sm-12 mb-2">
+            <div className="card ">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Paid Leave</strong></div>
+                <center>
+                  <BiCalendarCheck size={50} className="iconmargin"/>
+                  <p>Available  :{paidLeave.balance}</p>
+                  <p>Booked  :{paidLeave.booked}</p>
+                </center>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-2 col-md-4 col-sm-12 mb-2">
+            <div className="card ">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Unpaid Leave</strong></div>
+                <center>
+                  <BiCalendarCheck size={50} className="iconmargin"/>
+                  <p>Available  :0</p>
+                  <p>Booked  :{unpaidLeave.booked}</p>
+                </center>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-2 col-md-4 col-sm-12 mb-2">
+            <div className="card">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Work From Home</strong></div>
+                <center>
+                  <BiCalendarCheck size={50} className="iconmargin"/>
+                  <p>Available  :{workFromHome.balance}</p>
+                  <p>Booked  :{workFromHome.booked}</p>
+                </center>
+              </div>
             </div>
           </div>
         </div>
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>Forgot Id-Card</strong></p>
-              <br />
-              <p>Available:{forgotIdCard.balance}</p>
-              <br />
-              <p>Booked:{forgotIdCard.booked}</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>Out Of Office OnDuty</strong></p>
-              <br />
-              <p>Available:{outOfOfficeOnDuty.balance}</p>
-              <br />
-              <p>Booked:{outOfOfficeOnDuty.booked}</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>Paid Leave</strong></p>
-              <br />
-              <p>Available:{paidLeave.balance}</p>
-              <br />
-              <p>Booked:{paidLeave.booked}</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>Unpaid Leave</strong></p>
-              <br />
-              <p>Available:0</p>
-              <br />
-              <p>Booked:{unpaidLeave.booked}</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>Work From Home</strong></p>
-              <br />
-              <p>Available:{workFromHome.balance}</p>
-              <br />
-              <p>Booked:{workFromHome.booked}</p>
-            </div>
+        <br></br><br></br>
+        <h4><strong> Leave History:</strong></h4>
+        <div class="col-md-12 mb-12" style={{ marginTop: "40px", ...divStyle }}>
+          <div class="card example-1 scrollbar-ripe-malinka" style={{ height: "400px" }}>
+            {request.length > 0 ? (
+              <table className="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Sr.No</th>
+                    <th scope="col">From-To</th>
+                    <th scope="col">Total Days</th>
+                    <th scope="col">Leave Type</th>
+                    <th scope="col">Reason</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {request.map((requestItem, index) => (
+                    (
+                      <tr key={requestItem._id} onClick={() => navigateToLeaveDetails(requestItem._id)} className="table-row-hover">
+                        <th scope="row">{index + 1}</th>
+                        <td>{convertToDate(requestItem.startDate)} - {convertToDate(requestItem.endDate)}</td>
+                        <td>{requestItem.totalDays}</td>
+                        <td>{requestItem.leaveName}</td>
+                        <td>.....</td>
+                        <td>{requestItem.status}</td>
+                      </tr>
+                    )
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <center>
+                <p>No leaves record</p>
+              </center>
+            )}
           </div>
         </div>
       </div>
-      <br></br>
-      <h4><strong>Leave History:</strong></h4>
-      <table className="table table-hover" style={{ marginTop: "20px" }}>
-        <thead>
-          <tr>
-            <th scope="col">Sr.No</th>
-            <th scope="col">From-To</th>
-            <th scope="col">Total Days</th>
-            <th scope="col">Leave Name</th>
-            <th scope="col">Reason</th>
-            <th scope="col">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {request.map((requestItem, index) => (
-            (
-              <tr key={requestItem._id} onClick={() => navigateToLeaveDetails(requestItem._id)} className="table-row-hover">
-                <th scope="row">{index + 1}</th>
-                <td>{convertToDate(requestItem.startDate)} - {convertToDate(requestItem.endDate)}</td>
-                <td>{requestItem.totalDays}</td>
-                <td>{requestItem.leaveName}</td>
-                <td>.....</td>
-                <td>{requestItem.status}</td>
-              </tr>
-            )
-          ))}
-        </tbody>
-      </table>
+
     </>
   )
 }

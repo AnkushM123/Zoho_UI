@@ -4,13 +4,11 @@ import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './zoho-logo-web.png';
 
-function Layout() {
+function AdminLayout() {
   const navigate = useNavigate();
 
   const navigateToLogin = () => {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('id');
-    localStorage.removeItem('role');
     navigate('/');
   }
 
@@ -38,10 +36,10 @@ function Layout() {
                 <Link className="nav-link font-weight-bold" to="/request">Request</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/leaveTracker">Leave Tracker</Link>
+                <Link className="nav-link font-weight-bold" to="/addLeave">Add Leave</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/addLeave">Add Leave</Link>
+                <Link className="nav-link font-weight-bold" to="/register">Register</Link>
               </li>
             </ul>
           </div>
@@ -52,4 +50,4 @@ function Layout() {
   )
 }
 
-export default Layout;
+export default AdminLayout;

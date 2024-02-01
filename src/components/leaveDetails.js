@@ -7,6 +7,8 @@ import requestService from "../core/services/request-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
 import { useParams } from 'react-router-dom';
 import Layout from "./layout";
+import AdminLayout from "./adminLayout";
+import EmployeeLayout from "./employeeLayout";
 
 function LeaveDetails() {
     const navigate = useNavigate();
@@ -42,7 +44,13 @@ function LeaveDetails() {
     }
 
     return (<>
-        <Layout></Layout>
+        {decodeJwt().role === 'Employee' ? (
+            <EmployeeLayout />
+        ) : decodeJwt().role === 'Manager' ? (
+            <Layout />
+        ) : (
+            <AdminLayout />
+        )}
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
@@ -68,7 +76,7 @@ function LeaveDetails() {
                             </div>
                             <div className="row">
                                 <div className="col-sm-3">
-                                    <p className="form-label font-weight-bold">Leave Name:</p>
+                                    <p className="form-label font-weight-bold">Leave Type:</p>
                                     <br />
                                 </div>
                                 <div className="col-sm-9">
@@ -92,6 +100,18 @@ function LeaveDetails() {
                                 <div class="col-sm-9">
                                     <p class="text-muted mb-0">{request.status}</p>
                                 </div>
+                                {request.comment !== 'undefined' && (
+                                    <div className="row">
+                                        <div className="col-sm-3">
+                                            <p className="form-label font-weight-bold">Comment:</p>
+                                            <br />
+                                        </div>
+                                        <div className="col-sm-9">
+                                            <p className="text-muted mb-0">{request.comment}</p>
+                                        </div>
+                                    </div>
+                                )}
+
                             </div>
                             <button class="btn btn-danger" onClick={backToLeaveTracker}>Back</button>
                         </div>

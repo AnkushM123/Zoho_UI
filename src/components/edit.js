@@ -4,35 +4,31 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "./layout";
 import mobileRegex from "../core/constants/mobile-regex";
-import emailRegex from "../core/constants/email-regex";
 import profileService from '../core/services/profile-service';
 import { configureToastOptions } from "../core/services/toast-service";
 import messages from "../core/constants/messages";
 import updateService from '../core/services/update-service';
 import decodeJwt from "../core/services/decodedJwtData-service";
+import EmployeeLayout from './employeeLayout';
+import AdminLayout from './adminLayout';
 
 function Edit() {
     const navigate = useNavigate();
-    const [user, setUser] = useState({ 'name': '', 'age': '', 'mobile': '', 'email': '', 'addressLine1': '', 'addressLine2': '', 'city': '', 'state': '', 'country': '', 'postalCode': '' });
+    const [user, setUser] = useState({ 'name': '', 'mobile': '', 'addressLine1': '', 'addressLine2': '', 'city': '', 'state': '', 'country': '', 'postalCode': '' });
     const [avatar, setAvatar] = useState('');
     const [error, setError] = useState({})
-    const [emailMessage, setEmailMessage] = useState('');
     const jwtToken = localStorage.getItem('authToken');
     const [manager, setManager] = useState([]);
-    const [oldEmail, setoldEmail] = useState('');
     const id = decodeJwt().id;
 
     useEffect(() => {
-        console.log(id)
         const fetchData = async () => {
             try {
                 const result = await profileService.loggedInUser(jwtToken);
                 const managerPromises = result.data.map(async (user) => {
                     setUser({
                         'name': user.name,
-                        'age': user.age,
                         'mobile': user.mobile,
-                        'email': user.email,
                         'addressLine1': user.address.addressLine1,
                         'addressLine2': user.address.addressLine2,
                         'city': user.address.city,
@@ -42,9 +38,10 @@ function Edit() {
                     });
 
                     setAvatar(user.avatar);
-                    setoldEmail(user.email);
-                    const managerDetailsResponse = await profileService.getManagerDetail(user.managerId, jwtToken);
-                    setManager(managerDetailsResponse.data)
+                    if (decodeJwt().role !== 'Admin') {
+                        const managerDetailsResponse = await profileService.getManagerDetail(user.managerId, jwtToken);
+                        setManager(managerDetailsResponse.data)
+                    }
                 })
             }
             catch (error) {
@@ -56,34 +53,10 @@ function Edit() {
         fetchData();
     }, [jwtToken])
 
-    const checkEmail = async () => {
-        try {
-            const result = await updateService.varifyEmail({ email: user.email });
-            setEmailMessage(messages.update.error.emailRegistered);
-            if (result.data[0].email !== oldEmail) {
-                return true;
-            }
-        } catch (error) {
-            setEmailMessage('');
-        }
-    }
-
     const validation = async () => {
         const error = {}
         if (!user.name) {
             error.name = messages.update.error.nameRequired;
-        }
-
-        if (!user.email) {
-            error.email = messages.update.error.emailRequired;
-        } else if (!emailRegex.test(user.email)) {
-            error.email = messages.update.error.invalidEmail;
-        }
-
-        if (!user.age) {
-            error.age = messages.update.error.ageRequired;
-        } else if (!(0 < user.age && 60 >= user.age)) {
-            error.age = messages.update.error.invalidAge;
         }
 
         if (!user.mobile) {
@@ -129,11 +102,7 @@ function Edit() {
         }
         setError(error);
 
-        if (await checkEmail()) {
-            return true;
-        }
-
-        if (!user.name || !user.email || !emailRegex.test(user.email) || !user.age || !(0 < user.age && 60 >= user.age) || !user.mobile || !mobileRegex.test(user.mobile) || !user.addressLine1 || user.addressLine1.length > 200 || !user.addressLine2 || user.addressLine2.length > 200 || !user.city || user.city.length > 200 || !user.state || user.state.length > 200 || !user.country || user.country.length > 200 || !user.postalCode || user.postalCode.length > 200) {
+        if (!user.name || !user.mobile || !mobileRegex.test(user.mobile) || !user.addressLine1 || user.addressLine1.length > 200 || !user.addressLine2 || user.addressLine2.length > 200 || !user.city || user.city.length > 200 || !user.state || user.state.length > 200 || !user.country || user.country.length > 200 || !user.postalCode || user.postalCode.length > 200) {
             return true;
         }
     };
@@ -160,9 +129,7 @@ function Edit() {
 
         const formData = new FormData();
         formData.append('name', user.name);
-        formData.append('age', user.age);
         formData.append('mobile', user.mobile);
-        formData.append('email', user.email);
         formData.append('updatedBy', id);
         formData.append('address', JSON.stringify(address));
 
@@ -188,7 +155,13 @@ function Edit() {
     return (
         <>
             <form action="#" method="post" encType="multipart/form-data" onSubmit={updateUser}>
-                <Layout></Layout>
+                {decodeJwt().role === 'Employee' ? (
+                    <EmployeeLayout />
+                ) : decodeJwt().role === 'Manager' ? (
+                    <Layout />
+                ) : (
+                    <AdminLayout />
+                )}
                 <div style={{ backgroundcolor: "#eee" }}>
                     <div class="container py-5">
                         <div class="row">
@@ -201,7 +174,7 @@ function Edit() {
                                         <p class="text-muted mb-4">{user.city}</p>
                                     </div>
                                 </div>
-                                <div className="card mb-4">
+                                {manager && <div className="card mb-4">
                                     {manager.map((manager) =>
                                         <div className="card-body text-center" key={manager._id}>
                                             <h5 className="my-3">Reporting To:</h5>
@@ -212,12 +185,12 @@ function Edit() {
                                                     height="30px"
                                                     width="30px"
                                                     style={{ borderRadius: "50%" }}
-                                                />
-                                                {manager.name}
+                                                />  {manager.name}
                                             </p>
                                         </div>
                                     )}
                                 </div>
+                                }
                             </div>
                             <div class="col-lg-8">
                                 <div class="card mb-4">
@@ -230,29 +203,6 @@ function Edit() {
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="name" name="name" onChange={handleChange} value={user.name} />
                                                 {error.name && <p style={{ color: "red" }}>{error.name}</p>}
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Email</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="email" name="email" onChange={handleChange} value={user.email} />
-                                                {error.email && <p style={{ color: "red" }}>{error.email}</p>}
-                                                <p style={{ color: "red" }}>{emailMessage}</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Age</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="number" class="form-control" id="age" name="age" onChange={handleChange} value={user.age} />
-                                                {error.age && <p style={{ color: "red" }}>{error.age}</p>}
                                             </div>
                                         </div>
                                         <div class="row">

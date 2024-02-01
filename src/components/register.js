@@ -10,6 +10,10 @@ import passwordRegex from "../core/constants/password-regex";
 import { configureToastOptions } from "../core/services/toast-service";
 import authService from "../core/services/auth-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import EmployeeLayout from './employeeLayout';
+import AdminLayout from './adminLayout';
 
 function Register() {
     const navigate = useNavigate();
@@ -17,7 +21,6 @@ function Register() {
         email: '',
         password: '',
         name: '',
-        age: '',
         mobile: '',
         address: {
             addressLine1: '',
@@ -35,8 +38,10 @@ function Register() {
     const [gender, setGender] = useState('');
     const [leaveId, setLeaveId] = useState(["659bc36c01e2f1640c26260e", "659bc3ae01e2f1640c262612", "659bc3b501e2f1640c262614", "659bc3c101e2f1640c262616", "659bc3c601e2f1640c262618", "659bc3ce01e2f1640c26261a"])
     const jwtToken = localStorage.getItem('authToken');
-    const id = decodeJwt().id;
-    const [leaveRecord, setLeaveRecord] = useState({});
+    const adminId = decodeJwt().id;
+    const [dob, setDob] = useState(null);
+    const [respondingTo, setRespondingTo] = useState([]);
+    const [managerId, setManagerId] = useState('');
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -72,12 +77,9 @@ function Register() {
             error.password = messages.register.error.invalidPassword;
         }
 
-        if (!inputData.age) {
-            error.age = messages.register.error.ageRequired;
-        } else if (!(0 < inputData.age && 60 >= inputData.age)) {
-            error.age = messages.register.error.invalidAge;
+        if (!dob) {
+            error.dob = messages.register.error.ageRequired;
         }
-
         if (!inputData.mobile.trim()) {
             error.mobile = messages.register.error.mobileRequired;
         } else if (!mobileRegex.test(inputData.mobile)) {
@@ -124,6 +126,10 @@ function Register() {
             error.role = messages.register.error.roleRequired;
         }
 
+        if (!managerId) {
+            error.respondingTo = messages.register.error.respondingToRequired;
+        }
+
         if (!gender) {
             error.gender = messages.register.error.genderRequired;
         }
@@ -136,7 +142,7 @@ function Register() {
             return true;
         }
 
-        if (!inputData.name || !inputData.email || !emailRegex.test(inputData.email) || !inputData.age || !(0 < inputData.age && 60 >= inputData.age) || !inputData.mobile || !mobileRegex.test(inputData.mobile) || !inputData.address.addressLine1 || inputData.address.addressLine1.length > 200 || !inputData.address.addressLine2 || inputData.address.addressLine2.length > 200 || !inputData.address.city || inputData.address.city.length > 200 || !inputData.address.state || inputData.address.state.length > 200 || !inputData.address.country || inputData.address.country.length > 200 || !inputData.address.postalCode || inputData.address.postalCode.length > 200 || !role || !gender || !file) {
+        if (!inputData.name || !inputData.email || !emailRegex.test(inputData.email) || !inputData.mobile || !mobileRegex.test(inputData.mobile) || !inputData.address.addressLine1 || inputData.address.addressLine1.length > 200 || !inputData.address.addressLine2 || inputData.address.addressLine2.length > 200 || !inputData.address.city || inputData.address.city.length > 200 || !inputData.address.state || inputData.address.state.length > 200 || !inputData.address.country || inputData.address.country.length > 200 || !inputData.address.postalCode || inputData.address.postalCode.length > 200 || !role || !gender || !file || !dob || !managerId) {
             return true;
         }
     };
@@ -152,7 +158,7 @@ function Register() {
                 }
             });
         } else {
-            setInputData({ ...inputData, [e.target.name]: e.target.value })
+            setInputData({ ...inputData, [e.target.name]: e.target.value });
         }
     }
 
@@ -168,13 +174,13 @@ function Register() {
         formData.append('address', JSON.stringify(inputData.address));
         formData.append('email', inputData.email);
         formData.append('password', inputData.password);
-        formData.append('age', inputData.age);
+        formData.append('dateOfBirth', dob);
         formData.append('mobile', inputData.mobile);
         formData.append('roles', role);
         formData.append('gender', gender);
-        formData.append('managerId', id);
-        formData.append('createdBy', id);
-        formData.append('updatedBy', id);
+        formData.append('managerId', managerId);
+        formData.append('createdBy', adminId);
+        formData.append('updatedBy', adminId);
 
         try {
             const result = await authService.register(formData, jwtToken);
@@ -185,24 +191,33 @@ function Register() {
                     return {
                         userId: userId,
                         leaveId: id,
-                        balance: 1.5,
-                        createdBy: id,
-                        updatedBy: id
+                        balance: 2,
+                        createdBy: adminId,
+                        updatedBy: adminId
                     };
                 } else {
+                    if(id === "659bc3ce01e2f1640c26261a"){
+                        return {
+                            userId: userId,
+                            leaveId: id,
+                            balance: 3,
+                            createdBy: adminId,
+                            updatedBy: adminId
+                        };
+                    }else{
                     return {
                         userId: userId,
                         leaveId: id,
                         balance: 0,
-                        createdBy: id,
-                        updatedBy: id
+                        createdBy: adminId,
+                        updatedBy: adminId
                     };
+                }
                 }
             });
 
             const leaveRecordsData = await Promise.all(leaveRecords);
-
-            await Promise.all(leaveRecordsData.map(record => authService.createLeaveRecord(record, jwtToken)));
+           const addRecord= await Promise.all(leaveRecordsData.map(record => authService.createLeaveRecord(record, jwtToken)));
 
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
@@ -217,9 +232,38 @@ function Register() {
         }
     }
 
+    const respondingToList = async (e) => {
+        try {
+            const selectedRole = e.target.value;
+            setRole(selectedRole);
+
+            if (selectedRole === '658eac73510f63f754e68cf9') {
+                const result = await authService.getByRole('658eac9e510f63f754e68cfe', jwtToken);
+                setRespondingTo(result.data);
+            } else {
+                if (selectedRole === '658eac9e510f63f754e68cfe') {
+                    const result = await authService.getByRole('658eacbb510f63f754e68d02', jwtToken);
+                    setRespondingTo(result.data);
+                }
+                else {
+                    setRespondingTo([]);
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
     return (
         <>
-            <Layout></Layout>
+            {decodeJwt().role === 'Employee' ? (
+                <EmployeeLayout />
+            ) : decodeJwt().role === 'Manager' ? (
+                <Layout />
+            ) : (
+                <AdminLayout />
+            )}
             <div class="container py-5">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
@@ -249,9 +293,23 @@ function Register() {
                                             {error.password && <p style={{ color: "red" }}>{error.password}</p>}
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label font-weight-bold">Age:</label>
-                                            <input type="number" class="form-control" id="age" name="age" onChange={handleChange} placeholder="enter your age" />
-                                            {error.age && <p style={{ color: "red" }}>{error.age}</p>}
+                                            <label class="form-label font-weight-bold">Date Of Birth:</label>
+                                            <div style={{ width: '100%' }}>
+                                                <DatePicker
+                                                    className="form-control"
+                                                    selected={dob}
+                                                    onChange={(date) => {
+                                                        setDob(date);
+                                                        console.log("Selected Date:", date);
+                                                    }}
+                                                    dateFormat="MM/dd/yyyy"
+                                                    placeholderText="select date of birth"
+                                                    showYearDropdown
+                                                    scrollableYearDropdown
+                                                    yearDropdownItemNumber={40}
+                                                />
+                                                {error.dob && <p style={{ color: "red" }}>{error.dob}</p>}
+                                            </div>
                                         </div>
                                     </div>
                                     <br></br>
@@ -262,16 +320,16 @@ function Register() {
                                             {error.mobile && <p style={{ color: "red" }}>{error.mobile}</p>}
                                         </div>
                                         <div class="col-md-6">
-                                            <br></br>
-                                            <label class="form-label font-weight-bold">Role:</label>
-                                            <select class="form-select" id="role"
-                                                name="role"
+                                            <label class="form-label font-weight-bold">Gender:</label>
+                                            <select class="form-select" id="gender"
+                                                name="gender"
                                                 required
-                                                value={role} onChange={(e) => setRole(e.target.value)} >
-                                                <option>select role</option>
-                                                <option value="658eac73510f63f754e68cf9">Employee</option>
+                                                value={gender} onChange={(e) => setGender(e.target.value)} >
+                                                <option>select gender</option>
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
                                             </select>
-                                            {error.role && <p style={{ color: "red" }}>{error.role}</p>}
+                                            {error.gender && <p style={{ color: "red" }}>{error.gender}</p>}
                                         </div>
                                     </div>
                                     <br></br>
@@ -279,39 +337,53 @@ function Register() {
                                         <div class="col-md-6">
                                             <label class="form-label font-weight-bold">Address:</label>
                                             <br></br>
-                                            <label class="form-label">address Line 1:</label>
+                                            <label class="form-label">Address Line 1:</label>
                                             <input type="text" class="form-control" id="name" name="address.addressLine1" onChange={handleChange} />
                                             {error.addressLine1 && <p style={{ color: "red" }}>{error.addressLine1}</p>}
-                                            <label class="form-label">address Line 2:</label>
+                                            <label class="form-label">Address Line 2:</label>
                                             <input type="text" class="form-control" id="name" name="address.addressLine2" onChange={handleChange} />
                                             {error.addressLine2 && <p style={{ color: "red" }}>{error.addressLine2}</p>}
-                                            <label class="form-label">city:</label>
+                                            <label class="form-label">City:</label>
                                             <input type="text" class="form-control" id="name" name="address.city" onChange={handleChange} />
                                             {error.city && <p style={{ color: "red" }}>{error.city}</p>}
-                                            <label class="form-label">state:</label>
+                                            <label class="form-label">State:</label>
                                             <input type="text" class="form-control" id="name" name="address.state" onChange={handleChange} />
                                             {error.state && <p style={{ color: "red" }}>{error.state}</p>}
-                                            <label class="form-label">country:</label>
+                                            <label class="form-label">Country:</label>
                                             <input type="text" class="form-control" id="name" name="address.country" onChange={handleChange} />
                                             {error.country && <p style={{ color: "red" }}>{error.country}</p>}
-                                            <label class="form-label">postal code:</label>
+                                            <label class="form-label">Postal code:</label>
                                             <input type="text" class="form-control" id="name" name="address.postalCode" onChange={handleChange} />
                                             {error.postalCode && <p style={{ color: "red" }}>{error.postalCode}</p>}
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label font-weight-bold">Gender:</label>
-                                            <select class="form-select" id="gender"
-                                                name="gender"
+                                            <label class="form-label font-weight-bold">Role:</label>
+                                            <select class="form-select" id="role"
+                                                name="role"
                                                 required
-                                                value={gender} onChange={(e) => setGender(e.target.value)} >
-                                                <option>select Gender</option>
-                                                <option value="male">Male</option>
-                                                <option value="female">Female</option>
+                                                value={role} onChange={async (e) => await respondingToList(e)} >
+                                                <option>select role</option>
+                                                <option value="658eac73510f63f754e68cf9">Employee</option>
+                                                <option value="658eac9e510f63f754e68cfe">Manager</option>
                                             </select>
-                                            {error.gender && <p style={{ color: "red" }}>{error.gender}</p>}
+                                            {error.role && <p style={{ color: "red" }}>{error.role}</p>}
+                                            <br></br>
+                                            <label class="form-label font-weight-bold">Responding To:</label>
+                                            <select class="form-select" id="respondingTo"
+                                                name="respondingTo"
+                                                required
+                                                value={managerId} onChange={(e) => setManagerId(e.target.value)} >
+                                                <option>select user</option>
+                                                {
+                                                    respondingTo.map((user) =>
+                                                        <option value={user._id} key={user._id}>{user.employeeId}-{user.name}</option>
+                                                    )
+                                                }
+                                            </select>
+                                            {error.respondingTo && <p style={{ color: "red" }}>{error.respondingTo}</p>}
                                             <br></br>
                                             <label class="form-label font-weight-bold">Upload Image:</label>
-                                            <input type="file" class="form-control" id="file" name="avatar" onChange={handleFileChange} />
+                                            <input type="file" class="form-control" id="file" name="avatar" accept="image/png, image/gif, image/jpeg" onChange={handleFileChange} />
                                             {error.file && <p style={{ color: "red" }}>{error.file}</p>}
                                         </div>
                                     </div>

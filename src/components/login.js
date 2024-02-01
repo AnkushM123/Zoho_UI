@@ -7,6 +7,7 @@ import messages from "../core/constants/messages";
 import auth from '../core/services/auth-service';
 import { configureToastOptions } from "../core/services/toast-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
+import logo from './zoho-logo-web.png';
 
 function Login() {
     const navigate = useNavigate();
@@ -53,11 +54,12 @@ function Login() {
                 localStorage.removeItem('id');
             }
 
-            if (decodeJwt().role === 'Manager') {
+                if(decodeJwt().role === 'Employee'){
+                navigate('/profile');
+                }
+                else{
                 navigate('/home');
-            } else {
-                navigate('/leaveTracker');
-            }
+                }
         } catch (error) {
             const toastOptions = configureToastOptions();
             toast.options = toastOptions;
@@ -75,7 +77,7 @@ function Login() {
                                 <div class="col-lg-6">
                                     <div class="card-body p-md-5 mx-md-4">
                                         <div class="text-center">
-                                            <img src="https://www.zohowebstatic.com/sites/zweb/images/commonroot/zoho-logo-web.svg"
+                                            <img src={logo}
                                                 style={{ width: "185px" }} alt="logo" />
                                             <br></br>
                                             <h2 class="mt-1 mb-5 pb-1" style={{ color: "blueviolet" }}>Login</h2>
@@ -83,7 +85,7 @@ function Login() {
 
                                         <form method="post" onSubmit={loginData}>
                                             <div class="form-outline mb-4">
-                                                <label class="form-label">Email</label>
+                                                <label class="form-label">Username</label>
                                                 <input type="text" id="email" class="form-control"
                                                     placeholder="enter email address" name="email" onChange={handleChange} />
                                                 {error.email && <p style={{ color: "red" }}>{error.email}</p>}

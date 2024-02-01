@@ -9,7 +9,8 @@ import decodeJwt from "../core/services/decodedJwtData-service";
 import { useParams } from 'react-router-dom';
 import Layout from "./layout";
 import leaveTrackerService from "../core/services/leaveTracker-service";
-
+import EmployeeLayout from "./employeeLayout";
+import AdminLayout from "./adminLayout";
 
 function RequestDetails() {
     const navigate = useNavigate();
@@ -17,6 +18,7 @@ function RequestDetails() {
     const jwtToken = localStorage.getItem('authToken');
     const { requestId } = useParams();
     const [request, setRequest] = useState({});
+    const [comment, setComment] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -32,6 +34,11 @@ function RequestDetails() {
         fetchData();
     }, [jwtToken]);
 
+    const handleChange = (e) => {
+        setComment({ ...comment, [e.target.name]: e.target.value });
+        console.log(comment)
+    }
+
     const convertToDate = (timestamp) => {
         const date = new Date(timestamp);
         const year = date.getFullYear();
@@ -43,14 +50,15 @@ function RequestDetails() {
     const changeRequestStatus = async () => {
         try {
             await requestService.changeRequestStatus(request._id, { status: "Approved" }, jwtToken);
+            await requestService.addCommentInRequest(request._id, comment, jwtToken);
             const result = await leaveTrackerService.getParticularRecord({ userId: request.userId, leaveId: request.leaveId }, jwtToken);
             const leaveRecord = {
                 userId: request.userId,
-                balance: Math.abs(result.data[0].balance - request.totalDays),
+                balance: result.data[0].balance - request.totalDays,
                 booked: result.data[0].booked + request.totalDays,
                 updatedBy: request.userId
             }
-            await leaveTrackerService.updateLeaveRecord(result.data[0].leaveId, leaveRecord, jwtToken);
+            const updateRecord = await leaveTrackerService.updateLeaveRecord(result.data[0].leaveId, leaveRecord, jwtToken);
             navigate('/request')
         } catch (error) {
             const toastOptions = configureToastOptions();
@@ -71,12 +79,27 @@ function RequestDetails() {
     }
 
     return (<>
-        <Layout></Layout>
+        {decodeJwt().role === 'Employee' ? (
+            <EmployeeLayout />
+        ) : decodeJwt().role === 'Manager' ? (
+            <Layout />
+        ) : (
+            <AdminLayout />
+        )}
         <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="card mb-4">
                         <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="form-label font-weight-bold">Employee No:</p>
+                                    <br></br>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="text-muted mb-0">{request.employeeId}</p>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-sm-3">
                                     <p class="form-label font-weight-bold">Name:</p>
@@ -106,7 +129,7 @@ function RequestDetails() {
                             </div>
                             <div className="row">
                                 <div className="col-sm-3">
-                                    <p className="form-label font-weight-bold">Leave Name:</p>
+                                    <p className="form-label font-weight-bold">Leave Type:</p>
                                     <br />
                                 </div>
                                 <div className="col-sm-9">
@@ -122,8 +145,17 @@ function RequestDetails() {
                                     <p class="text-muted mb-0">{request.reasonForLeave}</p>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <p class="form-label font-weight-bold">Comment:</p>
+                                    <br></br>
+                                </div>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" id="comment" name="comment" onChange={handleChange} />
+                                </div>
+                            </div>
                             <button style={{ margin: "10px" }} type="submit" class="btn btn-success" onClick={changeRequestStatus}>Approve</button>
-                            <button class="btn btn-danger" onClick={declineRequest}>Decline</button>
+                            <button class="btn btn-danger" onClick={declineRequest}>Rejected</button>
                         </div>
                     </div>
                 </div>

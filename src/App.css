@@ -163,3 +163,17 @@ div.content {
     background-color: #00bcd4; /* Change the background color on hover as per your preference */
     cursor: pointer; /* Change the cursor to a pointer on hover */
   }
+
+  .react-datepicker-wrapper{
+    display:  block!important;
+  }
+
+
+  #section1{
+    height: 60px;
+  }
+
+  .iconmargin{
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }

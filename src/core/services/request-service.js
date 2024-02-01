@@ -41,4 +41,12 @@ const getByUserId = async (userId, jwtToken) => {
     })
 }
 
-export default { getRequestByManagerId, getUser, getByRequestId, changeRequestStatus, getByUserId };
+const addCommentInRequest = async (requestId, comment, jwtToken) => {
+    return axios.put(path.addCommentInRequest + `/${requestId}`, comment, {
+        headers: {
+            'Authorization': `Bearer ${jwtToken}`
+        }
+    })
+}
+
+export default { getRequestByManagerId, getUser, getByRequestId, changeRequestStatus, getByUserId, addCommentInRequest };

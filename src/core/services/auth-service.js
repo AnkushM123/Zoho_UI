@@ -30,4 +30,12 @@ const createLeaveRecord = async (inputData, jwtToken) => {
     })
 }
 
-export default { login, setPassword, varifyEmail, register, createLeaveRecord };
+const getByRole = async (id, jwtToken) => {
+    return axios.get(path.getByRole + `/${id}`, {
+        headers: {
+            'Authorization': `Bearer ${jwtToken}`,
+        },
+    })
+}
+
+export default { login, setPassword, varifyEmail, register, createLeaveRecord, getByRole };

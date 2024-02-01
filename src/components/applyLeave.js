@@ -9,6 +9,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import messages from "../core/constants/messages";
 import leaveTrackerService from "../core/services/leaveTracker-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
+import AdminLayout from "./adminLayout";
+import Layout from "./layout";
 
 function ApplyLeave() {
     const navigate = useNavigate();
@@ -24,6 +26,7 @@ function ApplyLeave() {
     const [name, setName] = useState('')
     const [leaveError, setLeaveError] = useState('');
     const [leaveName, setLeaveName] = useState('');
+    const [employeeId, setEmployeeId] = useState(0)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,6 +34,7 @@ function ApplyLeave() {
                 const result = await leaveTrackerService.loggedInUser(jwtToken);
                 setManagerId(result.data[0].managerId);
                 setName(result.data[0].name);
+                setEmployeeId(result.data[0].employeeId)
             } catch (error) {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
@@ -48,6 +52,8 @@ function ApplyLeave() {
 
         if (!startDate) {
             error.startDate = messages.applyLeave.error.startDateRequired;
+        } else if (startDate > endDate) {
+            error.startDate = messages.applyLeave.error.startDateGreater;
         }
 
         if (!endDate) {
@@ -57,9 +63,10 @@ function ApplyLeave() {
         if (!reasonForLeave.reasonForLeave) {
             error.reasonForLeave = messages.applyLeave.error.reasonForLeaveRequired;
         }
+
         setError(error);
 
-        if (!leaveType || !startDate || !endDate || !reasonForLeave.reasonForLeave) {
+        if (!leaveType || !startDate || !endDate || !reasonForLeave.reasonForLeave || startDate > endDate) {
             return true;
         }
     };
@@ -130,7 +137,7 @@ function ApplyLeave() {
         }
         try {
             const result = await leaveTrackerService.getParticularRecord({ userId: id, leaveId: leaveType }, jwtToken);
-            if ((result.data[0].balance - totalDays) < 0 && leaveType !== '659bc3c601e2f1640c262618') {
+            if ((result.data[0].balance - totalDays) < 0 && leaveType !== '659bc3c601e2f1640c262618' && leaveType !== '659bc3ae01e2f1640c262612' && leaveType !== '659bc3b501e2f1640c262614') {
                 setLeaveError(`You have '${result.data[0].balance}' leaves available`);
                 return
             } else {
@@ -139,7 +146,9 @@ function ApplyLeave() {
                 formData.append('managerId', managerId);
                 formData.append('leaveId', leaveType);
                 formData.append('name', name);
+                formData.append('employeeId', employeeId);
                 formData.append('leaveName', leaveName);
+                formData.append('comment', reasonForLeave.reasonForLeav);
                 formData.append('reasonForLeave', reasonForLeave.reasonForLeave);
                 formData.append('startDate', startDate);
                 formData.append('endDate', endDate);
@@ -169,7 +178,13 @@ function ApplyLeave() {
     return (
         <>
             <form action="#" method="post" onSubmit={applyLeave}>
-                <EmployeeLayout></EmployeeLayout>
+                {decodeJwt().role === 'Employee' ? (
+                    <EmployeeLayout />
+                ) : decodeJwt().role === 'Manager' ? (
+                    <Layout />
+                ) : (
+                    <AdminLayout />
+                )}
                 <div class="container py-5">
                     <div class="row justify-content-center">
                         <div class="col-lg-8">
@@ -187,7 +202,7 @@ function ApplyLeave() {
                                                 value={leaveType} onChange={(e) => setLeaveType(e.target.value)} >
                                                 <option>select leave type</option>
                                                 <option value="659bc36c01e2f1640c26260e">Compensantory Off</option>
-                                                <option value="659bc3ae01e2f1640c262612">ForgotId Card</option>
+                                                <option value="659bc3ae01e2f1640c262612">Forgot Id-Card</option>
                                                 <option value="659bc3b501e2f1640c262614">Out Of Office On Duty</option>
                                                 <option value="659bc3c101e2f1640c262616">Paid Leave</option>
                                                 <option value="659bc3c601e2f1640c262618">Unpaid Leave</option>
@@ -210,6 +225,7 @@ function ApplyLeave() {
                                                 startDate={startDate}
                                                 endDate={endDate}
                                                 className="form-control"
+                                                placeholderText="From"
                                             />
                                             {error.startDate && <p style={{ color: "red" }}>{error.startDate}</p>}
                                         </div>
@@ -229,6 +245,7 @@ function ApplyLeave() {
                                                 endDate={endDate}
                                                 minDate={startDate}
                                                 className="form-control"
+                                                placeholderText="To"
                                             />
                                             {error.endDate && <p style={{ color: "red" }}>{error.endDate}</p>}
                                         </div>
@@ -248,7 +265,7 @@ function ApplyLeave() {
                                             <br></br>
                                         </div>
                                         <div class="col-sm-9">
-                                            <textarea class="form-control" id="reason" name="reasonForLeave" onChange={handleChange} />
+                                            <textarea class="form-control" id="reason" name="reasonForLeave" onChange={handleChange} placeholder="Enter reason for leave" />
                                             {error.reasonForLeave && <p style={{ color: "red" }}>{error.reasonForLeave}</p>}
                                         </div>
                                     </div>
@@ -262,9 +279,7 @@ function ApplyLeave() {
                         {leaveError && <p style={{ color: "red" }}>{leaveError}</p>}
                     </center>
                 </div>
-
             </form>
-
         </>
     )
 }

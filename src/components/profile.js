@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { configureToastOptions } from "../core/services/toast-service";
 import EmployeeLayout from "./employeeLayout";
 import decodeJwt from "../core/services/decodedJwtData-service";
+import AdminLayout from "./adminLayout";
 
 function Profile() {
     const [user, setUser] = useState([]);
@@ -44,44 +45,53 @@ function Profile() {
         fetchData();
     }, [jwtToken])
 
+    const convertToDate = (timestamp) => {
+        const date = new Date(timestamp);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${day}/${month}/${year}`;
+    }
+
     return (<>
         {decodeJwt().role === 'Employee' ? (
             <EmployeeLayout />
-        ) : (
+        ) : decodeJwt().role === 'Manager' ? (
             <Layout />
-        )
-        }
-        <div style={{ backgroundcolor: "#eee" }}>
-            <div class="container py-5">
-                <Link to="/edit" class="link-primary font-weight-bold" style={{ marginLeft: "1050px" }}>Edit</Link>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <div class="card mb-4">
-                            {
-                                user.map((user) =>
-                                    <div class="card-body text-center">
-                                        <img src={process.env.REACT_APP_DOMAIN_URL + `/${user.avatar}`} alt="avatar"
-                                            class="rounded-circle img-fluid" style={{ width: "200px", height: "200px" }} />
-                                        <h5 class="my-3">{user.name}</h5>
-                                        <p class="text-muted mb-1">{role}</p>
-                                        <p class="text-muted mb-4">{user.address.city}</p>
-                                    </div>
-                                )
+        ) : (
+            <AdminLayout />
+        )}
+        <div>
+            <div className="container py-5">
+                <div className="row">
+                    <div className="col-lg-12">
+                        <Link to="/edit" className="link-primary font-weight-bold float-right">Edit</Link>
+                    </div>
+                    <div className="col-lg-4">
+                        <div className="card mb-4">
+                            {user.map((userData) =>
+                                <div className="card-body text-center" key={userData.employeeId}>
+                                    <img src={process.env.REACT_APP_DOMAIN_URL + `/${userData.avatar}`} alt="avatar"
+                                        className="rounded-circle img-fluid" style={{ width: "200px", height: "200px" }} />
+                                    <h5 className="my-3">{userData.name}</h5>
+                                    <p className="text-muted mb-1">{role}</p>
+                                    <p className="text-muted mb-4">{userData.address.city}</p>
+                                </div>
+                            )
                             }
                         </div>
                         <div className="card mb-4">
                             {manager.map((manager) =>
                                 <div className="card-body text-center" key={manager._id}>
                                     <h5 className="my-3">Reporting To:</h5>
-                                    <p style={{ color: "darkcyan" }}>
+                                    <p>
                                         <img
                                             src={process.env.REACT_APP_DOMAIN_URL + `/${manager.avatar}`}
-                                            alt="Manager"
+                                            alt="Employee"
                                             height="30px"
                                             width="30px"
                                             style={{ borderRadius: "50%" }}
-                                        />
-                                        {manager.name}
+                                        />  {manager.employeeId}-<span className="font-weight-bold">{manager.name}</span>
                                     </p>
                                 </div>
                             )}
@@ -94,6 +104,15 @@ function Profile() {
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-sm-3">
+                                                <p class="mb-0">Employee No</p>
+                                                <br></br>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p class="text-muted mb-0">{user.employeeId}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-3">
                                                 <p class="mb-0">Full Name</p>
                                                 <br></br>
                                             </div>
@@ -101,7 +120,6 @@ function Profile() {
                                                 <p class="text-muted mb-0">{user.name}</p>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col-sm-3">
                                                 <p class="mb-0">Email</p>
@@ -113,11 +131,11 @@ function Profile() {
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Age</p>
+                                                <p class="mb-0">Date Of Birth</p>
                                                 <br></br>
                                             </div>
                                             <div class="col-sm-9">
-                                                <p class="text-muted mb-0">{user.age}</p>
+                                                <p class="text-muted mb-0">{convertToDate(user.dateOfBirth)}</p>
                                             </div>
                                         </div>
                                         <div class="row">

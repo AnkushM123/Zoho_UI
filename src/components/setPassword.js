@@ -67,18 +67,22 @@ function SetPassword() {
     return (
         <>
             <center>
-                <div class="card text-center" style={{ width: "600px", marginTop: "60px" }}>
+                <div class="card text-center forgotPassword">
                     <div class="card-header h5 text-white bg-primary gradient-custom-2">Password Reset</div>
                     <div class="card-body px-5">
                         <form action="#" method="post" onSubmit={loginData}>
                             <div class="mb-3">
-                                <label for="password" class="form-label font-weight-bold" style={{ marginRight: "340px" }}>New Password:</label>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="enter new password" onChange={handleChange} />
+                                <div className="text-start">
+                                    <label for="password" class="form-label font-weight-bold">New Password:</label>
+                                </div>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password" onChange={handleChange} />
                                 {error.password && <p class="form-label font-weight-bold" style={{ color: "red" }}>{error.password}</p>}
                             </div>
                             <div class="mb-3">
-                                <label for="password" class="form-label font-weight-bold" style={{ marginRight: "340px" }}>Confirm Password:</label>
-                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="enter confirm password" onChange={handleChange} />
+                                <div className="text-start">
+                                    <label for="password" class="form-label font-weight-bold">Confirm Password:</label>
+                                </div>
+                                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Enter confirm password" onChange={handleChange} />
                                 {error.confirmPassword && <p class="form-label font-weight-bold" style={{ color: "red" }}>{error.confirmPassword}</p>}
                             </div>
                             <br></br>
@@ -89,7 +93,6 @@ function SetPassword() {
                         </div>
                     </div>
                 </div>
-                {error.email && <p class="form-label font-weight-bold" style={{ color: "red" }}>{error.email}</p>}
                 {message && <p className="form-label font-weight-bold" style={{ color: "red" }}>{message}</p>}
             </center>
         </>

@@ -11,6 +11,7 @@ import updateService from '../core/services/update-service';
 import decodeJwt from "../core/services/decodedJwtData-service";
 import EmployeeLayout from './employeeLayout';
 import AdminLayout from './adminLayout';
+import defaultUser from './user_3177440.png'
 
 function Edit() {
     const navigate = useNavigate();
@@ -152,6 +153,11 @@ function Edit() {
         navigate('/profile');
     }
 
+    const handleImageError = (event) => {
+        event.target.src = defaultUser;
+        event.target.onerror = null;
+    };
+
     return (
         <>
             <form action="#" method="post" encType="multipart/form-data" onSubmit={updateUser}>
@@ -169,23 +175,23 @@ function Edit() {
                                 <div class="card mb-4">
                                     <div class="card-body text-center">
                                         <img src={process.env.REACT_APP_DOMAIN_URL + `/${avatar}`} alt="avatar"
-                                            class="rounded-circle img-fluid" style={{ width: "200px", height: "200px" }} />
+                                            class="rounded-circle img-fluid" onError={handleImageError} style={{ width: "200px", height: "200px" }} />
                                         <h5 class="my-3">{user.name}</h5>
                                         <p class="text-muted mb-4">{user.city}</p>
                                     </div>
                                 </div>
-                                {manager && <div className="card mb-4">
+                                {manager.length != 0 && <div className="card mb-4">
                                     {manager.map((manager) =>
                                         <div className="card-body text-center" key={manager._id}>
                                             <h5 className="my-3">Reporting To:</h5>
-                                            <p style={{ color: "darkcyan" }}>
+                                            <p>
                                                 <img
                                                     src={process.env.REACT_APP_DOMAIN_URL + `/${manager.avatar}`}
-                                                    alt="Manager"
+                                                    alt="Employee"
                                                     height="30px"
                                                     width="30px"
                                                     style={{ borderRadius: "50%" }}
-                                                />  {manager.name}
+                                                />  {manager.employeeId}-<span className="font-weight-bold">{manager.name}</span>
                                             </p>
                                         </div>
                                     )}
@@ -226,7 +232,7 @@ function Edit() {
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">address Line1</p>
+                                                <p class="mb-0">Address Line 1</p>
                                                 <br></br>
                                             </div>
                                             <div class="col-sm-9">
@@ -236,7 +242,7 @@ function Edit() {
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">address Line2</p>
+                                                <p class="mb-0">Address Line 2</p>
                                                 <br></br>
                                             </div>
                                             <div class="col-sm-9">
@@ -246,7 +252,7 @@ function Edit() {
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">city</p>
+                                                <p class="mb-0">City</p>
                                                 <br></br>
                                             </div>
                                             <div class="col-sm-9">
@@ -256,7 +262,7 @@ function Edit() {
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">state</p>
+                                                <p class="mb-0">State</p>
                                                 <br></br>
                                             </div>
                                             <div class="col-sm-9">
@@ -266,7 +272,7 @@ function Edit() {
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">country</p>
+                                                <p class="mb-0">Country</p>
                                                 <br></br>
                                             </div>
                                             <div class="col-sm-9">
@@ -276,7 +282,7 @@ function Edit() {
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">postal code</p>
+                                                <p class="mb-0">Postal Code</p>
                                                 <br></br>
                                             </div>
                                             <div class="col-sm-9">

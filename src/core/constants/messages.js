@@ -84,7 +84,7 @@ const messages = {
             "roleRequired": "Role is required",
             "genderRequired": "Gender is required",
             "imageRequired": "Image is required",
-            "respondingToRequired": "select manager or admin"
+            "respondingToRequired": "Select manager or admin"
         }
     },
     applyLeave: {
@@ -92,11 +92,12 @@ const messages = {
             "requestSuccess": "Leave request sent successfully"
         },
         error: {
-            "leaveTypeRequired": "select leave type",
-            "startDateRequired": "select start date of leave",
-            "endDateRequired": "select end date of leave",
-            "reasonForLeaveRequired": "select reason of leave",
-            "startDateGreater": "Start date should not be greater than end date"
+            "leaveTypeRequired": "Please select leave type",
+            "startDateRequired": "Please select start date of leave",
+            "endDateRequired": "Please select end date of leave",
+            "reasonForLeaveRequired": "Please select reason of leave",
+            "startDateGreater": "Start date should not be greater than end date",
+            "invalidReasonForLeave": "Reason for leave should ne within 200 words"
         }
     },
     protectedRoute: {
@@ -108,10 +109,26 @@ const messages = {
         success: {
             "leaveAdded": "Leave added successfully"
         },
-        error:{
-            "daysRequired":"Please select number of days",
-            "employeeRequired":"Please select employee name",
-            "invalidDays":"Number of days are invalid"
+        error: {
+            "daysRequired": "Please select number of days",
+            "employeeRequired": "Please select employee name",
+            "invalidDays": "Number of days are invalid",
+            "daysRange": "Total days should be within 20 days"
+        }
+    },
+    changePassword: {
+        success: {
+            "passwordChanged": "Password changed successfully"
+        },
+        error: {
+            "passwordRequired": "Please enter new password",
+            "oldPasswordRequired": "Please enter old password",
+            "confirmOldPasswordRequired": "Please enter confirm old password",
+            "confirmPasswordRequired": "Please enter confirm new password",
+            "invalidPassword": "Password must contain at least 8 characters, one uppercase,one lowercase, one number and one special case character",
+            "OldBothUnmatched": "Old passwords and confirm old passwords do not match",
+            "NewBothUnmatched": "New passwords and confirm new passwords do not match",
+            "oldPasswordUnmatched": "You have entered invalid old password"
         }
     }
 }

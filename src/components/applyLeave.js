@@ -11,6 +11,7 @@ import leaveTrackerService from "../core/services/leaveTracker-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
 import AdminLayout from "./adminLayout";
 import Layout from "./layout";
+import requestService from "../core/services/request-service";
 
 function ApplyLeave() {
     const navigate = useNavigate();
@@ -26,7 +27,10 @@ function ApplyLeave() {
     const [name, setName] = useState('')
     const [leaveError, setLeaveError] = useState('');
     const [leaveName, setLeaveName] = useState('');
-    const [employeeId, setEmployeeId] = useState(0)
+    const [employeeId, setEmployeeId] = useState(0);
+    const [disabledDateRanges, setDisabledDateRanges] = useState([]);
+    const [commonDates, setCommonDates] = useState([]);
+    const [allDaysBetweenStartAndEnd, setAllDaysBetweenStartAndEnd] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,14 +39,52 @@ function ApplyLeave() {
                 setManagerId(result.data[0].managerId);
                 setName(result.data[0].name);
                 setEmployeeId(result.data[0].employeeId)
+                const requestData = await requestService.getRequestByStatus(id, jwtToken);
+                const disabledDates = requestData.data.map((range) => {
+                    return {
+                        startDate: new Date(range.startDate),
+                        endDate: new Date(range.endDate),
+                    };
+                });
+    
+                const allDaysBetweenStartAndEnd = [];
+                let currentDate = new Date(startDate);
+                while (currentDate <= endDate) {
+                    if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) {
+                        allDaysBetweenStartAndEnd.push(new Date(currentDate));
+                    }
+                    currentDate.setDate(currentDate.getDate() + 1);
+                }
+    
+                const allDisabledDays = disabledDates.reduce((acc, range) => {
+                    let currentDate = new Date(range.startDate);
+                    while (currentDate <= range.endDate) {
+                        acc.push(new Date(currentDate));
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+                    return acc;
+                }, []);
+    
+                const commonDates = allDaysBetweenStartAndEnd.filter(date =>
+                    allDisabledDays.some(disabledDate =>
+                        date.getTime() === disabledDate.getTime()
+                    )
+                );
+    
+                setAllDaysBetweenStartAndEnd(allDaysBetweenStartAndEnd);
+                setDisabledDateRanges(disabledDates);
+                setCommonDates(commonDates);
+    
             } catch (error) {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
                 toast.error(error);
             }
-        }
+        };
+    
         fetchData();
-    }, [jwtToken])
+    }, [jwtToken, startDate, endDate]);
+
 
     const validation = async () => {
         const error = {}
@@ -51,13 +93,13 @@ function ApplyLeave() {
         }
 
         if (!startDate) {
-            error.startDate = messages.applyLeave.error.startDateRequired;
+            error.startDateRequired = messages.applyLeave.error.startDateRequired;
         } else if (startDate > endDate) {
-            error.startDate = messages.applyLeave.error.startDateGreater;
+            error.startDateRequired = messages.applyLeave.error.startDateGreater;
         }
 
         if (!endDate) {
-            error.endDate = messages.applyLeave.error.endDateRequired;
+            error.endDateRequired = messages.applyLeave.error.endDateRequired;
         }
 
         if (!reasonForLeave.reasonForLeave) {
@@ -66,7 +108,7 @@ function ApplyLeave() {
 
         setError(error);
 
-        if (!leaveType || !startDate || !endDate || !reasonForLeave.reasonForLeave || startDate > endDate) {
+        if (!leaveType || !startDate || !endDate || !reasonForLeave.reasonForLeave || startDate > endDate ) {
             return true;
         }
     };
@@ -135,6 +177,13 @@ function ApplyLeave() {
         if (await validation()) {
             return;
         }
+         
+        if (commonDates.length > 0) {
+            const formattedDates = commonDates.map(date => date.toLocaleDateString('en-GB'));
+            setLeaveError(`Leave already applied for : [${formattedDates.join(', ')}]`);
+            return;
+        }
+
         try {
             const result = await leaveTrackerService.getParticularRecord({ userId: id, leaveId: leaveType }, jwtToken);
             if ((result.data[0].balance - totalDays) < 0 && leaveType !== '659bc3c601e2f1640c262618' && leaveType !== '659bc3ae01e2f1640c262612' && leaveType !== '659bc3b501e2f1640c262614') {
@@ -175,6 +224,11 @@ function ApplyLeave() {
         navigate('/leaveTracker');
     }
 
+    const filterWeekends = (date) => {
+        const day = date.getDay();
+        return day !== 0 && day !== 6;
+    }
+
     return (
         <>
             <form action="#" method="post" onSubmit={applyLeave}>
@@ -200,8 +254,7 @@ function ApplyLeave() {
                                                 name="leaveType"
                                                 required
                                                 value={leaveType} onChange={(e) => setLeaveType(e.target.value)} >
-                                                <option>select leave type</option>
-                                                <option value="659bc36c01e2f1640c26260e">Compensantory Off</option>
+                                                <option>Select leave type</option>
                                                 <option value="659bc3ae01e2f1640c262612">Forgot Id-Card</option>
                                                 <option value="659bc3b501e2f1640c262614">Out Of Office On Duty</option>
                                                 <option value="659bc3c101e2f1640c262616">Paid Leave</option>
@@ -226,11 +279,16 @@ function ApplyLeave() {
                                                 endDate={endDate}
                                                 className="form-control"
                                                 placeholderText="From"
+                                                filterDate={filterWeekends}
+                                                minDate={new Date()}
+                                                showYearDropdown
+                                                scrollableYearDropdown
+                                                yearDropdownItemNumber={40}
                                             />
+                                            {error.startDateRequired && <p style={{ color: "red" }}>{error.startDateRequired}</p>}
                                             {error.startDate && <p style={{ color: "red" }}>{error.startDate}</p>}
                                         </div>
                                     </div>
-
                                     <div className="row">
                                         <div className="col-sm-3">
                                             <p className="form-label font-weight-bold">End Date:</p>
@@ -243,10 +301,15 @@ function ApplyLeave() {
                                                 selectsEnd
                                                 startDate={startDate}
                                                 endDate={endDate}
-                                                minDate={startDate}
                                                 className="form-control"
                                                 placeholderText="To"
+                                                filterDate={filterWeekends}
+                                                minDate={new Date()}
+                                                showYearDropdown
+                                                scrollableYearDropdown
+                                                yearDropdownItemNumber={40}
                                             />
+                                            {error.endDateRequired && <p style={{ color: "red" }}>{error.endDateRequired}</p>}
                                             {error.endDate && <p style={{ color: "red" }}>{error.endDate}</p>}
                                         </div>
                                     </div>

@@ -8,6 +8,7 @@ import { configureToastOptions } from "../core/services/toast-service";
 import EmployeeLayout from "./employeeLayout";
 import decodeJwt from "../core/services/decodedJwtData-service";
 import AdminLayout from "./adminLayout";
+import defaultUser from './user_3177440.png'
 
 function Home() {
     const [employees, setEmployees] = useState([]);
@@ -29,6 +30,11 @@ function Home() {
 
     }, [jwtToken]);
 
+    const handleImageError = (event) => {
+        event.target.src = defaultUser;
+        event.target.onerror = null;
+    };
+
     return (
         <>
             {decodeJwt().role === 'Employee' ? (
@@ -41,7 +47,7 @@ function Home() {
             <div className="col-md-11 mb-11" style={{ marginLeft: "40px", marginTop: "40px" }}>
                 <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "400px" }}>
                     <div className="card-body">
-                        <h4 className="my-3">Team Overview:</h4>
+                        <h4>Team Overview:</h4>
                         <br />
                         {employees.map((employee, index) => (
                             <p key={index}>
@@ -51,9 +57,11 @@ function Home() {
                                     height="30px"
                                     width="30px"
                                     style={{ borderRadius: "50%" }}
+                                    onError={handleImageError}
                                 />{' '}
                                 {employee.employeeId}-<span className="font-weight-bold">{employee.name}</span>
                             </p>
+                            
                         ))}
                     </div>
                 </div>

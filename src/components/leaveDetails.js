@@ -111,9 +111,8 @@ function LeaveDetails() {
                                         </div>
                                     </div>
                                 )}
-
                             </div>
-                            <button class="btn btn-danger" onClick={backToLeaveTracker}>Back</button>
+                            <button class="btn btn-dark" onClick={backToLeaveTracker}>Back</button>
                         </div>
                     </div>
                 </div>

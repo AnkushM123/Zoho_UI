@@ -54,12 +54,12 @@ function Login() {
                 localStorage.removeItem('id');
             }
 
-                if(decodeJwt().role === 'Employee'){
+            if (decodeJwt().role === 'Employee') {
                 navigate('/profile');
-                }
-                else{
+            }
+            else {
                 navigate('/home');
-                }
+            }
         } catch (error) {
             const toastOptions = configureToastOptions();
             toast.options = toastOptions;

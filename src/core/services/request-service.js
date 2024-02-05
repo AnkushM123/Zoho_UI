@@ -49,4 +49,12 @@ const addCommentInRequest = async (requestId, comment, jwtToken) => {
     })
 }
 
-export default { getRequestByManagerId, getUser, getByRequestId, changeRequestStatus, getByUserId, addCommentInRequest };
+const getRequestByStatus = async (userId, jwtToken) => {
+    return axios.get(path.getRequestByStatus + `/${userId}`, {
+        headers: {
+            'Authorization': `Bearer ${jwtToken}`
+        }
+    })
+}
+
+export default { getRequestByManagerId, getUser, getByRequestId, changeRequestStatus, getByUserId, addCommentInRequest, getRequestByStatus };

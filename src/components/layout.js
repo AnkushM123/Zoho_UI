@@ -18,10 +18,8 @@ function Layout() {
     <>
       <nav className="navbar navbar-expand-md navbar-dark bg-dark">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/home">
-            <img src={logo}
-              style={{ width: "120px" }} alt="logo" />
-          </Link>
+          <img src={logo}
+            style={{ width: "120px" }} alt="logo" />
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>

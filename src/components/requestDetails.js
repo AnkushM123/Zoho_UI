@@ -70,6 +70,7 @@ function RequestDetails() {
     const declineRequest = async () => {
         try {
             await requestService.changeRequestStatus(request._id, { status: "Rejected" }, jwtToken);
+            await requestService.addCommentInRequest(request._id, comment, jwtToken);
             navigate('/request')
         } catch (error) {
             const toastOptions = configureToastOptions();

@@ -44,13 +44,13 @@ function Request() {
 
     return (
         <>
-         {decodeJwt().role === 'Employee' ? (
-            <EmployeeLayout />
-          ) : decodeJwt().role === 'Manager' ? (
-            <Layout />
-          ) :  (
-            <AdminLayout />
-          )}
+            {decodeJwt().role === 'Employee' ? (
+                <EmployeeLayout />
+            ) : decodeJwt().role === 'Manager' ? (
+                <Layout />
+            ) : (
+                <AdminLayout />
+            )}
             {request.length > 0 ? (
                 <table className="table table-bordered table-hover" style={{ marginTop: "20px" }}>
                     <thead>
@@ -72,7 +72,11 @@ function Request() {
                                     <td>{convertToDate(requestItem.startDate)} - {convertToDate(requestItem.endDate)}</td>
                                     <td>{requestItem.totalDays}</td>
                                     <td>{requestItem.leaveName}</td>
-                                    <td>.....</td>
+                                    <td>
+                                        {requestItem.reasonForLeave.length <= 5
+                                            ? requestItem.reasonForLeave
+                                            : `${requestItem.reasonForLeave.substring(0, 4)}...`}
+                                    </td>
                                 </tr>
                             )
                         ))}
@@ -83,7 +87,6 @@ function Request() {
                     <p>No pending requests available</p>
                 </center>
             )}
-
         </>
     );
 }

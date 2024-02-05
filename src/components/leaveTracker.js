@@ -53,7 +53,6 @@ function LeaveTracker() {
         });
         const requests = await requestService.getByUserId(id, jwtToken);
         setRequest(requests.data);
-        console.log(request)
       } catch (error) {
         const toastOptions = configureToastOptions();
         toast.options = toastOptions;
@@ -86,17 +85,17 @@ function LeaveTracker() {
 
   return (
     <>
-                {decodeJwt().role === 'Employee' ? (
-            <EmployeeLayout />
-          ) : decodeJwt().role === 'Manager' ? (
-            <Layout />
-          ) :  (
-            <AdminLayout />
-          )}
-      <div class="container-fluid">
+      {decodeJwt().role === 'Employee' ? (
+        <EmployeeLayout />
+      ) : decodeJwt().role === 'Manager' ? (
+        <Layout />
+      ) : (
+        <AdminLayout />
+      )}
+      <div class="container-fluid py-1">
         <div class="row">
           <div class="col-12">
-            <button type="button" class="btn btn-success float-right" onClick={navigateToApplyLeave}>Apply Leave</button>
+            <button type="button" class="btn btn-success float-right my-3" onClick={navigateToApplyLeave}>Apply Leave</button>
           </div>
         </div>
         <div className="row">
@@ -105,9 +104,9 @@ function LeaveTracker() {
               <div className="card-body">
                 <div id="section1" className="font-weight-bold"><strong>Compensantory Off</strong></div>
                 <center>
-                  <BiCalendarCheck size={50} className="iconmargin"/>
-                  <p>Available  :{compensantoryOff.balance}</p>
-                  <p>Booked   :{compensantoryOff.booked}</p>
+                  <BiCalendarCheck size={50} className="iconmargin" />
+                  <p>Available  : {compensantoryOff.balance}</p>
+                  <p>Booked   : {compensantoryOff.booked}</p>
                 </center>
               </div>
             </div>
@@ -117,9 +116,9 @@ function LeaveTracker() {
               <div className="card-body">
                 <div id="section1" className="font-weight-bold"><strong>Forgot Id-Card</strong></div>
                 <center>
-                  <BiCalendarCheck size={50} className="iconmargin"/>
-                  <p>Available  :{forgotIdCard.balance}</p>
-                  <p>Booked  :0</p>
+                  <BiCalendarCheck size={50} className="iconmargin" />
+                  <p>Available  : {forgotIdCard.balance}</p>
+                  <p>Booked  : 0</p>
                 </center>
               </div>
             </div>
@@ -129,9 +128,9 @@ function LeaveTracker() {
               <div className="card-body">
                 <div id="section1" className="font-weight-bold"><strong>Out Of Office On-Duty</strong></div>
                 <center>
-                  <BiCalendarCheck size={50} className="iconmargin"/>
-                  <p>Available  :{outOfOfficeOnDuty.balance}</p>
-                  <p>Booked  :0</p>
+                  <BiCalendarCheck size={50} className="iconmargin" />
+                  <p>Available  : {outOfOfficeOnDuty.balance}</p>
+                  <p>Booked  : 0</p>
                 </center>
               </div>
             </div>
@@ -141,9 +140,9 @@ function LeaveTracker() {
               <div className="card-body">
                 <div id="section1" className="font-weight-bold"><strong>Paid Leave</strong></div>
                 <center>
-                  <BiCalendarCheck size={50} className="iconmargin"/>
-                  <p>Available  :{paidLeave.balance}</p>
-                  <p>Booked  :{paidLeave.booked}</p>
+                  <BiCalendarCheck size={50} className="iconmargin" />
+                  <p>Available  : {paidLeave.balance}</p>
+                  <p>Booked  : {paidLeave.booked}</p>
                 </center>
               </div>
             </div>
@@ -153,9 +152,9 @@ function LeaveTracker() {
               <div className="card-body">
                 <div id="section1" className="font-weight-bold"><strong>Unpaid Leave</strong></div>
                 <center>
-                  <BiCalendarCheck size={50} className="iconmargin"/>
-                  <p>Available  :0</p>
-                  <p>Booked  :{unpaidLeave.booked}</p>
+                  <BiCalendarCheck size={50} className="iconmargin" />
+                  <p>Available  : 0</p>
+                  <p>Booked  : {unpaidLeave.booked}</p>
                 </center>
               </div>
             </div>
@@ -165,9 +164,9 @@ function LeaveTracker() {
               <div className="card-body">
                 <div id="section1" className="font-weight-bold"><strong>Work From Home</strong></div>
                 <center>
-                  <BiCalendarCheck size={50} className="iconmargin"/>
-                  <p>Available  :{workFromHome.balance}</p>
-                  <p>Booked  :{workFromHome.booked}</p>
+                  <BiCalendarCheck size={50} className="iconmargin" />
+                  <p>Available  : {workFromHome.balance}</p>
+                  <p>Booked  : {workFromHome.booked}</p>
                 </center>
               </div>
             </div>
@@ -197,7 +196,11 @@ function LeaveTracker() {
                         <td>{convertToDate(requestItem.startDate)} - {convertToDate(requestItem.endDate)}</td>
                         <td>{requestItem.totalDays}</td>
                         <td>{requestItem.leaveName}</td>
-                        <td>.....</td>
+                        <td>
+                          {requestItem.reasonForLeave.length <= 5
+                            ? requestItem.reasonForLeave
+                            : `${requestItem.reasonForLeave.substring(0, 5)}...`}
+                        </td>
                         <td>{requestItem.status}</td>
                       </tr>
                     )
@@ -212,7 +215,6 @@ function LeaveTracker() {
           </div>
         </div>
       </div>
-
     </>
   )
 }

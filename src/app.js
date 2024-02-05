@@ -18,6 +18,7 @@ import RequestDetails from "./components/requestDetails";
 import LeaveDetails from "./components/leaveDetails";
 import ProtectedRoute from "./components/protectedRoute";
 import AddLeave from "./components/addLeave";
+import ChangePassword from "./components/changePassword";
 
 function App() {
     return (
@@ -77,6 +78,10 @@ function App() {
                     <Route
                         path="/addLeave"
                         element={<ProtectedRoute Component={AddLeave} />}
+                    />
+                    <Route
+                        path="/changePassword"
+                        element={<ProtectedRoute Component={ChangePassword} />}
                     />
                 </Routes>
             </Router>

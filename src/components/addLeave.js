@@ -19,6 +19,7 @@ function AddLeave() {
     const [selectedUser, setSelectedUser] = useState('');
     const [totalDays, setTotalDays] = useState(0);
     const [error, setError] = useState({});
+    const id = decodeJwt().id;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,13 +39,17 @@ function AddLeave() {
         const error = {};
 
         if (!selectedUser) {
-            error.selectedUser = messages.addLeave.error.employeeRequired
+            error.selectedUser = messages.addLeave.error.employeeRequired;
         }
 
         if (!totalDays) {
-            error.totalDays = messages.addLeave.error.daysRequired
+            error.totalDays = messages.addLeave.error.daysRequired;
         } else if (totalDays < 1) {
-            error.totalDays = messages.addLeave.error.invalidDays
+            error.totalDays = messages.addLeave.error.invalidDays;
+        }
+
+        if(totalDays > 20){
+            error.totalDays = messages.addLeave.error.daysRange;
         }
         setError(error);
 
@@ -61,11 +66,10 @@ function AddLeave() {
             const result = await leaveTrackerService.getParticularRecord({ userId: selectedUser, leaveId: '659bc36c01e2f1640c26260e' }, jwtToken);
             const leaveRecord = {
                 userId: selectedUser,
-                balance: parseInt(result.data[0].balance) + parseInt(totalDays),
+                balance: parseFloat(result.data[0].balance) + parseFloat(totalDays),
                 booked: result.data[0].booked,
                 updatedBy: decodeJwt().id
             }
-            await leaveTrackerService.updateLeaveRecord(result.data[0].leaveId, leaveRecord, jwtToken);
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
@@ -108,7 +112,7 @@ function AddLeave() {
                                         name="selectedUser"
                                         required
                                         value={selectedUser} onChange={(e) => setSelectedUser(e.target.value)} >
-                                        <option>select employee</option>
+                                        <option>Select employee</option>
                                         {
                                             employees.map((user) =>
                                                 <option value={user._id}>{user.employeeId}-{user.name}</option>
@@ -117,18 +121,18 @@ function AddLeave() {
                                     </select>
                                     {error.selectedUser && <p style={{ color: "red" }}>{error.selectedUser}</p>}
                                 </div>
-                                <div className="row">
-                                    <div className="col-sm-3">
-                                        <p className="form-label font-weight-bold">Total Days:</p>
-                                        <br />
-                                    </div>
-                                    <div className="col-sm-9">
-                                        <input type="number" className="form-control" onChange={(e) => setTotalDays(e.target.value)} placeholder="enter number of days" />
-                                        {error.totalDays && <p style={{ color: "red" }}>{error.totalDays}</p>}
-                                    </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-3">
+                                    <p className="form-label font-weight-bold">Total Days:</p>
+                                    <br />
+                                </div>
+                                <div className="col-sm-9">
+                                    <input type="number" className="form-control" onChange={(e) => setTotalDays(e.target.value)} placeholder="Enter number of days" />
+                                    {error.totalDays && <p style={{ color: "red" }}>{error.totalDays}</p>}
                                 </div>
                             </div>
-                            <button style={{ margin: "10px" }} type="submit" class="btn btn-dark" onClick={addLeave}>submit</button>
+                            <button style={{ margin: "10px" }} type="submit" class="btn btn-dark" onClick={addLeave}>Submit</button>
                             <button class="btn btn-dark" onClick={backToHome}>Back</button>
                         </div>
                     </div>

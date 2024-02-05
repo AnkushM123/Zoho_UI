@@ -160,20 +160,26 @@ div.content {
 }
 
 .table-row-hover:hover {
-    background-color: #00bcd4; /* Change the background color on hover as per your preference */
-    cursor: pointer; /* Change the cursor to a pointer on hover */
-  }
+    background-color: #00bcd4;
+    cursor: pointer;
+}
 
-  .react-datepicker-wrapper{
-    display:  block!important;
-  }
+.react-datepicker-wrapper {
+    display: block !important;
+}
 
 
-  #section1{
+#section1 {
     height: 60px;
-  }
+}
 
-  .iconmargin{
+.iconmargin {
     margin-top: 20px;
     margin-bottom: 20px;
-  }
+}
+
+.forgotPassword {
+    text-align: center;
+    max-width: 600px;
+    margin-top: 60px;
+}

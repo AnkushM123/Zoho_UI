@@ -191,12 +191,12 @@ function Register() {
                     return {
                         userId: userId,
                         leaveId: id,
-                        balance: 2,
+                        balance: 1.5,
                         createdBy: adminId,
                         updatedBy: adminId
                     };
                 } else {
-                    if(id === "659bc3ce01e2f1640c26261a"){
+                    if (id === "659bc3ce01e2f1640c26261a") {
                         return {
                             userId: userId,
                             leaveId: id,
@@ -204,20 +204,20 @@ function Register() {
                             createdBy: adminId,
                             updatedBy: adminId
                         };
-                    }else{
-                    return {
-                        userId: userId,
-                        leaveId: id,
-                        balance: 0,
-                        createdBy: adminId,
-                        updatedBy: adminId
-                    };
-                }
+                    } else {
+                        return {
+                            userId: userId,
+                            leaveId: id,
+                            balance: 0,
+                            createdBy: adminId,
+                            updatedBy: adminId
+                        };
+                    }
                 }
             });
 
             const leaveRecordsData = await Promise.all(leaveRecords);
-           const addRecord= await Promise.all(leaveRecordsData.map(record => authService.createLeaveRecord(record, jwtToken)));
+            const addRecord = await Promise.all(leaveRecordsData.map(record => authService.createLeaveRecord(record, jwtToken)));
 
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
@@ -274,13 +274,13 @@ function Register() {
                                         <div class="col-md-6">
                                             <br></br>
                                             <label class="form-label font-weight-bold">Full Name:</label>
-                                            <input type="text" class="form-control" id="name" name="name" onChange={handleChange} placeholder="enter full name" />
+                                            <input type="text" class="form-control" id="name" name="name" onChange={handleChange} placeholder="Enter full name" />
                                             {error.name && <p style={{ color: "red" }}>{error.name}</p>}
                                         </div>
                                         <div class="col-md-6">
                                             <br></br>
                                             <label class="form-label font-weight-bold">Email:</label>
-                                            <input type="text" class="form-control" id="email" name="email" onChange={handleChange} placeholder="enter email address" />
+                                            <input type="text" class="form-control" id="email" name="email" onChange={handleChange} placeholder="Enter email address" />
                                             {error.email && <p style={{ color: "red" }}>{error.email}</p>}
                                             <p style={{ color: "red" }}>{emailMessage}</p>
                                         </div>
@@ -289,7 +289,7 @@ function Register() {
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label class="form-label font-weight-bold">Password:</label>
-                                            <input type="password" class="form-control" id="password" name="password" onChange={handleChange} placeholder="enter password" />
+                                            <input type="password" class="form-control" id="password" name="password" onChange={handleChange} placeholder="Enter password" />
                                             {error.password && <p style={{ color: "red" }}>{error.password}</p>}
                                         </div>
                                         <div class="col-md-6">
@@ -300,10 +300,9 @@ function Register() {
                                                     selected={dob}
                                                     onChange={(date) => {
                                                         setDob(date);
-                                                        console.log("Selected Date:", date);
                                                     }}
                                                     dateFormat="MM/dd/yyyy"
-                                                    placeholderText="select date of birth"
+                                                    placeholderText="Select date of birth"
                                                     showYearDropdown
                                                     scrollableYearDropdown
                                                     yearDropdownItemNumber={40}
@@ -316,7 +315,7 @@ function Register() {
                                     <div class="row mb-3">
                                         <div class="col-md-6">
                                             <label class="form-label font-weight-bold">Mobile:</label>
-                                            <input type="tel" class="form-control" id="mobile" name="mobile" onChange={handleChange} placeholder="enter mobile number" />
+                                            <input type="tel" class="form-control" id="mobile" name="mobile" onChange={handleChange} placeholder="Enter mobile number" />
                                             {error.mobile && <p style={{ color: "red" }}>{error.mobile}</p>}
                                         </div>
                                         <div class="col-md-6">
@@ -325,7 +324,7 @@ function Register() {
                                                 name="gender"
                                                 required
                                                 value={gender} onChange={(e) => setGender(e.target.value)} >
-                                                <option>select gender</option>
+                                                <option>Select gender</option>
                                                 <option value="male">Male</option>
                                                 <option value="female">Female</option>
                                             </select>
@@ -335,6 +334,20 @@ function Register() {
                                     <br></br>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
+                                        <label class="form-label font-weight-bold">Responding To:</label>
+                                            <select class="form-select" id="respondingTo"
+                                                name="respondingTo"
+                                                required
+                                                value={managerId} onChange={(e) => setManagerId(e.target.value)} >
+                                                <option>Select user</option>
+                                                {
+                                                    respondingTo.map((user) =>
+                                                        <option value={user._id} key={user._id}>{user.employeeId}-{user.name}</option>
+                                                    )
+                                                }
+                                            </select>
+                                            {error.respondingTo && <p style={{ color: "red" }}>{error.respondingTo}</p>}
+                                            <br></br><br></br>
                                             <label class="form-label font-weight-bold">Address:</label>
                                             <br></br>
                                             <label class="form-label">Address Line 1:</label>
@@ -362,26 +375,12 @@ function Register() {
                                                 name="role"
                                                 required
                                                 value={role} onChange={async (e) => await respondingToList(e)} >
-                                                <option>select role</option>
+                                                <option>Select role</option>
                                                 <option value="658eac73510f63f754e68cf9">Employee</option>
                                                 <option value="658eac9e510f63f754e68cfe">Manager</option>
                                             </select>
                                             {error.role && <p style={{ color: "red" }}>{error.role}</p>}
-                                            <br></br>
-                                            <label class="form-label font-weight-bold">Responding To:</label>
-                                            <select class="form-select" id="respondingTo"
-                                                name="respondingTo"
-                                                required
-                                                value={managerId} onChange={(e) => setManagerId(e.target.value)} >
-                                                <option>select user</option>
-                                                {
-                                                    respondingTo.map((user) =>
-                                                        <option value={user._id} key={user._id}>{user.employeeId}-{user.name}</option>
-                                                    )
-                                                }
-                                            </select>
-                                            {error.respondingTo && <p style={{ color: "red" }}>{error.respondingTo}</p>}
-                                            <br></br>
+                                            <br></br><br></br>
                                             <label class="form-label font-weight-bold">Upload Image:</label>
                                             <input type="file" class="form-control" id="file" name="avatar" accept="image/png, image/gif, image/jpeg" onChange={handleFileChange} />
                                             {error.file && <p style={{ color: "red" }}>{error.file}</p>}

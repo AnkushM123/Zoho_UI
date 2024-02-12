@@ -8,6 +8,7 @@ const urlPath = {
     update: process.env.REACT_APP_DOMAIN_URL + `/user`,
     register: process.env.REACT_APP_DOMAIN_URL + `/auth/register`,
     createLeaveRecord: process.env.REACT_APP_DOMAIN_URL + `/leaveRecord/createRecord`,
+    getLeaveTypeById: process.env.REACT_APP_DOMAIN_URL + `/leaveType`,
     getLeaveRecord: process.env.REACT_APP_DOMAIN_URL + `/leaveRecord/getAllRecord`,
     particularLeaveRecord: process.env.REACT_APP_DOMAIN_URL + `/leaveRecord/getParticularRecord`,
     updateLeaveRecord: process.env.REACT_APP_DOMAIN_URL + `/leaveRecord`,
@@ -17,9 +18,10 @@ const urlPath = {
     changeRequestStatus: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest/changeStatus',
     getRequestByUserId: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest/userRequest',
     addCommentInRequest: process.env.REACT_APP_DOMAIN_URL + `/leaveRequest`,
-    getByRole: process.env.REACT_APP_DOMAIN_URL + `/user/getByRole`,
     getRequestByStatus: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest/getByStatus',
     changePassword: process.env.REACT_APP_DOMAIN_URL + '/user/changePassword',
+    getCompensantoryRequest: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest/getCompensantoryRequest',
+    getRequestByManagerIdAndStatus: process.env.REACT_APP_DOMAIN_URL + `/leaveRequest/getByManagerIdAndStatus`
 }
 
 export default urlPath;

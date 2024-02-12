@@ -32,9 +32,9 @@ function Profile() {
                             setRole('Employee');
                         }
                     }
+
                     const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId, jwtToken);
                     setManager(managerDetailsResponse.data)
-
                 });
                 await Promise.all(managerPromises);
 
@@ -54,6 +54,17 @@ function Profile() {
         const day = String(date.getDate()).padStart(2, '0');
         return `${day}/${month}/${year}`;
     }
+
+    const getGenderString = (gender) => {
+        switch (gender) {
+          case 0:
+            return 'Male';
+          case 1:
+            return 'Female';
+          default:
+            return '';
+        }
+      };
 
     const navigateToEdit = () => {
         navigate('/edit');
@@ -96,7 +107,7 @@ function Profile() {
                             )
                             }
                         </div>
-                        {manager.length != 0 && <div className="card mb-4">
+                        {manager.length !== 0 && <div className="card mb-4">
                             {manager.map((manager) =>
                                 <div className="card-body text-center" key={manager._id}>
                                     <h5 className="my-3">Reporting To:</h5>
@@ -171,7 +182,7 @@ function Profile() {
                                                 <br></br>
                                             </div>
                                             <div class="col-sm-9">
-                                                <p class="text-muted mb-0">{user.gender}</p>
+                                                <p class="text-muted mb-0">{getGenderString(user.gender)}</p>
                                             </div>
                                         </div>
                                         <div class="row">

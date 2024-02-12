@@ -183,3 +183,34 @@ div.content {
     max-width: 600px;
     margin-top: 60px;
 }
+
+.errorColor {
+    color: red;
+}
+
+.logoWidth {
+   width: 120px ;
+}
+
+.homeCardSize {
+    margin-left: 40px;
+    margin-top: 40px;
+}
+
+.loginLogo {
+    width: 185px;
+}
+
+.loginTextColor {
+    color: blueviolet;
+}
+
+.registerLine {
+    background-color: darkslategray;
+    height: 0.2px;
+    width: 900px;
+}
+
+.requestCard {
+    min-height: 450px;
+}

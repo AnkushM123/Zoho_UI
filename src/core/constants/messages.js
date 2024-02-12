@@ -65,7 +65,7 @@ const messages = {
             "invalidEmail": "Email is invalid",
             "passwordRequired": "Password is required",
             "invalidPassword": "Password must contain at least 8 characters, one uppercase,one lowercase, one number and one special case character",
-            "ageRequired": "Age is required",
+            "DobRequired": "Date of birth is required",
             "invalidAge": "Age must be within 60",
             "mobileRequired": "Mobile number is required",
             "invalidMobile": "Mobile number is invalid",
@@ -84,7 +84,9 @@ const messages = {
             "roleRequired": "Role is required",
             "genderRequired": "Gender is required",
             "imageRequired": "Image is required",
-            "respondingToRequired": "Select manager or admin"
+            "respondingToRequired": "Select manager or admin",
+            "ageValidation": "Employee age should be over 18",
+            "fileValidation": "Selected file is not image"
         }
     },
     applyLeave: {
@@ -113,7 +115,10 @@ const messages = {
             "daysRequired": "Please select number of days",
             "employeeRequired": "Please select employee name",
             "invalidDays": "Number of days are invalid",
-            "daysRange": "Total days should be within 20 days"
+            "daysRange": "Total days should be within 20 days",
+            "startDateRequired": "Please select starting compensantory off day",
+            "endDateRequired": "Please select ending compensantory off day",
+            "startDateGreater": "Start date should not be greater than end date",
         }
     },
     changePassword: {
@@ -126,8 +131,7 @@ const messages = {
             "confirmOldPasswordRequired": "Please enter confirm old password",
             "confirmPasswordRequired": "Please enter confirm new password",
             "invalidPassword": "Password must contain at least 8 characters, one uppercase,one lowercase, one number and one special case character",
-            "OldBothUnmatched": "Old passwords and confirm old passwords do not match",
-            "NewBothUnmatched": "New passwords and confirm new passwords do not match",
+            "NewBothUnmatched": "New password and confirm new password do not match",
             "oldPasswordUnmatched": "You have entered invalid old password"
         }
     }

@@ -17,7 +17,7 @@ function AdminLayout() {
       <nav className="navbar navbar-expand-md navbar-dark bg-dark">
         <div className="container-fluid">
           <img src={logo}
-            style={{ width: "120px" }} alt="logo" />
+            className="logoWidth" alt="logo" />
           <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
@@ -31,7 +31,7 @@ function AdminLayout() {
                 <Link className="nav-link font-weight-bold" to="/profile">Profile</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/request">Request</Link>
+                <Link className="nav-link font-weight-bold" to="/request">Leave Request</Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link font-weight-bold" to="/addLeave">Add Leave</Link>

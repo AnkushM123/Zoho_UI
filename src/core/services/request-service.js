@@ -57,4 +57,20 @@ const getRequestByStatus = async (userId, jwtToken) => {
     })
 }
 
-export default { getRequestByManagerId, getUser, getByRequestId, changeRequestStatus, getByUserId, addCommentInRequest, getRequestByStatus };
+const getCompensantoryRequest = async (managerId, jwtToken) => {
+    return axios.get(path.getCompensantoryRequest + `/${managerId}`, {
+        headers: {
+            'Authorization': `Bearer ${jwtToken}`
+        }
+    })
+}
+
+const getByManagerIdAndStatus = async (requestId, status, jwtToken) => {
+    return axios.post(path.getRequestByManagerIdAndStatus + `/${requestId}`, status, {
+        headers: {
+            'Authorization': `Bearer ${jwtToken}`
+        }
+    })
+}
+
+export default { getRequestByManagerId, getUser, getByRequestId, changeRequestStatus, getByUserId, addCommentInRequest, getRequestByStatus, getCompensantoryRequest, getByManagerIdAndStatus };

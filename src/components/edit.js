@@ -11,7 +11,8 @@ import updateService from '../core/services/update-service';
 import decodeJwt from "../core/services/decodedJwtData-service";
 import EmployeeLayout from './employeeLayout';
 import AdminLayout from './adminLayout';
-import defaultUser from './user_3177440.png'
+import defaultUser from './user_3177440.png';
+import React, { useRef } from 'react';
 
 function Edit() {
     const navigate = useNavigate();
@@ -21,12 +22,17 @@ function Edit() {
     const jwtToken = localStorage.getItem('authToken');
     const [manager, setManager] = useState([]);
     const id = decodeJwt().id;
+    const [name, setName] = useState('');
+    const [city, setCity] = useState('');
+    const fileInputRef = useRef(null);
+    const [isFileImage, setIsFileImage] = useState(true);
+    const [file, setFile] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await profileService.loggedInUser(jwtToken);
-                const managerPromises = result.data.map(async (user) => {
+                result.data.map(async (user) => {
                     setUser({
                         'name': user.name,
                         'mobile': user.mobile,
@@ -39,6 +45,9 @@ function Edit() {
                     });
 
                     setAvatar(user.avatar);
+                    setFile(user.avatar);
+                    setCity(user.address.city);
+                    setName(user.name);
                     if (decodeJwt().role !== 'Admin') {
                         const managerDetailsResponse = await profileService.getManagerDetail(user.managerId, jwtToken);
                         setManager(managerDetailsResponse.data)
@@ -101,17 +110,40 @@ function Edit() {
         } else if (user.postalCode.length > 200) {
             error.postalCode = messages.update.error.invalidPostalCode
         }
+
+        if (isFileImage === false) {
+            error.file = messages.register.error.fileValidation;
+        }
+
         setError(error);
 
-        if (!user.name || !user.mobile || !mobileRegex.test(user.mobile) || !user.addressLine1 || user.addressLine1.length > 200 || !user.addressLine2 || user.addressLine2.length > 200 || !user.city || user.city.length > 200 || !user.state || user.state.length > 200 || !user.country || user.country.length > 200 || !user.postalCode || user.postalCode.length > 200) {
+        if (!user.name || !user.mobile || !mobileRegex.test(user.mobile) || !user.addressLine1 || user.addressLine1.length > 200 || !user.addressLine2 || user.addressLine2.length > 200 || !user.city || user.city.length > 200 || !user.state || user.state.length > 200 || !user.country || user.country.length > 200 || !user.postalCode || user.postalCode.length > 200 || isFileImage === false) {
             return true;
         }
     };
 
     const handleChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value });
-
     }
+
+    const handleUploadClick = (e) => {
+        e.preventDefault();
+        fileInputRef.current.click();
+    };
+
+    const handleFileChange = (event) => {
+        const selectedFile = event.target.files[0];
+        if (selectedFile) {
+            const fileType = selectedFile.type.split('/')[0];
+            if (fileType === 'image') {
+                setIsFileImage(true);
+
+            } else {
+                setIsFileImage(false);
+            }
+        }
+        setFile(selectedFile);
+    };
 
     const updateUser = async (e) => {
         e.preventDefault();
@@ -131,6 +163,7 @@ function Edit() {
         const formData = new FormData();
         formData.append('name', user.name);
         formData.append('mobile', user.mobile);
+        formData.append('avatar', file);
         formData.append('updatedBy', id);
         formData.append('address', JSON.stringify(address));
 
@@ -160,7 +193,7 @@ function Edit() {
 
     return (
         <>
-            <form action="#" method="post" encType="multipart/form-data" onSubmit={updateUser}>
+            <form action="#" method="post" encType="multipart/form-data">
                 {decodeJwt().role === 'Employee' ? (
                     <EmployeeLayout />
                 ) : decodeJwt().role === 'Manager' ? (
@@ -168,19 +201,30 @@ function Edit() {
                 ) : (
                     <AdminLayout />
                 )}
-                <div style={{ backgroundcolor: "#eee" }}>
+                <div>
                     <div class="container py-5">
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="card mb-4">
                                     <div class="card-body text-center">
                                         <img src={process.env.REACT_APP_DOMAIN_URL + `/${avatar}`} alt="avatar"
-                                            class="rounded-circle img-fluid" onError={handleImageError} style={{ width: "200px", height: "200px" }} />
-                                        <h5 class="my-3">{user.name}</h5>
-                                        <p class="text-muted mb-4">{user.city}</p>
+                                            class="rounded-circle img-fluid my-1" onError={handleImageError} style={{ width: "200px", height: "200px" }} />
+                                        <div>
+                                            <button onClick={handleUploadClick}>Upload Image</button>
+                                            <input
+                                                type="file"
+                                                ref={fileInputRef}
+                                                style={{ display: 'none' }}
+                                                onChange={handleFileChange}
+                                                accept="image/png, image/gif, image/jpeg"
+                                            />
+                                        </div>
+                                        {error.file && <p className='errorColor'>{error.file}</p>}
+                                        <h5 class="my-3">{name}</h5>
+                                        <p class="text-muted mb-4">{city}</p>
                                     </div>
                                 </div>
-                                {manager.length != 0 && <div className="card mb-4">
+                                {manager.length !== 0 && <div className="card mb-4">
                                     {manager.map((manager) =>
                                         <div className="card-body text-center" key={manager._id}>
                                             <h5 className="my-3">Reporting To:</h5>
@@ -208,7 +252,7 @@ function Edit() {
                                             </div>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="name" name="name" onChange={handleChange} value={user.name} />
-                                                {error.name && <p style={{ color: "red" }}>{error.name}</p>}
+                                                {error.name && <p className='errorColor'>{error.name}</p>}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -218,7 +262,7 @@ function Edit() {
                                             </div>
                                             <div class="col-sm-9">
                                                 <input type="tel" class="form-control" id="mobile" name="mobile" onChange={handleChange} value={user.mobile} />
-                                                {error.mobile && <p style={{ color: "red" }}>{error.mobile}</p>}
+                                                {error.mobile && <p className='errorColor'>{error.mobile}</p>}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -237,7 +281,7 @@ function Edit() {
                                             </div>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="addressLine1" name="addressLine1" onChange={handleChange} value={user.addressLine1} />
-                                                {error.addressLine1 && <p style={{ color: "red" }}>{error.addressLine1}</p>}
+                                                {error.addressLine1 && <p className='errorColor'>{error.addressLine1}</p>}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -247,7 +291,7 @@ function Edit() {
                                             </div>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="addressLine2" name="addressLine2" onChange={handleChange} value={user.addressLine2} />
-                                                {error.addressLine2 && <p style={{ color: "red" }}>{error.addressLine2}</p>}
+                                                {error.addressLine2 && <p className='errorColor'>{error.addressLine2}</p>}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -257,7 +301,7 @@ function Edit() {
                                             </div>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="city" name="city" onChange={handleChange} value={user.city} />
-                                                {error.city && <p style={{ color: "red" }}>{error.city}</p>}
+                                                {error.city && <p className='errorColor'>{error.city}</p>}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -267,7 +311,7 @@ function Edit() {
                                             </div>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="state" name="state" onChange={handleChange} value={user.state} />
-                                                {error.state && <p style={{ color: "red" }}>{error.state}</p>}
+                                                {error.state && <p className='errorColor'>{error.state}</p>}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -277,7 +321,7 @@ function Edit() {
                                             </div>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="country" name="country" onChange={handleChange} value={user.country} />
-                                                {error.country && <p style={{ color: "red" }}>{error.country}</p>}
+                                                {error.country && <p className='errorColor'>{error.country}</p>}
                                             </div>
                                         </div>
                                         <div class="row">
@@ -287,10 +331,10 @@ function Edit() {
                                             </div>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control" id="postalCode" name="postalCode" onChange={handleChange} value={user.postalCode} />
-                                                {error.postalCode && <p style={{ color: "red" }}>{error.postalCode}</p>}
+                                                {error.postalCode && <p className='errorColor'>{error.postalCode}</p>}
                                             </div>
                                         </div>
-                                        <button style={{ margin: "10px" }} type="submit" class="btn btn-dark">Save</button>
+                                        <button onClick={updateUser} class="btn btn-dark m-2">Save</button>
                                         <button class="btn btn-dark" onClick={navigateToProfile}>Cancel</button>
                                     </div>
                                 </div>

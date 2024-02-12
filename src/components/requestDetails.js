@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { configureToastOptions } from "../core/services/toast-service";
-import messages from "../core/constants/messages";
 import requestService from "../core/services/request-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
 import { useParams } from 'react-router-dom';
@@ -11,10 +10,10 @@ import Layout from "./layout";
 import leaveTrackerService from "../core/services/leaveTracker-service";
 import EmployeeLayout from "./employeeLayout";
 import AdminLayout from "./adminLayout";
+import leaveTypeService from '../core/services/leaveType-service';
 
 function RequestDetails() {
     const navigate = useNavigate();
-    const id = decodeJwt().id;
     const jwtToken = localStorage.getItem('authToken');
     const { requestId } = useParams();
     const [request, setRequest] = useState({});
@@ -32,7 +31,7 @@ function RequestDetails() {
             }
         }
         fetchData();
-    }, [jwtToken]);
+    }, [jwtToken, requestId]);
 
     const handleChange = (e) => {
         setComment({ ...comment, [e.target.name]: e.target.value });
@@ -47,6 +46,11 @@ function RequestDetails() {
         return `${day}/${month}/${year}`;
     }
 
+    const getLeaveTypeById = async (id) => {
+        const result = await leaveTypeService(id, jwtToken);
+        return result.data.leaveName;
+    };
+
     const changeRequestStatus = async () => {
         try {
             await requestService.changeRequestStatus(request._id, { status: "Approved" }, jwtToken);
@@ -58,7 +62,7 @@ function RequestDetails() {
                 booked: result.data[0].booked + request.totalDays,
                 updatedBy: request.userId
             }
-            const updateRecord = await leaveTrackerService.updateLeaveRecord(result.data[0].leaveId, leaveRecord, jwtToken);
+            await leaveTrackerService.updateLeaveRecord(result.data[0].leaveId, leaveRecord, jwtToken);
             navigate('/request')
         } catch (error) {
             const toastOptions = configureToastOptions();
@@ -134,7 +138,7 @@ function RequestDetails() {
                                     <br />
                                 </div>
                                 <div className="col-sm-9">
-                                    <p class="text-muted mb-0">{request.leaveName}</p>
+                                    <p class="text-muted mb-0">{getLeaveTypeById(request.leaveId)}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -155,8 +159,10 @@ function RequestDetails() {
                                     <textarea class="form-control" id="comment" name="comment" onChange={handleChange} />
                                 </div>
                             </div>
-                            <button style={{ margin: "10px" }} type="submit" class="btn btn-success" onClick={changeRequestStatus}>Approve</button>
-                            <button class="btn btn-danger" onClick={declineRequest}>Rejected</button>
+                            <div className="py-2">
+                                <button type="submit" class="btn btn-success m-2" onClick={changeRequestStatus}>Approve</button>
+                                <button class="btn btn-danger" onClick={declineRequest}>Rejected</button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -11,7 +11,7 @@ import AdminLayout from "./adminLayout";
 import EmployeeLayout from "./employeeLayout";
 import leaveTypeService from '../core/services/leaveType-service';
 
-function LeaveDetails() {
+function AllRequestDetails() {
     const navigate = useNavigate();
     const jwtToken = localStorage.getItem('authToken');
     const { requestId } = useParams();
@@ -42,10 +42,6 @@ function LeaveDetails() {
         return `${day}/${month}/${year}`;
     }
 
-    const backToLeaveTracker = () => {
-        navigate('/leaveTracker');
-    }
-
     const getStatus = (status) => {
         switch (status) {
             case 0:
@@ -61,6 +57,10 @@ function LeaveDetails() {
         }
     };
 
+    const backToLeaveTracker = () => {
+        navigate('/request');
+    }
+
     return (<>
         {decodeJwt().role === 'Employee' ? (
             <EmployeeLayout />
@@ -74,6 +74,15 @@ function LeaveDetails() {
                 <div class="col-lg-8">
                     <div class="card mb-4">
                         <div class="card-body">
+                            <div className="row">
+                                <div className="col-sm-3">
+                                    <p className="form-label font-weight-bold">Employee Name:</p>
+                                    <br />
+                                </div>
+                                <div className="col-sm-9">
+                                    <p class="text-muted mb-0">{request.employeeId}-{request.name}</p>
+                                </div>
+                            </div>
                             <div className="row">
                                 <div className="col-sm-3">
                                     <p className="form-label font-weight-bold">From-To:</p>
@@ -144,4 +153,4 @@ function LeaveDetails() {
     )
 }
 
-export default LeaveDetails;
+export default AllRequestDetails;

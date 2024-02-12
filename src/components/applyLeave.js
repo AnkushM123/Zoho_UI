@@ -26,11 +26,8 @@ function ApplyLeave() {
     const [managerId, setManagerId] = useState('');
     const [name, setName] = useState('')
     const [leaveError, setLeaveError] = useState('');
-    const [leaveName, setLeaveName] = useState('');
     const [employeeId, setEmployeeId] = useState(0);
-    const [disabledDateRanges, setDisabledDateRanges] = useState([]);
     const [commonDates, setCommonDates] = useState([]);
-    const [allDaysBetweenStartAndEnd, setAllDaysBetweenStartAndEnd] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,7 +43,7 @@ function ApplyLeave() {
                         endDate: new Date(range.endDate),
                     };
                 });
-    
+
                 const allDaysBetweenStartAndEnd = [];
                 let currentDate = new Date(startDate);
                 while (currentDate <= endDate) {
@@ -55,7 +52,7 @@ function ApplyLeave() {
                     }
                     currentDate.setDate(currentDate.getDate() + 1);
                 }
-    
+
                 const allDisabledDays = disabledDates.reduce((acc, range) => {
                     let currentDate = new Date(range.startDate);
                     while (currentDate <= range.endDate) {
@@ -64,26 +61,24 @@ function ApplyLeave() {
                     }
                     return acc;
                 }, []);
-    
+
                 const commonDates = allDaysBetweenStartAndEnd.filter(date =>
                     allDisabledDays.some(disabledDate =>
                         date.getTime() === disabledDate.getTime()
                     )
                 );
-    
-                setAllDaysBetweenStartAndEnd(allDaysBetweenStartAndEnd);
-                setDisabledDateRanges(disabledDates);
+
                 setCommonDates(commonDates);
-    
+
             } catch (error) {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
                 toast.error(error);
             }
         };
-    
+
         fetchData();
-    }, [jwtToken, startDate, endDate]);
+    }, [jwtToken, startDate, endDate, id]);
 
 
     const validation = async () => {
@@ -108,7 +103,7 @@ function ApplyLeave() {
 
         setError(error);
 
-        if (!leaveType || !startDate || !endDate || !reasonForLeave.reasonForLeave || startDate > endDate ) {
+        if (!leaveType || !startDate || !endDate || !reasonForLeave.reasonForLeave || startDate > endDate) {
             return true;
         }
     };
@@ -148,28 +143,6 @@ function ApplyLeave() {
 
     const handleChange = (e) => {
         setReasonForLeave({ ...reasonForLeave, [e.target.name]: e.target.value });
-        switch (leaveType) {
-            case '659bc36c01e2f1640c26260e':
-                setLeaveName('Compensantory Leave');
-                break;
-            case '659bc3ae01e2f1640c262612':
-                setLeaveName('Forgot IDCard');
-                break;
-            case '659bc3b501e2f1640c262614':
-                setLeaveName('Out Of Office OnDuty');
-                break;
-            case '659bc3c101e2f1640c262616':
-                setLeaveName('Paid Leave');
-                break;
-            case '659bc3c601e2f1640c262618':
-                setLeaveName('Unpaid Leave');
-                break;
-            case '659bc3ce01e2f1640c26261a':
-                setLeaveName('Work From Home');
-                break;
-            default:
-                break;
-        }
     }
 
     const applyLeave = async (e) => {
@@ -177,7 +150,7 @@ function ApplyLeave() {
         if (await validation()) {
             return;
         }
-         
+
         if (commonDates.length > 0) {
             const formattedDates = commonDates.map(date => date.toLocaleDateString('en-GB'));
             setLeaveError(`Leave already applied for : [${formattedDates.join(', ')}]`);
@@ -196,16 +169,16 @@ function ApplyLeave() {
                 formData.append('leaveId', leaveType);
                 formData.append('name', name);
                 formData.append('employeeId', employeeId);
-                formData.append('leaveName', leaveName);
                 formData.append('comment', reasonForLeave.reasonForLeav);
                 formData.append('reasonForLeave', reasonForLeave.reasonForLeave);
                 formData.append('startDate', startDate);
+                formData.append('status', 0);
                 formData.append('endDate', endDate);
                 formData.append('totalDays', totalDays);
                 formData.append('createdBy', id);
                 formData.append('updatedBy', id);
 
-                const leaveRequest = await leaveTrackerService.applyLeaveRequest(formData, jwtToken);
+                await leaveTrackerService.applyLeaveRequest(formData, jwtToken);
                 setTimeout(function () {
                     const toastOptions = configureToastOptions();
                     toast.options = toastOptions;
@@ -255,16 +228,16 @@ function ApplyLeave() {
                                                 required
                                                 value={leaveType} onChange={(e) => setLeaveType(e.target.value)} >
                                                 <option>Select leave type</option>
+                                                <option value="659bc36c01e2f1640c26260e">Compensantory Off</option>
                                                 <option value="659bc3ae01e2f1640c262612">Forgot Id-Card</option>
                                                 <option value="659bc3b501e2f1640c262614">Out Of Office On Duty</option>
                                                 <option value="659bc3c101e2f1640c262616">Paid Leave</option>
                                                 <option value="659bc3c601e2f1640c262618">Unpaid Leave</option>
                                                 <option value="659bc3ce01e2f1640c26261a">Work From Home</option>
                                             </select>
-                                            {error.leaveType && <p style={{ color: "red" }}>{error.leaveType}</p>}
+                                            {error.leaveType && <p className="errorColor">{error.leaveType}</p>}
                                         </div>
                                     </div>
-
                                     <div className="row">
                                         <div className="col-sm-3">
                                             <p className="form-label font-weight-bold">Start Date:</p>
@@ -285,8 +258,8 @@ function ApplyLeave() {
                                                 scrollableYearDropdown
                                                 yearDropdownItemNumber={40}
                                             />
-                                            {error.startDateRequired && <p style={{ color: "red" }}>{error.startDateRequired}</p>}
-                                            {error.startDate && <p style={{ color: "red" }}>{error.startDate}</p>}
+                                            {error.startDateRequired && <p className="errorColor">{error.startDateRequired}</p>}
+                                            {error.startDate && <p className="errorColor">{error.startDate}</p>}
                                         </div>
                                     </div>
                                     <div className="row">
@@ -309,8 +282,8 @@ function ApplyLeave() {
                                                 scrollableYearDropdown
                                                 yearDropdownItemNumber={40}
                                             />
-                                            {error.endDateRequired && <p style={{ color: "red" }}>{error.endDateRequired}</p>}
-                                            {error.endDate && <p style={{ color: "red" }}>{error.endDate}</p>}
+                                            {error.endDateRequired && <p className="errorColor">{error.endDateRequired}</p>}
+                                            {error.endDate && <p className="errorColor">{error.endDate}</p>}
                                         </div>
                                     </div>
                                     <div className="row">
@@ -329,17 +302,17 @@ function ApplyLeave() {
                                         </div>
                                         <div class="col-sm-9">
                                             <textarea class="form-control" id="reason" name="reasonForLeave" onChange={handleChange} placeholder="Enter reason for leave" />
-                                            {error.reasonForLeave && <p style={{ color: "red" }}>{error.reasonForLeave}</p>}
+                                            {error.reasonForLeave && <p className="errorColor">{error.reasonForLeave}</p>}
                                         </div>
                                     </div>
-                                    <button style={{ margin: "10px" }} type="submit" class="btn btn-dark">Apply</button>
+                                    <button type="submit" class="btn btn-dark m-2">Apply</button>
                                     <button class="btn btn-dark" onClick={navigateToLeaveTracker}>Back</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <center>
-                        {leaveError && <p style={{ color: "red" }}>{leaveError}</p>}
+                        {leaveError && <p className="errorColor">{leaveError}</p>}
                     </center>
                 </div>
             </form>

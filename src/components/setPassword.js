@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import messages from "../core/constants/messages";
@@ -50,7 +50,7 @@ function SetPassword() {
             return;
         }
         try {
-            const result = await auth.setPassword(inputData, id);
+            await auth.setPassword(inputData, id);
             setMessage('');
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
@@ -76,14 +76,14 @@ function SetPassword() {
                                     <label for="password" class="form-label font-weight-bold">New Password:</label>
                                 </div>
                                 <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password" onChange={handleChange} />
-                                {error.password && <p class="form-label font-weight-bold" style={{ color: "red" }}>{error.password}</p>}
+                                {error.password && <p class="form-label font-weight-bold" className="errorColor">{error.password}</p>}
                             </div>
                             <div class="mb-3">
                                 <div className="text-start">
                                     <label for="password" class="form-label font-weight-bold">Confirm Password:</label>
                                 </div>
                                 <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Enter confirm password" onChange={handleChange} />
-                                {error.confirmPassword && <p class="form-label font-weight-bold" style={{ color: "red" }}>{error.confirmPassword}</p>}
+                                {error.confirmPassword && <p class="form-label font-weight-bold errorColor">{error.confirmPassword}</p>}
                             </div>
                             <br></br>
                             <button type="submit" class="btn btn-primary w-100 gradient-custom-2">Change Password</button>
@@ -93,7 +93,7 @@ function SetPassword() {
                         </div>
                     </div>
                 </div>
-                {message && <p className="form-label font-weight-bold" style={{ color: "red" }}>{message}</p>}
+                {message && <p className="form-label font-weight-bold errorColor">{message}</p>}
             </center>
         </>
     )

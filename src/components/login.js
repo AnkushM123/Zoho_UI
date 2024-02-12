@@ -68,7 +68,7 @@ function Login() {
     }
 
     return (
-        <section class="h-100 gradient-form" style={{ backgroundcolor: "#eee" }}>
+        <section class="h-100 gradient-form">
             <div class="container py-3 h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col-xl-10">
@@ -78,23 +78,22 @@ function Login() {
                                     <div class="card-body p-md-5 mx-md-4">
                                         <div class="text-center">
                                             <img src={logo}
-                                                style={{ width: "185px" }} alt="logo" />
+                                                className="loginLogo" alt="logo" />
                                             <br></br>
-                                            <h2 class="mt-1 mb-5 pb-1" style={{ color: "blueviolet" }}>Login</h2>
+                                            <h2 class="mt-1 mb-5 pb-1 loginTextColor">Login</h2>
                                         </div>
-
                                         <form method="post" onSubmit={loginData}>
                                             <div class="form-outline mb-4">
                                                 <label class="form-label">Username</label>
                                                 <input type="text" id="email" class="form-control"
                                                     placeholder="enter email address" name="email" onChange={handleChange} />
-                                                {error.email && <p style={{ color: "red" }}>{error.email}</p>}
+                                                {error.email && <p className="errorColor">{error.email}</p>}
                                             </div>
 
                                             <div class="form-outline mb-4">
                                                 <label class="form-label">Password</label>
                                                 <input type="password" id="password" class="form-control" name="password" placeholder="enter password" onChange={handleChange} />
-                                                {error.password && <p style={{ color: "red" }}>{error.password}</p>}
+                                                {error.password && <p className="errorColor">{error.password}</p>}
                                             </div>
 
                                             <div class="text-center pt-1 mb-5 pb-1">

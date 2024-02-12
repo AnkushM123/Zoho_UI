@@ -24,7 +24,6 @@ function Home() {
                 toast.options = toastOptions;
                 toast.error(error);
             }
-
         };
         fetchData();
 
@@ -44,7 +43,7 @@ function Home() {
             ) : (
                 <AdminLayout />
             )}
-            <div className="col-md-11 mb-11" style={{ marginLeft: "40px", marginTop: "40px" }}>
+            <div className="col-md-11 mb-11 homeCardSize">
                 <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "400px" }}>
                     <div className="card-body">
                         <h4>Team Overview:</h4>
@@ -61,7 +60,6 @@ function Home() {
                                 />{' '}
                                 {employee.employeeId}-<span className="font-weight-bold">{employee.name}</span>
                             </p>
-                            
                         ))}
                     </div>
                 </div>

@@ -10,6 +10,7 @@ import requestService from "../core/services/request-service";
 import { BiCalendarCheck } from 'react-icons/bi';
 import Layout from "./layout";
 import AdminLayout from "./adminLayout";
+import leaveTypeService from '../core/services/leaveType-service';
 
 function LeaveTracker() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ function LeaveTracker() {
   const [workFromHome, setWorkFromHome] = useState({});
   const jwtToken = localStorage.getItem('authToken');
   const [request, setRequest] = useState([]);
+  const [leaveTypes, setLeaveTypes] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,9 +52,16 @@ function LeaveTracker() {
             default:
               break;
           }
+
         });
         const requests = await requestService.getByUserId(id, jwtToken);
         setRequest(requests.data);
+        const leaveTypesData = {};
+        for (const requestItem of requests.data) {
+          const leaveType = await getLeaveTypeById(requestItem.leaveId);
+          leaveTypesData[requestItem.leaveId] = leaveType;
+        }
+        setLeaveTypes(leaveTypesData);
       } catch (error) {
         const toastOptions = configureToastOptions();
         toast.options = toastOptions;
@@ -60,7 +69,7 @@ function LeaveTracker() {
       }
     };
     fetchData();
-  }, [jwtToken]);
+  }, [jwtToken, id]);
 
   const convertToDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -70,6 +79,21 @@ function LeaveTracker() {
     return `${day}/${month}/${year}`;
   }
 
+  const getStatus = (status) => {
+    switch (status) {
+      case 0:
+        return 'Pending';
+      case 1:
+        return 'Approved';
+      case 2:
+        return 'Rejected';
+      case 3:
+        return 'Added';
+      default:
+        return '';
+    }
+  };
+
   const navigateToApplyLeave = () => {
     navigate('/applyLeave');
   }
@@ -77,6 +101,17 @@ function LeaveTracker() {
   const navigateToLeaveDetails = (requestId) => {
     navigate(`/leaveDetail/${requestId}`);
   }
+
+  const getLeaveTypeById = async (id) => {
+    try {
+      const result = await leaveTypeService(id, jwtToken);
+      return result.data[0].leaveName;
+    } catch (error) {
+      const toastOptions = configureToastOptions();
+      toast.options = toastOptions;
+      toast.error(error);
+    }
+  };
 
   const divStyle = {
     marginTop: "40px",
@@ -190,20 +225,24 @@ function LeaveTracker() {
                 </thead>
                 <tbody>
                   {request.map((requestItem, index) => (
-                    (
-                      <tr key={requestItem._id} onClick={() => navigateToLeaveDetails(requestItem._id)} className="table-row-hover">
-                        <th scope="row">{index + 1}</th>
-                        <td>{convertToDate(requestItem.startDate)} - {convertToDate(requestItem.endDate)}</td>
-                        <td>{requestItem.totalDays}</td>
-                        <td>{requestItem.leaveName}</td>
-                        <td>
-                          {requestItem.reasonForLeave.length <= 5
+                    <tr key={requestItem._id} onClick={() => navigateToLeaveDetails(requestItem._id)} className="table-row-hover">
+                      <th scope="row">{index + 1}</th>
+                      <td>{convertToDate(requestItem.startDate)} - {convertToDate(requestItem.endDate)}</td>
+                      <td>{requestItem.totalDays}</td>
+                      <td>
+                        {leaveTypes[requestItem.leaveId] || "Loading..."}
+                      </td>
+                      <td>
+                        {requestItem.reasonForLeave !== 'undefined'
+                          ? (requestItem.reasonForLeave.length <= 5
                             ? requestItem.reasonForLeave
-                            : `${requestItem.reasonForLeave.substring(0, 5)}...`}
-                        </td>
-                        <td>{requestItem.status}</td>
-                      </tr>
-                    )
+                            : `${requestItem.reasonForLeave.substring(0, 5)}...`)
+                          : '-'}
+                      </td>
+                      {requestItem.status !== undefined ?
+                        <td>{getStatus(requestItem.status)}</td> : <td>-</td>
+                      }
+                    </tr>
                   ))}
                 </tbody>
               </table>

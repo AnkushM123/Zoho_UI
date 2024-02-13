@@ -14,16 +14,18 @@ import leaveTypeService from '../core/services/leaveType-service';
 
 function RequestDetails() {
     const navigate = useNavigate();
-    const jwtToken = localStorage.getItem('authToken');
     const { requestId } = useParams();
     const [request, setRequest] = useState({});
     const [comment, setComment] = useState({});
+    const [leaveType, setLeaveType] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await requestService.getByRequestId(requestId, jwtToken);
+                const result = await requestService.getByRequestId(requestId);
                 setRequest(result.data[0]);
+                const leaveTypeResult = await leaveTypeService(result.data[0].leaveId);
+                setLeaveType(leaveTypeResult.data[0].leaveName);
             } catch (error) {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
@@ -31,11 +33,10 @@ function RequestDetails() {
             }
         }
         fetchData();
-    }, [jwtToken, requestId]);
+    }, [requestId]);
 
     const handleChange = (e) => {
         setComment({ ...comment, [e.target.name]: e.target.value });
-        console.log(comment)
     }
 
     const convertToDate = (timestamp) => {
@@ -46,23 +47,18 @@ function RequestDetails() {
         return `${day}/${month}/${year}`;
     }
 
-    const getLeaveTypeById = async (id) => {
-        const result = await leaveTypeService(id, jwtToken);
-        return result.data.leaveName;
-    };
-
     const changeRequestStatus = async () => {
         try {
-            await requestService.changeRequestStatus(request._id, { status: "Approved" }, jwtToken);
-            await requestService.addCommentInRequest(request._id, comment, jwtToken);
-            const result = await leaveTrackerService.getParticularRecord({ userId: request.userId, leaveId: request.leaveId }, jwtToken);
+            await requestService.changeRequestStatus(request._id, { status: 1 });
+            await requestService.addCommentInRequest(request._id, comment);
+            const result = await leaveTrackerService.getParticularRecord({ userId: request.userId, leaveId: request.leaveId });
             const leaveRecord = {
                 userId: request.userId,
                 balance: result.data[0].balance - request.totalDays,
                 booked: result.data[0].booked + request.totalDays,
                 updatedBy: request.userId
             }
-            await leaveTrackerService.updateLeaveRecord(result.data[0].leaveId, leaveRecord, jwtToken);
+            await leaveTrackerService.updateLeaveRecord(result.data[0].leaveId, leaveRecord);
             navigate('/request')
         } catch (error) {
             const toastOptions = configureToastOptions();
@@ -73,8 +69,8 @@ function RequestDetails() {
 
     const declineRequest = async () => {
         try {
-            await requestService.changeRequestStatus(request._id, { status: "Rejected" }, jwtToken);
-            await requestService.addCommentInRequest(request._id, comment, jwtToken);
+            await requestService.changeRequestStatus(request._id, { status: 2 });
+            await requestService.addCommentInRequest(request._id, comment);
             navigate('/request')
         } catch (error) {
             const toastOptions = configureToastOptions();
@@ -138,7 +134,7 @@ function RequestDetails() {
                                     <br />
                                 </div>
                                 <div className="col-sm-9">
-                                    <p class="text-muted mb-0">{getLeaveTypeById(request.leaveId)}</p>
+                                    <p class="text-muted mb-0">{leaveType}</p>
                                 </div>
                             </div>
                             <div class="row">

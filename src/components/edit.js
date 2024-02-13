@@ -19,7 +19,6 @@ function Edit() {
     const [user, setUser] = useState({ 'name': '', 'mobile': '', 'addressLine1': '', 'addressLine2': '', 'city': '', 'state': '', 'country': '', 'postalCode': '' });
     const [avatar, setAvatar] = useState('');
     const [error, setError] = useState({})
-    const jwtToken = localStorage.getItem('authToken');
     const [manager, setManager] = useState([]);
     const id = decodeJwt().id;
     const [name, setName] = useState('');
@@ -31,7 +30,7 @@ function Edit() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await profileService.loggedInUser(jwtToken);
+                const result = await profileService.loggedInUser();
                 result.data.map(async (user) => {
                     setUser({
                         'name': user.name,
@@ -49,7 +48,7 @@ function Edit() {
                     setCity(user.address.city);
                     setName(user.name);
                     if (decodeJwt().role !== 'Admin') {
-                        const managerDetailsResponse = await profileService.getManagerDetail(user.managerId, jwtToken);
+                        const managerDetailsResponse = await profileService.getManagerDetail(user.managerId);
                         setManager(managerDetailsResponse.data)
                     }
                 })
@@ -61,7 +60,7 @@ function Edit() {
             }
         }
         fetchData();
-    }, [jwtToken])
+    }, [])
 
     const validation = async () => {
         const error = {}
@@ -168,7 +167,7 @@ function Edit() {
         formData.append('address', JSON.stringify(address));
 
         try {
-            await updateService.updateUser(id, formData, jwtToken);
+            await updateService.updateUser(id, formData);
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;

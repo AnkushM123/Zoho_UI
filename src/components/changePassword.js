@@ -14,7 +14,6 @@ import changePasswordService from "../core/services/changePassword-service"
 function ChangePassword() {
     const navigate = useNavigate();
     const id = decodeJwt().id;
-    const jwtToken = localStorage.getItem('authToken');
     const [error, setError] = useState({});
     const [inputData, setInputData] = useState({});
     const [message, setMessage] = useState('');
@@ -58,7 +57,7 @@ function ChangePassword() {
             return;
         }
         try {
-            await changePasswordService(inputData, id, jwtToken);
+            await changePasswordService(inputData, id);
             setMessage('');
             setTimeout(function () {
                 const toastOptions = configureToastOptions();

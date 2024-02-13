@@ -15,9 +15,8 @@ import leaveTypeService from '../core/services/leaveType-service';
 function Request() {
     const navigate = useNavigate();
     const id = decodeJwt().id;
-    const jwtToken = localStorage.getItem('authToken');
     const [request, setRequest] = useState([]);
-    const [requestStatus, setRequestStatus] = useState(3);
+    const [requestStatus, setRequestStatus] = useState(4);
     const [pageNumber, setPageNumber] = useState(0);
     const [leaveTypes, setLeaveTypes] = useState({});
     const perPage = 10;
@@ -27,7 +26,7 @@ function Request() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await requestService.getRequestByManagerId(id, jwtToken);
+                const result = await requestService.getRequestByManagerId(id);
                 setRequest(result.data);
             } catch (error) {
                 const toastOptions = configureToastOptions();
@@ -36,33 +35,29 @@ function Request() {
             }
         }
         fetchData();
-    }, [jwtToken]);
-
-    const getLeaveTypeById = async (id) => {
-        try {
-          const result = await leaveTypeService(id, jwtToken);
-          return result.data[0].leaveName;
-        } catch (error) {
-          const toastOptions = configureToastOptions();
-          toast.options = toastOptions;
-          toast.error(error);
-        }
-      };
+    }, []);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchLeaveTypes = async () => {
             try {
-                const leaveTypePromises = request.map(requestItem => getLeaveTypeById(requestItem.leaveId));
-                const leaveTypes = await Promise.all(leaveTypePromises);
-                setLeaveTypes(leaveTypes);
+                const leaveTypePromises = request.map(async (requestItem) => {
+                    const result = await leaveTypeService(requestItem.leaveId);
+                    return result.data[0].leaveName;
+                });
+                const leaveTypeNames = await Promise.all(leaveTypePromises);
+                const leaveTypeMap = request.reduce((acc, curr, index) => {
+                    acc[curr._id] = leaveTypeNames[index];
+                    return acc;
+                }, {});
+                setLeaveTypes(leaveTypeMap);
             } catch (error) {
                 const toastOptions = configureToastOptions();
-          toast.options = toastOptions;
-          toast.error(error);
+                toast.options = toastOptions;
+                toast.error(error);
             }
         };
-        fetchData();
-    }, [request, getLeaveTypeById]);
+        fetchLeaveTypes();
+    }, [request]);
 
     const convertToDate = (timestamp) => {
         const date = new Date(timestamp);
@@ -74,10 +69,10 @@ function Request() {
 
     const handleRequestTypeChange = (e) => {
         try {
-            const selectedValue = e.target.value;
+            const selectedValue = parseInt(e.target.value);
             setRequestStatus(selectedValue);
         } catch (error) {
-            setRequest([]);
+            setRequestStatus(4);
         }
     };
 
@@ -85,9 +80,9 @@ function Request() {
         async function fetchData() {
             try {
                 setPageNumber(0);
-                const result = requestStatus === 3 ?
-                    await requestService.getRequestByManagerId(id, jwtToken) :
-                    await requestService.getByManagerIdAndStatus(id, { status: requestStatus }, jwtToken);
+                const result = requestStatus === 4 ?
+                    await requestService.getRequestByManagerId(id) :
+                    await requestService.getByManagerIdAndStatus(id, { status: requestStatus });
 
                 setRequest(result.data);
 
@@ -96,22 +91,20 @@ function Request() {
             }
         }
         fetchData();
-    }, [requestStatus, id, jwtToken]);
-
-
+    }, [requestStatus]);
 
     const getStatus = (status) => {
         switch (status) {
-          case 0:
-            return 'Pending';
-          case 1:
-            return 'Approved';
-          case 2:
-            return 'Rejected';
-          case 3:
-            return 'Added';
-          default:
-            return '';
+            case 0:
+                return 'Pending';
+            case 1:
+                return 'Approved';
+            case 2:
+                return 'Rejected';
+            case 3:
+                return 'Added';
+            default:
+                return '';
         }
     };
 
@@ -147,9 +140,9 @@ function Request() {
                             value={requestStatus}
                             onChange={(e) => handleRequestTypeChange(e)}
                         >
-                            <option value={3}>All</option>
+                            <option value={4}>All</option>
                             <option value={0}>Pending</option>
-                            <option value={1}>Compensatory Off</option>
+                            <option value={3}>Compensatory Off</option>
                         </select>
                     </div>
                 </div>
@@ -170,25 +163,25 @@ function Request() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {request.slice(perVisit, perVisit + perPage).map((requestItem, index) => (
-    <tr key={requestItem._id} onClick={() => requestStatus !== 'Pending' ? navigateToAllRequestDetails(requestItem._id) : navigateToRequest(requestItem._id)} className="table-row-hover">
-        <th scope="row">{index + 1}</th>
-        <td>{requestItem.employeeId}-{requestItem.name}</td>
-        <td>{convertToDate(requestItem.startDate)} - {convertToDate(requestItem.endDate)}</td>
-        <td>{requestItem.totalDays}</td>
-        <td>{leaveTypes[index]}</td>
-        {requestItem.reasonForLeave !== 'undefined' ?
-            <td>
-                {requestItem.reasonForLeave.length <= 5
-                    ? requestItem.reasonForLeave
-                    : `${requestItem.reasonForLeave.substring(0, 4)}...`}
-            </td> : <td>-</td>
-        }
-        {requestItem.status !== 'undefined' ?
-            <td>{getStatus(requestItem.status)}</td> : <td>-</td>
-        }
-    </tr>
-))}
+                                        {request.slice(perVisit, perVisit + perPage).map((requestItem, index) => (
+                                            <tr key={requestItem._id} onClick={() => requestStatus !== 0 ? navigateToAllRequestDetails(requestItem._id) : navigateToRequest(requestItem._id)} className="table-row-hover">
+                                                <th scope="row">{index + 1}</th>
+                                                <td>{requestItem.employeeId}-{requestItem.name}</td>
+                                                <td>{convertToDate(requestItem.startDate)} - {convertToDate(requestItem.endDate)}</td>
+                                                <td>{requestItem.totalDays}</td>
+                                                <td>{leaveTypes[requestItem._id]}</td>
+                                                {requestItem.reasonForLeave !== 'undefined' ?
+                                                    <td>
+                                                        {requestItem.reasonForLeave.length <= 5
+                                                            ? requestItem.reasonForLeave
+                                                            : `${requestItem.reasonForLeave.substring(0, 4)}...`}
+                                                    </td> : <td>-</td>
+                                                }
+                                                {requestItem.status !== 'undefined' ?
+                                                    <td>{getStatus(requestItem.status)}</td> : <td>-</td>
+                                                }
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             ) : (

@@ -21,14 +21,13 @@ function LeaveTracker() {
   const [paidLeave, setPaisLeave] = useState({});
   const [unpaidLeave, setUnpaidLeave] = useState({});
   const [workFromHome, setWorkFromHome] = useState({});
-  const jwtToken = localStorage.getItem('authToken');
   const [request, setRequest] = useState([]);
   const [leaveTypes, setLeaveTypes] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await LeaveTrackerService.getLeaveRecords({ userId: id }, jwtToken);
+        const result = await LeaveTrackerService.getLeaveRecords({ userId: id });
         result.data.forEach((leave) => {
           switch (leave.leaveId) {
             case '659bc36c01e2f1640c26260e':
@@ -54,7 +53,7 @@ function LeaveTracker() {
           }
 
         });
-        const requests = await requestService.getByUserId(id, jwtToken);
+        const requests = await requestService.getByUserId(id);
         setRequest(requests.data);
         const leaveTypesData = {};
         for (const requestItem of requests.data) {
@@ -69,7 +68,7 @@ function LeaveTracker() {
       }
     };
     fetchData();
-  }, [jwtToken, id]);
+  }, [id]);
 
   const convertToDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -104,7 +103,7 @@ function LeaveTracker() {
 
   const getLeaveTypeById = async (id) => {
     try {
-      const result = await leaveTypeService(id, jwtToken);
+      const result = await leaveTypeService(id);
       return result.data[0].leaveName;
     } catch (error) {
       const toastOptions = configureToastOptions();

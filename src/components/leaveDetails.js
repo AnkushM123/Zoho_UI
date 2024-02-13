@@ -13,7 +13,6 @@ import leaveTypeService from '../core/services/leaveType-service';
 
 function LeaveDetails() {
     const navigate = useNavigate();
-    const jwtToken = localStorage.getItem('authToken');
     const { requestId } = useParams();
     const [request, setRequest] = useState({});
     const [leaveType, setLeaveType] = useState('');
@@ -21,9 +20,9 @@ function LeaveDetails() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await requestService.getByRequestId(requestId, jwtToken);
+                const result = await requestService.getByRequestId(requestId);
                 setRequest(result.data[0]);
-                const leaveTypeResult = await leaveTypeService(result.data[0].leaveId, jwtToken);
+                const leaveTypeResult = await leaveTypeService(result.data[0].leaveId);
                 setLeaveType(leaveTypeResult.data[0].leaveName);
             } catch (error) {
                 const toastOptions = configureToastOptions();
@@ -32,7 +31,7 @@ function LeaveDetails() {
             }
         }
         fetchData();
-    }, [jwtToken, requestId]);
+    }, [requestId]);
 
     const convertToDate = (timestamp) => {
         const date = new Date(timestamp);

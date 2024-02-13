@@ -1,43 +1,32 @@
 import axios from 'axios';
 import path from '../../config/path';
+import setupAxiosInterceptors from './axiosInterceptor-service';
 
-const getLeaveRecords = async (inputData, jwtToken) => {
-    return axios.post(path.getLeaveRecord, inputData, {
-        headers: {
-            'Authorization': `Bearer ${jwtToken}`
-        }
-    })
+const getLeaveRecords = async (inputData) => {
+    setupAxiosInterceptors();
+    return axios.post(path.getLeaveRecord, inputData)
 };
 
-const getParticularRecord = async (inputData, jwtToken) => {
-    return axios.post(path.particularLeaveRecord, inputData, {
-        headers: {
-            'Authorization': `Bearer ${jwtToken}`
-        }
-    })
+const getParticularRecord = async (inputData) => {
+    setupAxiosInterceptors();
+    return axios.post(path.particularLeaveRecord, inputData)
 };
 
-const loggedInUser = async (jwtToken) => {
-    return axios.get(path.profile, {
-        headers: {
-            'Authorization': `Bearer ${jwtToken}`
-        }
-    })
+const loggedInUser = async () => {
+    setupAxiosInterceptors();
+    return axios.get(path.profile)
 }
 
-const updateLeaveRecord = async (leaveId, leaveRecord, jwtToken) => {
-    return axios.put(path.updateLeaveRecord + `/${leaveId}`, leaveRecord, {
-        headers: {
-            'Authorization': `Bearer ${jwtToken}`
-        }
-    })
+const updateLeaveRecord = async (leaveId, leaveRecord) => {
+    setupAxiosInterceptors();
+    return axios.put(path.updateLeaveRecord + `/${leaveId}`, leaveRecord)
 }
 
-const applyLeaveRequest = async (formData, jwtToken) => {
+const applyLeaveRequest = async (formData) => {
+    setupAxiosInterceptors();
     return axios.post(path.applyLeaveRequest, formData, {
         headers: {
-            'content-type': 'multipart/form-data',
-            'Authorization': `Bearer ${jwtToken}`,
+            'content-type': 'multipart/form-data'
         },
     })
 }

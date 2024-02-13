@@ -37,7 +37,6 @@ function Register() {
     const [emailMessage, setEmailMessage] = useState('')
     const [gender, setGender] = useState('');
     const [leaveId, setLeaveId] = useState(["659bc36c01e2f1640c26260e", "659bc3ae01e2f1640c262612", "659bc3b501e2f1640c262614", "659bc3c101e2f1640c262616", "659bc3c601e2f1640c262618", "659bc3ce01e2f1640c26261a"])
-    const jwtToken = localStorage.getItem('authToken');
     const adminId = decodeJwt().id;
     const [dob, setDob] = useState(null);
     const [respondingTo, setRespondingTo] = useState([]);
@@ -220,7 +219,7 @@ function Register() {
         formData.append('updatedBy', adminId);
 
         try {
-            const result = await authService.register(formData, jwtToken);
+            const result = await authService.register(formData);
             const userId = result.data._id;
 
             const leaveRecords = leaveId.map(async (id) => {
@@ -254,7 +253,7 @@ function Register() {
             });
 
             const leaveRecordsData = await Promise.all(leaveRecords);
-            await Promise.all(leaveRecordsData.map(record => authService.createLeaveRecord(record, jwtToken)));
+            await Promise.all(leaveRecordsData.map(record => authService.createLeaveRecord(record)));
 
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
@@ -275,11 +274,11 @@ function Register() {
             setRole(selectedRole);
 
             if (selectedRole === '658eac73510f63f754e68cf9') {
-                const result = await authService.getByRole('658eac9e510f63f754e68cfe', jwtToken);
+                const result = await authService.getByRole('658eac9e510f63f754e68cfe');
                 setRespondingTo(result.data);
             } else {
                 if (selectedRole === '658eac9e510f63f754e68cfe') {
-                    const result = await authService.getByRole('658eacbb510f63f754e68d02', jwtToken);
+                    const result = await authService.getByRole('658eacbb510f63f754e68d02');
                     setRespondingTo(result.data);
                 }
                 else {
@@ -365,8 +364,8 @@ function Register() {
                                                 required
                                                 value={gender} onChange={(e) => setGender(e.target.value)} >
                                                 <option>Select gender</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
+                                                <option value={0}>Male</option>
+                                                <option value={1}>Female</option>
                                             </select>
                                             {error.gender && <p className='errorColor'>{error.gender}</p>}
                                         </div>
@@ -389,7 +388,7 @@ function Register() {
                                             <input type="file" class="form-control" id="file" name="avatar" accept="image/png, image/gif, image/jpeg" onChange={handleFileChange} />
                                             {error.file && <p className='errorColor'>{error.file}</p>}
                                             <br></br>
-                                            <hr className='registerLine'/>
+                                            <hr className='registerLine' />
                                             <label class="form-label font-weight-bold">Address:</label>
                                         </div>
                                         <div class="col-md-6">

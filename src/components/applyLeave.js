@@ -16,7 +16,6 @@ import requestService from "../core/services/request-service";
 function ApplyLeave() {
     const navigate = useNavigate();
     const id = decodeJwt().id;
-    const jwtToken = localStorage.getItem('authToken');
     const [error, setError] = useState({});
     const [leaveType, setLeaveType] = useState('');
     const [startDate, setStartDate] = useState(null);
@@ -32,11 +31,11 @@ function ApplyLeave() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await leaveTrackerService.loggedInUser(jwtToken);
+                const result = await leaveTrackerService.loggedInUser();
                 setManagerId(result.data[0].managerId);
                 setName(result.data[0].name);
                 setEmployeeId(result.data[0].employeeId)
-                const requestData = await requestService.getRequestByStatus(id, jwtToken);
+                const requestData = await requestService.getRequestByStatus(id);
                 const disabledDates = requestData.data.map((range) => {
                     return {
                         startDate: new Date(range.startDate),
@@ -78,7 +77,7 @@ function ApplyLeave() {
         };
 
         fetchData();
-    }, [jwtToken, startDate, endDate, id]);
+    }, [startDate, endDate, id]);
 
 
     const validation = async () => {
@@ -158,7 +157,7 @@ function ApplyLeave() {
         }
 
         try {
-            const result = await leaveTrackerService.getParticularRecord({ userId: id, leaveId: leaveType }, jwtToken);
+            const result = await leaveTrackerService.getParticularRecord({ userId: id, leaveId: leaveType });
             if ((result.data[0].balance - totalDays) < 0 && leaveType !== '659bc3c601e2f1640c262618' && leaveType !== '659bc3ae01e2f1640c262612' && leaveType !== '659bc3b501e2f1640c262614') {
                 setLeaveError(`You have '${result.data[0].balance}' leaves available`);
                 return
@@ -178,7 +177,7 @@ function ApplyLeave() {
                 formData.append('createdBy', id);
                 formData.append('updatedBy', id);
 
-                await leaveTrackerService.applyLeaveRequest(formData, jwtToken);
+                await leaveTrackerService.applyLeaveRequest(formData);
                 setTimeout(function () {
                     const toastOptions = configureToastOptions();
                     toast.options = toastOptions;

@@ -235,6 +235,7 @@ function Edit() {
                                                     height="30px"
                                                     width="30px"
                                                     style={{ borderRadius: "50%" }}
+                                                    onError={handleImageError}
                                                 />  {manager.employeeId}-<span className="font-weight-bold">{manager.name}</span>
                                             </p>
                                         </div>

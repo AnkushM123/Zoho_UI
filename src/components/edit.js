@@ -26,11 +26,12 @@ function Edit() {
     const fileInputRef = useRef(null);
     const [isFileImage, setIsFileImage] = useState(true);
     const [file, setFile] = useState(null);
+    const jwtToken = localStorage.getItem('authToken')
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await profileService.loggedInUser();
+                const result = await profileService.loggedInUser(jwtToken);
                 result.data.map(async (user) => {
                     setUser({
                         'name': user.name,
@@ -48,7 +49,7 @@ function Edit() {
                     setCity(user.address.city);
                     setName(user.name);
                     if (decodeJwt().role !== 'Admin') {
-                        const managerDetailsResponse = await profileService.getManagerDetail(user.managerId);
+                        const managerDetailsResponse = await profileService.getManagerDetail(user.managerId, jwtToken);
                         setManager(managerDetailsResponse.data)
                     }
                 })
@@ -167,7 +168,7 @@ function Edit() {
         formData.append('address', JSON.stringify(address));
 
         try {
-            await updateService.updateUser(id, formData);
+            await updateService.updateUser(id, formData, jwtToken);
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;

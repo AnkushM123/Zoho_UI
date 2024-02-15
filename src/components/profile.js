@@ -15,11 +15,12 @@ function Profile() {
     const [user, setUser] = useState([]);
     const [role, setRole] = useState('');
     const [manager, setManager] = useState([]);
+    const jwtToken = localStorage.getItem('authToken');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await profileService.loggedInUser();
+                const result = await profileService.loggedInUser(jwtToken);
                 setUser(result.data);
                 const managerPromises = result.data.map(async (currentUser) => {
                     if (currentUser.roles.includes("658eacbb510f63f754e68d02")) {
@@ -32,7 +33,7 @@ function Profile() {
                         }
                     }
 
-                    const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId);
+                    const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId,jwtToken);
                     setManager(managerDetailsResponse.data)
                 });
                 await Promise.all(managerPromises);
@@ -44,7 +45,7 @@ function Profile() {
             }
         }
         fetchData();
-    }, [])
+    }, [jwtToken])
 
     const convertToDate = (timestamp) => {
         const date = new Date(timestamp);

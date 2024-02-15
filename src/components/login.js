@@ -44,7 +44,6 @@ function Login() {
         try {
             const result = await auth.login(inputData);
             localStorage.setItem('authToken', result.data.token);
-
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;

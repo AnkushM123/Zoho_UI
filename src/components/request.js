@@ -21,12 +21,13 @@ function Request() {
     const [leaveTypes, setLeaveTypes] = useState({});
     const perPage = 10;
     const perVisit = pageNumber * perPage;
-    let pageCount = Math.ceil(request.length / perPage)
+    let pageCount = Math.ceil(request.length / perPage);
+    const jwtToken = localStorage.getItem('authToken');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await requestService.getRequestByManagerId(id);
+                const result = await requestService.getRequestByManagerId(id, jwtToken);
                 setRequest(result.data);
             } catch (error) {
                 const toastOptions = configureToastOptions();
@@ -41,7 +42,7 @@ function Request() {
         const fetchLeaveTypes = async () => {
             try {
                 const leaveTypePromises = request.map(async (requestItem) => {
-                    const result = await leaveTypeService(requestItem.leaveId);
+                    const result = await leaveTypeService(requestItem.leaveId, jwtToken);
                     return result.data[0].leaveName;
                 });
                 const leaveTypeNames = await Promise.all(leaveTypePromises);
@@ -81,8 +82,8 @@ function Request() {
             try {
                 setPageNumber(0);
                 const result = requestStatus === 4 ?
-                    await requestService.getRequestByManagerId(id) :
-                    await requestService.getByManagerIdAndStatus(id, { status: requestStatus });
+                    await requestService.getRequestByManagerId(id, jwtToken) :
+                    await requestService.getByManagerIdAndStatus(id, { status: requestStatus }, jwtToken);
 
                 setRequest(result.data);
 

@@ -12,13 +12,15 @@ import defaultUser from './user_3177440.png'
 
 function Home() {
     const [employees, setEmployees] = useState([]);
+    const jwtToken = localStorage.getItem('authToken');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await homeService();
+                const result = await homeService(jwtToken);
                 setEmployees(result.data);
             } catch (error) {
+                console.log(error)
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
                 toast.error(error);
@@ -26,7 +28,7 @@ function Home() {
         };
         fetchData();
 
-    }, []);
+    }, [jwtToken]);
 
     const handleImageError = (event) => {
         event.target.src = defaultUser;

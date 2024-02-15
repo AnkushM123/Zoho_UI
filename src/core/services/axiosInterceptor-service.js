@@ -1,18 +1,24 @@
 import axios from 'axios';
+const axiosInstance=axios.create();
 
-const setupAxiosInterceptors = () => {
-    const jwtToken=localStorage.getItem('authToken')
-    axios.interceptors.request.use(
-        config => {
-            if (jwtToken) {
-                config.headers.Authorization = `Bearer ${jwtToken}`;
+let axiosInterceptorsSetup = false;
+
+  const token =localStorage.getItem('authToken');
+    if (!axiosInterceptorsSetup) {
+        axiosInstance.interceptors.request.use(
+            (config) => {
+                if (token) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
+                console.log(config)
+                return config;
+            },
+            (error) => {
+                return Promise.reject(error);
             }
-            return config;
-        },
-        error => {
-            return Promise.reject(error);
-        }
-    );
-};
+            
+        );
+        axiosInterceptorsSetup=true
+    }
 
-export default setupAxiosInterceptors;
+export default axiosInstance;

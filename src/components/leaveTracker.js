@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import EmployeeLayout from "./employeeLayout";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LeaveTrackerService from '../core/services/leaveTracker-service';
 import { configureToastOptions } from "../core/services/toast-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
+import EmployeeLayout from "./employeeLayout";
+import Layout from "./layout";
 
 function LeaveTracker() {
   const navigate = useNavigate();
@@ -61,72 +62,83 @@ function LeaveTracker() {
 
   return (
     <>
-      <EmployeeLayout></EmployeeLayout>
-      <button type="button" class="btn btn-success" style={{ marginTop: "20px", marginLeft: "1200px" }} onClick={navigateToApplyLeave}>Apply Leave</button>
-      <div className="row">
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>Compensantory Off</strong></p>
-              <br />
-              <p>Available:{compensantoryOff.balance}</p>
-              <br />
-              <p>Booked:0</p>
-            </div>
+      {localStorage.getItem('role') === 'Employee' ? (
+        <EmployeeLayout />
+      ) : (
+        <Layout />
+      )
+      }
+      <div class="container-fluid py-1">
+        <div class="row">
+          <div class="col-12">
+            <button type="button" class="btn btn-success float-right my-3" onClick={navigateToApplyLeave}>Apply Leave</button>
           </div>
         </div>
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>Forgot Id-Card</strong></p>
-              <br />
-              <p>Available:{forgotIdCard.balance}</p>
-              <br />
-              <p>Booked:0</p>
+        <div className="row">
+          <div className="col-lg-2 col-md-4 col-12 mb-2">
+            <div className="card">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Compensantory Off</strong></div>
+                <center>
+                  <p>Available  : {compensantoryOff.balance}</p>
+                  <p>Booked   : {compensantoryOff.booked}</p>
+                </center>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>OutOf OfficeOnDuty</strong></p>
-              <br />
-              <p>Available:{outOfOfficeOnDuty.balance}</p>
-              <br />
-              <p>Booked:0</p>
+          <div className="col-lg-2 col-md-4 col-12 mb-2">
+            <div className="card">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Forgot Id-Card</strong></div>
+                <center>
+                  <p>Available  : {forgotIdCard.balance}</p>
+                  <p>Booked  : 0</p>
+                </center>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>Paid Leave</strong></p>
-              <br />
-              <p>Available:{paidLeave.balance}</p>
-              <br />
-              <p>Booked:0</p>
+          <div className="col-lg-2 col-md-4 col-12 mb-2">
+            <div className="card ">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Out Of Office On-Duty</strong></div>
+                <center>
+                  <p>Available  : {outOfOfficeOnDuty.balance}</p>
+                  <p>Booked  : 0</p>
+                </center>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>Unpaid Leave</strong></p>
-              <br />
-              <p>Available:0</p>
-              <br />
-              <p>Booked:{unpaidLeave.balance}</p>
+          <div className="col-lg-2 col-md-4 col-sm-12 mb-2">
+            <div className="card ">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Paid Leave</strong></div>
+                <center>
+                  <p>Available  : {paidLeave.balance}</p>
+                  <p>Booked  : {paidLeave.booked}</p>
+                </center>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="col-md-2 mb-2" style={{ marginTop: "40px" }}>
-          <div className="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
-            <div className="card-body">
-              <p id="section1" className="font-weight-bold"><strong>Work From Home</strong></p>
-              <br />
-              <p>Available:{workFromHome.balance}</p>
-              <br />
-              <p>Booked:0</p>
+          <div className="col-lg-2 col-md-4 col-sm-12 mb-2">
+            <div className="card ">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Unpaid Leave</strong></div>
+                <center>
+                  <p>Available  : 0</p>
+                  <p>Booked  : {unpaidLeave.booked}</p>
+                </center>
+              </div>
+            </div>
+          </div>
+          <div className="col-lg-2 col-md-4 col-sm-12 mb-2">
+            <div className="card">
+              <div className="card-body">
+                <div id="section1" className="font-weight-bold"><strong>Work From Home</strong></div>
+                <center>
+                  <p>Available  : {workFromHome.balance}</p>
+                  <p>Booked  : {workFromHome.booked}</p>
+                </center>
+              </div>
             </div>
           </div>
         </div>

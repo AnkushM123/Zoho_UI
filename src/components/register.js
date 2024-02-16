@@ -36,7 +36,6 @@ function Register() {
     const [leaveId,setLeaveId]=useState(["659bc36c01e2f1640c26260e","659bc3ae01e2f1640c262612","659bc3b501e2f1640c262614","659bc3c101e2f1640c262616","659bc3c601e2f1640c262618","659bc3ce01e2f1640c26261a"])
     const jwtToken = localStorage.getItem('authToken');
     const id = decodeJwt().id;
-    const [leaveRecord,setLeaveRecord]=useState({});
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
@@ -49,6 +48,9 @@ function Register() {
             return true;
         } catch (error) {
             setEmailMessage('');
+            const toastOptions = configureToastOptions();
+            toast.options = toastOptions;
+            toast.error(messages.login.error.toastError);
         }
     }
 
@@ -231,14 +233,14 @@ function Register() {
                                             <br></br>
                                             <label class="form-label font-weight-bold">Full Name:</label>
                                             <input type="text" class="form-control" id="name" name="name" onChange={handleChange} placeholder="enter full name" />
-                                            {error.name && <p style={{ color: "red" }}>{error.name}</p>}
+                                            {error.name && <p className="errorColor">{error.name}</p>}
                                         </div>
                                         <div class="col-md-6">
                                             <br></br>
                                             <label class="form-label font-weight-bold">Email:</label>
                                             <input type="text" class="form-control" id="email" name="email" onChange={handleChange} placeholder="enter email address" />
-                                            {error.email && <p style={{ color: "red" }}>{error.email}</p>}
-                                            <p style={{ color: "red" }}>{emailMessage}</p>
+                                            {error.email && <p className="errorColor">{error.email}</p>}
+                                            <p className="errorColor">{emailMessage}</p>
                                         </div>
                                     </div>
                                     <br></br>
@@ -246,12 +248,12 @@ function Register() {
                                         <div class="col-md-6">
                                             <label class="form-label font-weight-bold">Password:</label>
                                             <input type="password" class="form-control" id="password" name="password" onChange={handleChange} placeholder="enter password" />
-                                            {error.password && <p style={{ color: "red" }}>{error.password}</p>}
+                                            {error.password && <p className="errorColor">{error.password}</p>}
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label font-weight-bold">Age:</label>
                                             <input type="number" class="form-control" id="age" name="age" onChange={handleChange} placeholder="enter your age" />
-                                            {error.age && <p style={{ color: "red" }}>{error.age}</p>}
+                                            {error.age && <p className="errorColor">{error.age}</p>}
                                         </div>
                                     </div>
 
@@ -260,7 +262,7 @@ function Register() {
                                         <div class="col-md-6">
                                             <label class="form-label font-weight-bold">Mobile:</label>
                                             <input type="tel" class="form-control" id="mobile" name="mobile" onChange={handleChange} placeholder="enter mobile number" />
-                                            {error.mobile && <p style={{ color: "red" }}>{error.mobile}</p>}
+                                            {error.mobile && <p className="errorColor">{error.mobile}</p>}
                                         </div>
                                         <div class="col-md-6">
                                             <br></br>
@@ -272,7 +274,7 @@ function Register() {
                                                 <option>select role</option>
                                                 <option value="658eac73510f63f754e68cf9">Employee</option>
                                             </select>
-                                            {error.role && <p style={{ color: "red" }}>{error.role}</p>}
+                                            {error.role && <p className="errorColor">{error.role}</p>}
                                         </div>
                                     </div>
                                     <br></br>
@@ -282,22 +284,22 @@ function Register() {
                                             <br></br>
                                             <label class="form-label">address Line 1:</label>
                                             <input type="text" class="form-control" id="name" name="address.addressLine1" onChange={handleChange} />
-                                            {error.addressLine1 && <p style={{ color: "red" }}>{error.addressLine1}</p>}
+                                            {error.addressLine1 && <p className="errorColor">{error.addressLine1}</p>}
                                             <label class="form-label">address Line 2:</label>
                                             <input type="text" class="form-control" id="name" name="address.addressLine2" onChange={handleChange} />
-                                            {error.addressLine2 && <p style={{ color: "red" }}>{error.addressLine2}</p>}
+                                            {error.addressLine2 && <p className="errorColor">{error.addressLine2}</p>}
                                             <label class="form-label">city:</label>
                                             <input type="text" class="form-control" id="name" name="address.city" onChange={handleChange} />
-                                            {error.city && <p style={{ color: "red" }}>{error.city}</p>}
+                                            {error.city && <p className="errorColor">{error.city}</p>}
                                             <label class="form-label">state:</label>
                                             <input type="text" class="form-control" id="name" name="address.state" onChange={handleChange} />
-                                            {error.state && <p style={{ color: "red" }}>{error.state}</p>}
+                                            {error.state && <p className="errorColor">{error.state}</p>}
                                             <label class="form-label">country:</label>
                                             <input type="text" class="form-control" id="name" name="address.country" onChange={handleChange} />
-                                            {error.country && <p style={{ color: "red" }}>{error.country}</p>}
+                                            {error.country && <p className="errorColor">{error.country}</p>}
                                             <label class="form-label">postal code:</label>
                                             <input type="text" class="form-control" id="name" name="address.postalCode" onChange={handleChange} />
-                                            {error.postalCode && <p style={{ color: "red" }}>{error.postalCode}</p>}
+                                            {error.postalCode && <p className="errorColor">{error.postalCode}</p>}
                                         </div>
                                         <div class="col-md-6">
                                             <label class="form-label font-weight-bold">Gender:</label>
@@ -309,11 +311,11 @@ function Register() {
                                                 <option value="male">Male</option>
                                                 <option value="female">Female</option>
                                             </select>
-                                            {error.gender && <p style={{ color: "red" }}>{error.gender}</p>}
+                                            {error.gender && <p className="errorColor">{error.gender}</p>}
                                             <br></br>
                                             <label class="form-label font-weight-bold">Upload Image:</label>
                                             <input type="file" class="form-control" id="file" name="avatar" onChange={handleFileChange} />
-                                            {error.file && <p style={{ color: "red" }}>{error.file}</p>}
+                                            {error.file && <p className="errorColor">{error.file}</p>}
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Submit</button>

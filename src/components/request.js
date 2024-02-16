@@ -43,7 +43,7 @@ navigate('/requestDetails')
     return (
         <>
             <Layout></Layout>
-            <table className="table table-bordered" style={{ marginTop: "20px" }}>
+            <table className="table table-bordered">
                 <thead>
                     <tr>
                         <th scope="col">Sr.No</th>

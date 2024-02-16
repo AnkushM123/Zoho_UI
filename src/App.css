@@ -160,6 +160,61 @@ div.content {
 }
 
 .table-row-hover:hover {
-    background-color: #00bcd4; /* Change the background color on hover as per your preference */
-    cursor: pointer; /* Change the cursor to a pointer on hover */
-  }
+    background-color: #00bcd4;
+    cursor: pointer;
+}
+
+.react-datepicker-wrapper {
+    display: block !important;
+}
+
+
+#section1 {
+    height: 60px;
+}
+
+.iconmargin {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.forgotPassword {
+    text-align: center;
+    max-width: 600px;
+    margin-top: 60px;
+}
+
+.errorColor {
+    color: red;
+}
+
+.logoWidth {
+   width: 120px ;
+}
+
+.homeCardSize {
+    margin-left: 40px;
+    margin-top: 40px;
+}
+
+.loginLogo {
+    width: 185px;
+}
+
+.loginTextColor {
+    color: blueviolet;
+}
+
+.registerLine {
+    background-color: darkslategray;
+    height: 0.2px;
+    width: 900px;
+}
+
+.requestCard {
+    min-height: 450px;
+}
+
+.homeCss {
+    padding: 40px;
+}

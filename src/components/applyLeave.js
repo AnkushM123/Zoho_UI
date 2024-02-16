@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import messages from "../core/constants/messages";
 import leaveTrackerService from "../core/services/leaveTracker-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
+import Layout from "./layout";
 
 function ApplyLeave() {
     const navigate = useNavigate();
@@ -22,8 +23,8 @@ function ApplyLeave() {
     const [reasonForLeave, setReasonForLeave] = useState({});
     const [managerId, setManagerId] = useState('');
     const [name, setName] = useState('')
-    const [leaveError,setLeaveError]= useState('');
-    const [leaveName,setLeaveName]=useState('');
+    const [leaveError, setLeaveError] = useState('');
+    const [leaveName, setLeaveName] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -101,26 +102,26 @@ function ApplyLeave() {
         setReasonForLeave({ ...reasonForLeave, [e.target.name]: e.target.value });
         switch (leaveType) {
             case '659bc36c01e2f1640c26260e':
-              setLeaveName('Compensantory Leave');
-              break;
+                setLeaveName('Compensantory Leave');
+                break;
             case '659bc3ae01e2f1640c262612':
                 setLeaveName('Forgot IDCard');
-              break;
+                break;
             case '659bc3b501e2f1640c262614':
                 setLeaveName('Out Of Office OnDuty');
-              break;
+                break;
             case '659bc3c101e2f1640c262616':
                 setLeaveName('Paid Leave');
-              break;
+                break;
             case '659bc3c601e2f1640c262618':
                 setLeaveName('Unpaid Leave');
-              break;
+                break;
             case '659bc3ce01e2f1640c26261a':
                 setLeaveName('Work From Home');
-              break;
+                break;
             default:
-              break;
-          }
+                break;
+        }
     }
 
     const applyLeave = async (e) => {
@@ -130,7 +131,7 @@ function ApplyLeave() {
         }
         try {
             const result = await leaveTrackerService.getParticularRecord({ userId: id, leaveId: leaveType }, jwtToken);
-            if ((result.data[0].balance - totalDays) < 0 && leaveType!=='659bc3c601e2f1640c262618') {
+            if ((result.data[0].balance - totalDays) < 0 && leaveType !== '659bc3c601e2f1640c262618') {
                 setLeaveError(`You have '${result.data[0].balance}' leaves available`);
                 return
             } else {
@@ -175,7 +176,12 @@ function ApplyLeave() {
     return (
         <>
             <form action="#" method="post" onSubmit={applyLeave}>
-                <EmployeeLayout></EmployeeLayout>
+                {localStorage.getItem('role') === 'Employee' ? (
+                    <EmployeeLayout />
+                ) : (
+                    <Layout />
+                )
+                }
                 <div class="container py-5">
                     <div class="row justify-content-center">
                         <div class="col-lg-8">
@@ -199,10 +205,9 @@ function ApplyLeave() {
                                                 <option value="659bc3c601e2f1640c262618">Unpaid Leave</option>
                                                 <option value="659bc3ce01e2f1640c26261a">Work From Home</option>
                                             </select>
-                                            {error.leaveType && <p style={{ color: "red" }}>{error.leaveType}</p>}
+                                            {error.leaveType && <p className="errorColor">{error.leaveType}</p>}
                                         </div>
                                     </div>
-
                                     <div className="row">
                                         <div className="col-sm-3">
                                             <p className="form-label font-weight-bold">Start Date:</p>
@@ -217,10 +222,9 @@ function ApplyLeave() {
                                                 endDate={endDate}
                                                 className="form-control"
                                             />
-                                            {error.startDate && <p style={{ color: "red" }}>{error.startDate}</p>}
+                                            {error.startDate && <p className="errorColor">{error.startDate}</p>}
                                         </div>
                                     </div>
-
                                     <div className="row">
                                         <div className="col-sm-3">
                                             <p className="form-label font-weight-bold">End Date:</p>
@@ -236,7 +240,7 @@ function ApplyLeave() {
                                                 minDate={startDate}
                                                 className="form-control"
                                             />
-                                            {error.endDate && <p style={{ color: "red" }}>{error.endDate}</p>}
+                                            {error.endDate && <p className="errorColor">{error.endDate}</p>}
                                         </div>
                                     </div>
                                     <div className="row">
@@ -255,7 +259,7 @@ function ApplyLeave() {
                                         </div>
                                         <div class="col-sm-9">
                                             <textarea class="form-control" id="reason" name="reasonForLeave" onChange={handleChange} />
-                                            {error.reasonForLeave && <p style={{ color: "red" }}>{error.reasonForLeave}</p>}
+                                            {error.reasonForLeave && <p className="errorColor">{error.reasonForLeave}</p>}
                                         </div>
                                     </div>
                                     <button style={{ margin: "10px" }} type="submit" class="btn btn-dark">Apply</button>
@@ -265,12 +269,10 @@ function ApplyLeave() {
                         </div>
                     </div>
                     <center>
-                    {leaveError && <p style={{ color: "red" }}>{leaveError}</p>}
+                        {leaveError && <p className="errorColor">{leaveError}</p>}
                     </center>
                 </div>
-                
             </form>
-           
         </>
     )
 }

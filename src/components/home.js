@@ -14,7 +14,12 @@ function Home() {
         const fetchData = async () => {
             try {
                 const result = await homeService(jwtToken);
-                setEmployees(result.data);
+                if (result.data.length > 0){
+                    setEmployees(result.data);
+                }
+                else{
+                    setEmployees([]);
+                }
             } catch (error) {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
@@ -27,14 +32,14 @@ function Home() {
     return (
         <div >
             <Layout></Layout>
-            <div class="col-md-11 mb-11" style={{ marginLeft: "40px", marginTop: "40px" }}>
-                <div class="card example-1 scrollbar-ripe-malinka" style={{ height: "300px" }}>
+            <div class="col-md-11 mb-11 homeCss">
+                <div class="card example-1 scrollbar-ripe-malinka">
                     <div class="card-body">
                         <h4 id="section1"><strong>Employee:</strong></h4>
                         <br></br>
                         {
                             employees.map((employee, index) =>
-                                <p style={{ color: "darkcyan" }}>{index + 1}.<img src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`} alt="Employee" height="30px" width="30px" style={{ borderRadius: "50%" }} /> {employee.name}</p>
+                                <p style={{ color: "darkcyan" }}>{index + 1}. <img src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`} alt="Employee" height="30px" width="30px" style={{ borderRadius: "50%" }} /> {employee.name}</p>
                             )
                         }
                     </div>

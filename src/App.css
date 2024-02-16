@@ -214,3 +214,7 @@ div.content {
 .requestCard {
     min-height: 450px;
 }
+
+.homeCss {
+    padding: 40px;
+}

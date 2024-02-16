@@ -6,6 +6,7 @@ import '../App.css';
 import messages from "../core/constants/messages";
 import auth from '../core/services/auth-service';
 import { configureToastOptions } from "../core/services/toast-service";
+import logo from './zoho-logo-web.png';
 
 function Login() {
     const navigate = useNavigate();
@@ -61,7 +62,7 @@ function Login() {
     }
 
     return (
-        <section class="h-100 gradient-form" style={{ backgroundcolor: "#eee" }}>
+        <section class="h-100 gradient-form">
             <div class="container py-3 h-100">
                 <div class="row d-flex justify-content-center align-items-center h-100">
                     <div class="col-xl-10">
@@ -70,26 +71,23 @@ function Login() {
                                 <div class="col-lg-6">
                                     <div class="card-body p-md-5 mx-md-4">
                                         <div class="text-center">
-                                            <img src="https://www.zohowebstatic.com/sites/zweb/images/commonroot/zoho-logo-web.svg"
-                                                style={{ width: "185px" }} alt="logo" />
+                                            <img src={logo}
+                                                className="loginLogo" alt="logo" />
                                             <br></br>
-                                            <h2 class="mt-1 mb-5 pb-1" style={{ color: "blueviolet" }}>Login</h2>
+                                            <h2 class="mt-1 mb-5 pb-1 loginTextColor">Login</h2>
                                         </div>
-
                                         <form method="post" onSubmit={loginData}>
                                             <div class="form-outline mb-4">
-                                                <label class="form-label">Email</label>
+                                                <label class="form-label">Username</label>
                                                 <input type="text" id="email" class="form-control"
                                                     placeholder="enter email address" name="email" onChange={handleChange} />
-                                                {error.email && <p style={{ color: "red" }}>{error.email}</p>}
+                                                {error.email && <p className="errorColor">{error.email}</p>}
                                             </div>
-
                                             <div class="form-outline mb-4">
                                                 <label class="form-label">Password</label>
                                                 <input type="password" id="password" class="form-control" name="password" placeholder="enter password" onChange={handleChange} />
-                                                {error.password && <p style={{ color: "red" }}>{error.password}</p>}
+                                                {error.password && <p className="errorColor">{error.password}</p>}
                                             </div>
-
                                             <div class="text-center pt-1 mb-5 pb-1">
                                                 <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Log
                                                     in</button>

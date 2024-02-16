@@ -16,7 +16,6 @@ function Edit() {
     const [avatar, setAvatar] = useState('');
     const [error, setError] = useState({})
     const [emailMessage, setEmailMessage] = useState('');
-    const [emailExist, setEmailExist] = useState(false);
     const jwtToken = localStorage.getItem('authToken');
     const [manager, setManager] = useState([]);
 
@@ -42,7 +41,6 @@ function Edit() {
                     const managerDetailsResponse = await profileService.getManagerDetail(user.managerId, jwtToken);
                     setManager(managerDetailsResponse.data)
                 })
-                // await Promise.all(managerPromises);
             }
             catch (error) {
                 const toastOptions = configureToastOptions();
@@ -52,15 +50,6 @@ function Edit() {
         }
         fetchData();
     }, [jwtToken])
-
-    const checkEmail = async () => {
-        try {
-            await updateService.varifyEmail({ email: user.email });
-            setEmailMessage(messages.update.error.emailRegistered);
-        } catch (error) {
-            setEmailMessage('');
-        }
-    }
 
     const validation = async () => {
         const error = {}
@@ -73,10 +62,6 @@ function Edit() {
         } else if (!emailRegex.test(user.email)) {
             error.email = messages.update.error.invalidEmail;
         }
-
-        // if (true) {
-        //    await checkEmail();
-        // }
 
         if (!user.age) {
             error.age = messages.update.error.ageRequired;
@@ -126,6 +111,7 @@ function Edit() {
             error.postalCode = messages.update.error.invalidPostalCode
         }
         setError(error);
+
         if (!user.name || !user.email || !emailRegex.test(user.email) || !user.age || !(0 < user.age && 60 >= user.age) || !user.mobile || !mobileRegex.test(user.mobile) || !user.addressLine1 || user.addressLine1.length > 200 || !user.addressLine2 || user.addressLine2.length > 200 || !user.city || user.city.length > 200 || !user.state || user.state.length > 200 || !user.country || user.country.length > 200 || !user.postalCode || user.postalCode.length > 200) {
             return true;
         }
@@ -133,9 +119,6 @@ function Edit() {
 
     const handleChange = (e) => {
         setUser({ ...user, [e.target.name]: e.target.value });
-        // if (checkEmail()) {
-        //     return;
-        // }
     }
 
     const updateUser = async (e) => {
@@ -177,165 +160,153 @@ function Edit() {
         navigate('/profile');
     }
 
-    return (
-        <>
+    return (<>
         <form action="#" method="post" encType="multipart/form-data" onSubmit={updateUser}>
             <Layout></Layout>
-            <div style={{ backgroundcolor: "#eee" }}>
-                <div class="container py-5">
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="card mb-4">
-                                    <div class="card-body text-center">
-                                        <img src={process.env.REACT_APP_DOMAIN_URL + `/${avatar}`} alt="avatar"
-                                            class="rounded-circle img-fluid" style={{ width: "200px", height: "200px" }} />
-                                        <h5 class="my-3">{user.name}</h5>
-                                        <p class="text-muted mb-4">{user.city}</p>
-                                    </div>
-                                </div>
-                                <div className="card mb-4">
-                                    {manager.map((manager) =>
-                                        <div className="card-body text-center" key={manager._id}>
-                                            <h5 className="my-3">Reporting To:</h5>
-                                            <p style={{ color: "darkcyan" }}>
-                                                <img
-                                                    src={process.env.REACT_APP_DOMAIN_URL + `/${manager.avatar}`}
-                                                    alt="Manager"
-                                                    height="30px"
-                                                    width="30px"
-                                                    style={{ borderRadius: "50%" }}
-                                                />
-                                                {manager.name}
-                                            </p>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                            <div class="col-lg-8">
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Full Name</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="name" name="name" onChange={handleChange} value={user.name} />
-                                                {error.name && <p style={{ color: "red" }}>{error.name}</p>}
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Email</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="email" name="email" onChange={handleChange} value={user.email} />
-                                                {error.email && <p style={{ color: "red" }}>{error.email}</p>}
-                                                <p style={{ color: "red" }}>{emailMessage}</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Age</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="number" class="form-control" id="age" name="age" onChange={handleChange} value={user.age} />
-                                                {error.age && <p style={{ color: "red" }}>{error.age}</p>}
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">Mobile</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="tel" class="form-control" id="mobile" name="mobile" onChange={handleChange} value={user.mobile} />
-                                                {error.mobile && <p style={{ color: "red" }}>{error.mobile}</p>}
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0 font-weight-bold">Address:</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <p class="text-muted mb-0"></p>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">address Line1</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="addressLine1" name="addressLine1" onChange={handleChange} value={user.addressLine1} />
-                                                {error.addressLine1 && <p style={{ color: "red" }}>{error.addressLine1}</p>}
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">address Line2</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="addressLine2" name="addressLine2" onChange={handleChange} value={user.addressLine2} />
-                                                {error.addressLine2 && <p style={{ color: "red" }}>{error.addressLine2}</p>}
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">city</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="city" name="city" onChange={handleChange} value={user.city} />
-                                                {error.city && <p style={{ color: "red" }}>{error.city}</p>}
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">state</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="state" name="state" onChange={handleChange} value={user.state} />
-                                                {error.state && <p style={{ color: "red" }}>{error.state}</p>}
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">country</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="country" name="country" onChange={handleChange} value={user.country} />
-                                                {error.country && <p style={{ color: "red" }}>{error.country}</p>}
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-sm-3">
-                                                <p class="mb-0">postal code</p>
-                                                <br></br>
-                                            </div>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control" id="postalCode" name="postalCode" onChange={handleChange} value={user.postalCode} />
-                                                {error.postalCode && <p style={{ color: "red" }}>{error.postalCode}</p>}
-                                            </div>
-                                        </div>
-                                        <button style={{ margin: "10px" }} type="submit" class="btn btn-dark">Save</button>
-                                        <button class="btn btn-dark" onClick={navigateToProfile}>Cancel</button>
-                                    </div>
-                                </div>
+            <div class="container py-5">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <div class="card-body text-center">
+                                <img src={process.env.REACT_APP_DOMAIN_URL + `/${avatar}`} alt="avatar" class="rounded-circle img-fluid" style={{ width: "200px", height: "200px" }} />
+                                <h5 class="my-3">{user.name}</h5>
+                                <p class="text-muted mb-4">{user.city}</p>
                             </div>
                         </div>
+                        <div className="card mb-4">
+                            {manager.map((manager) =>
+                                <div className="card-body text-center" key={manager._id}>
+                                    <h5 className="my-3">Reporting To:</h5>
+                                    <p>
+                                        <img src={process.env.REACT_APP_DOMAIN_URL + `/${manager.avatar}`} alt="Manager" height="30px" width="30px" style={{ borderRadius: "50%" }} /> {manager.name}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Full Name</p>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="name" name="name" onChange={handleChange} value={user.name} />
+                                        {error.name && <p className="errorColor">{error.name}</p>}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Email</p>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="email" name="email" onChange={handleChange} value={user.email} />
+                                        {error.email && <p style={{ color: "red" }}>{error.email}</p>}
+                                        <p className="errorColor">{emailMessage}</p>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Age</p>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" id="age" name="age" onChange={handleChange} value={user.age} />
+                                        {error.age && <p className="errorColor">{error.age}</p>}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">Mobile</p>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="tel" class="form-control" id="mobile" name="mobile" onChange={handleChange} value={user.mobile} />
+                                        {error.mobile && <p className="errorColor">{error.mobile}</p>}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0 font-weight-bold">Address:</p>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p class="text-muted mb-0"></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">address Line1</p>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="addressLine1" name="addressLine1" onChange={handleChange} value={user.addressLine1} />
+                                        {error.addressLine1 && <p className="errorColor">{error.addressLine1}</p>}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">address Line2</p>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="addressLine2" name="addressLine2" onChange={handleChange} value={user.addressLine2} />
+                                        {error.addressLine2 && <p className="errorColor">{error.addressLine2}</p>}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">city</p>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="city" name="city" onChange={handleChange} value={user.city} />
+                                        {error.city && <p className="errorColor">{error.city}</p>}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">state</p>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="state" name="state" onChange={handleChange} value={user.state} />
+                                        {error.state && <p className="errorColor">{error.state}</p>}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">country</p>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="country" name="country" onChange={handleChange} value={user.country} />
+                                        {error.country && <p className="errorColor">{error.country}</p>}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p class="mb-0">postal code</p>
+                                        <br></br>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="postalCode" name="postalCode" onChange={handleChange} value={user.postalCode} />
+                                        {error.postalCode && <p className="errorColor">{error.postalCode}</p>}
+                                    </div>
+                                </div>
+                                <button style={{ margin: "10px" }} type="submit" class="btn btn-dark">Save</button>
+                                <button class="btn btn-dark" onClick={navigateToProfile}>Cancel</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            </form>
-        </>)
+        </form>
+    </>)
 }
 
 export default Edit;

@@ -20,8 +20,6 @@ function App() {
                         path="/"
                         element={<Login />}
                     />
-                </Routes>
-                <Routes>
                     <Route
                         exact
                         path="/varifyEmail"

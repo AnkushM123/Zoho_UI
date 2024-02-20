@@ -78,7 +78,7 @@ function Login() {
                                         </div>
                                         <form method="post" onSubmit={loginData}>
                                             <div class="form-outline mb-4">
-                                                <label class="form-label">Username</label>
+                                                <label class="form-label">Email</label>
                                                 <input type="text" id="email" class="form-control"
                                                     placeholder="enter email address" name="email" onChange={handleChange} />
                                                 {error.email && <p className="errorColor">{error.email}</p>}

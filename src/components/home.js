@@ -14,10 +14,10 @@ function Home() {
         const fetchData = async () => {
             try {
                 const result = await homeService(jwtToken);
-                if (result.data.length > 0){
+                if (result.data && result.data.length > 0) {
                     setEmployees(result.data);
                 }
-                else{
+                else {
                     setEmployees([]);
                 }
             } catch (error) {
@@ -35,11 +35,11 @@ function Home() {
             <div class="col-md-11 mb-11 homeCss">
                 <div class="card example-1 scrollbar-ripe-malinka">
                     <div class="card-body">
-                        <h4 id="section1"><strong>Employee:</strong></h4>
+                        <h4><strong>Employee:</strong></h4>
                         <br></br>
                         {
                             employees.map((employee, index) =>
-                                <p style={{ color: "darkcyan" }}>{index + 1}. <img src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`} alt="Employee" height="30px" width="30px" style={{ borderRadius: "50%" }} /> {employee.name}</p>
+                                <p>{index + 1}. <img src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`} alt="Employee" height="30px" width="30px" style={{ borderRadius: "50%" }} /> {employee.name}</p>
                             )
                         }
                     </div>

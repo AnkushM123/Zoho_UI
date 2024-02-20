@@ -62,7 +62,7 @@ function VarifyEmail() {
                                 <div className="text-start">
                                     <label class="form-label font-weight-bold">Email input:</label>
                                 </div>
-                                <input type="text" id="typeEmail" class="form-control my-3" name="email" placeholder="Enter email address" onChange={handleChange} />
+                                <input type="text" id="email" class="form-control my-3" name="email" placeholder="Enter email address" onChange={handleChange} />
                                 {error.email && <p class="form-label font-weight-bold errorColor">{error.email}</p>}
                             </div>
                             <br></br>

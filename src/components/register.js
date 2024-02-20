@@ -144,11 +144,7 @@ function Register() {
         if (e.target.name.startsWith("address.")) {
             const addressField = e.target.name.split('.')[1];
             setInputData({
-                ...inputData,
-                address: {
-                    ...inputData.address,
-                    [addressField]: e.target.value,
-                }
+                ...inputData, address: { ...inputData.address, [addressField]: e.target.value, }
             });
         } else {
             setInputData({ ...inputData, [e.target.name]: e.target.value })
@@ -228,7 +224,6 @@ function Register() {
                                             {error.age && <p className="errorColor">{error.age}</p>}
                                         </div>
                                     </div>
-
                                     <br></br>
                                     <div class="row mb-3">
                                         <div class="col-md-6">

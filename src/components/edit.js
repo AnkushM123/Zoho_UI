@@ -298,7 +298,7 @@ function Edit() {
                                         {error.postalCode && <p className="errorColor">{error.postalCode}</p>}
                                     </div>
                                 </div>
-                                <button style={{ margin: "10px" }} type="submit" class="btn btn-dark">Save</button>
+                                <button type="submit" class="btn btn-dark mx-2">Save</button>
                                 <button class="btn btn-dark" onClick={navigateToProfile}>Cancel</button>
                             </div>
                         </div>

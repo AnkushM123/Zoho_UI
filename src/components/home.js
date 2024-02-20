@@ -14,7 +14,7 @@ function Home() {
         const fetchData = async () => {
             try {
                 const result = await homeService(jwtToken);
-                if (result.data.length > 0) {
+                if (result.data && result.data.length > 0) {
                     setEmployees(result.data);
                 }
                 else {

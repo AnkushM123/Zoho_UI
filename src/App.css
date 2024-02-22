@@ -214,3 +214,7 @@ div.content {
 .requestCard {
     min-height: 450px;
 }
+
+.bell {
+    margin-top: 2px;
+}

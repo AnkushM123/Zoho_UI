@@ -61,7 +61,7 @@ function Profile() {
                         {
                             user.map((user) =>
                                 <div class="card-body text-center">
-                                    <img src={process.env.REACT_APP_DOMAIN_URL + `/${user.avatar}`} alt="avatar" class="rounded-circle img-fluid" style={{ width: "200px", height: "200px" }} />
+                                    <img src={process.env.REACT_APP_DOMAIN_URL + `/${user.avatar}`} alt="avatar" class="rounded-circle profileImage" />
                                     <h5 class="my-3">{user.name}</h5>
                                     <p class="text-muted mb-1">{role}</p>
                                     <p class="text-muted mb-4">{user.address.city}</p>
@@ -74,7 +74,7 @@ function Profile() {
                             <div className="card-body text-center" key={manager._id}>
                                 <h5 className="my-3">Reporting To:</h5>
                                 <p>
-                                    <img src={process.env.REACT_APP_DOMAIN_URL + `/${manager.avatar}`} alt="Manager" height="30px" width="30px" style={{ borderRadius: "50%" }} /> {manager.name}
+                                    <img className="employeesImage" src={process.env.REACT_APP_DOMAIN_URL + `/${manager.avatar}`} alt="Manager" height="30px" width="30px" /> {manager.name}
                                 </p>
                             </div>
                         )}
@@ -94,7 +94,6 @@ function Profile() {
                                             <p class="text-muted mb-0">{user.name}</p>
                                         </div>
                                     </div>
-
                                     <div class="row">
                                         <div class="col-sm-3">
                                             <p class="mb-0">Email</p>

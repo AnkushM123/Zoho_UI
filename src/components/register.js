@@ -207,7 +207,7 @@ function Register() {
                                             <br></br>
                                             <label class="form-label font-weight-bold">Email:</label>
                                             <input type="text" class="form-control" id="email" name="email" onChange={handleChange} placeholder="enter email address" />
-                                            {error.email && <p style={{ color: "red" }}>{error.email}</p>}
+                                            {error.email && <p className="errorColor">{error.email}</p>}
                                             <p className="errorColor">{emailMessage}</p>
                                         </div>
                                     </div>

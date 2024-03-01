@@ -1,5 +1,6 @@
 import axios from 'axios';
 import path from '../../config/path';
+import axiosInstance from './axiosInterceptor-service';
 
 const login = async (inputData) => {
     return axios.post(path.login, inputData);
@@ -14,28 +15,19 @@ const varifyEmail = async (inputData) => {
 };
 
 const register = async (formData, jwtToken) => {
-    return axios.post(path.register, formData, {
+    return axiosInstance.post(path.register, formData, {
         headers: {
-            'Authorization': `Bearer ${jwtToken}`,
             'content-type': 'multipart/form-data',
         },
     })
 }
 
-const createLeaveRecord = async (inputData, jwtToken) => {
-    return axios.post(path.createLeaveRecord, inputData, {
-        headers: {
-            'Authorization': `Bearer ${jwtToken}`
-        }
-    })
+const createLeaveRecord = async (inputData) => {
+    return axiosInstance.post(path.createLeaveRecord, inputData)
 }
 
-const getByRole = async (id, jwtToken) => {
-    return axios.get(path.getByRole + `/${id}`, {
-        headers: {
-            'Authorization': `Bearer ${jwtToken}`
-        }
-    })
+const getByRole = async (id) => {
+    return axiosInstance.get(path.getByRole + `/${id}`)
 }
 
 export default { login, setPassword, varifyEmail, register, createLeaveRecord, getByRole };

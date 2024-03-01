@@ -1,20 +1,13 @@
 import axios from 'axios';
 import path from '../../config/path';
+import axiosInstance from './axiosInterceptor-service';
 
-const loggedInUser = async (jwtToken) => {
-    return axios.get(path.profile , {
-        headers: {
-          'Authorization' : `Bearer ${jwtToken}` 
-        }
-      })
+const loggedInUser = async () => {
+    return axiosInstance.get(path.profile)
 }
 
-const getManagerDetail = async (id,jwtToken) => {   
-    return axios.get(path.getUserById + `/${id}` , {
-        headers: {
-          'Authorization' : `Bearer ${jwtToken}` 
-        }
-      })
+const getManagerDetail = async (id) => {   
+    return axiosInstance.get(path.getUserById + `/${id}`)
 }
 
 export default { loggedInUser, getManagerDetail };

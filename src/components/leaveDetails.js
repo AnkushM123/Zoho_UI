@@ -16,14 +16,13 @@ function LeaveDetails() {
     const { requestId } = useParams();
     const [request, setRequest] = useState({});
     const [leaveType, setLeaveType] = useState('');
-    const jwtToken = localStorage.getItem('authToken')
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await requestService.getByRequestId(requestId, jwtToken);
+                const result = await requestService.getByRequestId(requestId);
                 setRequest(result.data[0]);
-                const leaveTypeResult = await leaveTypeService(result.data[0].leaveId, jwtToken);
+                const leaveTypeResult = await leaveTypeService(result.data[0].leaveId);
                 setLeaveType(leaveTypeResult.data[0].leaveName);
             } catch (error) {
                 const toastOptions = configureToastOptions();

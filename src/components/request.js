@@ -22,12 +22,11 @@ function Request() {
     const perPage = 10;
     const perVisit = pageNumber * perPage;
     let pageCount = Math.ceil(request.length / perPage);
-    const jwtToken = localStorage.getItem('authToken');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await requestService.getRequestByManagerId(id, jwtToken);
+                const result = await requestService.getRequestByManagerId(id);
                 const sortedData = result.data.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
                 setRequest(sortedData);
             } catch (error) {
@@ -43,7 +42,7 @@ function Request() {
         const fetchLeaveTypes = async () => {
             try {
                 const leaveTypePromises = request.map(async (requestItem) => {
-                    const result = await leaveTypeService(requestItem.leaveId, jwtToken);
+                    const result = await leaveTypeService(requestItem.leaveId);
                     return result.data[0].leaveName;
                 });
                 const leaveTypeNames = await Promise.all(leaveTypePromises);
@@ -83,8 +82,8 @@ function Request() {
             try {
                 setPageNumber(0);
                 const result = requestStatus === 4 ?
-                    await requestService.getRequestByManagerId(id, jwtToken) :
-                    await requestService.getByManagerIdAndStatus(id, { status: requestStatus }, jwtToken);
+                    await requestService.getRequestByManagerId(id) :
+                    await requestService.getByManagerIdAndStatus(id, { status: requestStatus });
 
                 const sortedData = result.data.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
                 setRequest(sortedData);

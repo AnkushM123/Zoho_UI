@@ -42,7 +42,6 @@ function Register() {
     const [respondingTo, setRespondingTo] = useState([]);
     const [managerId, setManagerId] = useState('');
     const [isFileImage, setIsFileImage] = useState(true);
-    const jwtToken = localStorage.getItem('authToken');
 
     useEffect(() => {
         if (respondingTo.length === 1) {
@@ -67,7 +66,7 @@ function Register() {
 
     const checkEmail = async () => {
         try {
-            await authService.varifyEmail({ email: inputData.email }, jwtToken);
+            await authService.varifyEmail({ email: inputData.email });
             setEmailMessage(messages.register.error.emailAlreadyExist);
             return true;
         } catch (error) {
@@ -220,7 +219,7 @@ function Register() {
         formData.append('updatedBy', adminId);
 
         try {
-            const result = await authService.register(formData, jwtToken);
+            const result = await authService.register(formData);
             const userId = result.data._id;
 
             const leaveRecords = leaveId.map(async (id) => {
@@ -275,11 +274,11 @@ function Register() {
             setRole(selectedRole);
 
             if (selectedRole === '658eac73510f63f754e68cf9') {
-                const result = await authService.getByRole('658eac9e510f63f754e68cfe', jwtToken);
+                const result = await authService.getByRole('658eac9e510f63f754e68cfe');
                 setRespondingTo(result.data);
             } else {
                 if (selectedRole === '658eac9e510f63f754e68cfe') {
-                    const result = await authService.getByRole('658eacbb510f63f754e68d02', jwtToken);
+                    const result = await authService.getByRole('658eacbb510f63f754e68d02');
                     setRespondingTo(result.data);
                 }
                 else {

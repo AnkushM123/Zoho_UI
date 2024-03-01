@@ -6,7 +6,7 @@ const loggedInUser = async () => {
     return axiosInstance.get(path.profile)
 }
 
-const getManagerDetail = async (id) => {   
+const getManagerDetail = async (id) => {
     return axiosInstance.get(path.getUserById + `/${id}`)
 }
 

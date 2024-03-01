@@ -17,7 +17,6 @@ function ChangePassword() {
     const [error, setError] = useState({});
     const [inputData, setInputData] = useState({});
     const [message, setMessage] = useState('');
-    const jwtToken = localStorage.getItem('authToken');
 
     const validation = async () => {
         const error = {}
@@ -58,7 +57,7 @@ function ChangePassword() {
             return;
         }
         try {
-            await changePasswordService(inputData, id, jwtToken);
+            await changePasswordService(inputData, id);
             setMessage('');
             setTimeout(function () {
                 const toastOptions = configureToastOptions();

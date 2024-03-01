@@ -18,7 +18,6 @@ import '../App.css'
 function EmployeeLayout() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const jwtToken = localStorage.getItem('authToken');
   const id = decodeJwt().id;
   const [notification, setNotification] = useState([]);
   const [count, setCount] = useState(0)
@@ -27,7 +26,7 @@ function EmployeeLayout() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await notificationService.getNotification(id, jwtToken);
+        const result = await notificationService.getNotification(id);
         const sortedData = result.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setNotification(sortedData);
         increment = 0;
@@ -44,7 +43,7 @@ function EmployeeLayout() {
       }
     };
     fetchData();
-  }, [jwtToken]);
+  }, []);
 
 
   const handleClose = () => setShow(false);
@@ -57,7 +56,7 @@ function EmployeeLayout() {
 
   const markAllRead = async () => {
     try {
-      await notificationService.updateAllNotification(id, { isSeen: true }, jwtToken);
+      await notificationService.updateAllNotification(id, { isSeen: true });
       handleClose();
       window.location.reload()
     } catch (error) {
@@ -70,7 +69,7 @@ function EmployeeLayout() {
   const handleNotificationClick = async (notificationId, requestId, seenByManager) => {
     try {
       if (!seenByManager) {
-        await notificationService.updateNotification(notificationId, { isSeen: true }, jwtToken);
+        await notificationService.updateNotification(notificationId, { isSeen: true });
         navigate(`/notificationDetails/${requestId}`);
       } else {
         navigate(`/notificationDetails/${requestId}`);

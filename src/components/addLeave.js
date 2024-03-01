@@ -21,7 +21,6 @@ function AddLeave() {
     const [selectedUser, setSelectedUser] = useState('');
     const [error, setError] = useState({});
     const id = decodeJwt().id;
-    const jwtToken = localStorage.getItem('authToken');
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [totalDays, setTotalDays] = useState(0);
@@ -30,7 +29,7 @@ function AddLeave() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await homeService(jwtToken);
+                const result = await homeService();
                 setEmployees(result.data);
             } catch (error) {
                 const toastOptions = configureToastOptions();
@@ -109,15 +108,15 @@ function AddLeave() {
             return;
         }
         try {
-            const result = await leaveTrackerService.getParticularRecord({ userId: selectedUser, leaveId: '659bc36c01e2f1640c26260e' }, jwtToken);
+            const result = await leaveTrackerService.getParticularRecord({ userId: selectedUser, leaveId: '659bc36c01e2f1640c26260e' });
             const leaveRecord = {
                 userId: selectedUser,
                 balance: parseInt(result.data[0].balance) + parseInt(totalDays),
                 booked: result.data[0].booked,
                 updatedBy: decodeJwt().id
             }
-            await leaveTrackerService.updateLeaveRecord('659bc36c01e2f1640c26260e', leaveRecord, jwtToken);
-            const employeeDetailsResponse = await profileService.getManagerDetail(selectedUser, jwtToken);
+            await leaveTrackerService.updateLeaveRecord('659bc36c01e2f1640c26260e', leaveRecord);
+            const employeeDetailsResponse = await profileService.getManagerDetail(selectedUser);
             const formData = new FormData();
             formData.append('userId', selectedUser);
             formData.append('managerId', id);
@@ -133,7 +132,7 @@ function AddLeave() {
             formData.append('createdBy', id);
             formData.append('updatedBy', id);
 
-            await leaveTrackerService.applyLeaveRequest(formData, jwtToken);
+            await leaveTrackerService.applyLeaveRequest(formData);
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;

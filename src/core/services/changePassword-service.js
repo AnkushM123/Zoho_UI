@@ -1,4 +1,3 @@
-import axios from 'axios';
 import path from '../../config/path';
 import axiosInstance from './axiosInterceptor-service';
 

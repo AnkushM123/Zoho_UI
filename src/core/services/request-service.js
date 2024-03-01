@@ -1,76 +1,40 @@
-import axios from 'axios';
 import path from '../../config/path';
+import axiosInstance from './axiosInterceptor-service';
 
-const getRequestByManagerId = async (managerId, jwtToken) => {
-    return axios.get(path.getRequestByManagerId + `/${managerId}`, {
-        headers: {
-          'Authorization' : `Bearer ${jwtToken}` 
-        }
-      })
+const getRequestByManagerId = async (managerId) => {
+  return axiosInstance.get(path.getRequestByManagerId + `/${managerId}`)
 }
 
-const getUser = async (id, jwtToken) => {
-    return axios.get(path.getUserById + `/${id}`, {
-      headers: {
-        'Authorization' : `Bearer ${jwtToken}` 
-      }
-    })
+const getUser = async (id) => {
+  return axiosInstance.get(path.getUserById + `/${id}`)
 }
 
-const getByRequestId = async (requestId, jwtToken) => {
-    return axios.get(path.getRequestByRequestId + `/${requestId}`, {
-        headers: {
-          'Authorization' : `Bearer ${jwtToken}` 
-        }
-      })
+const getByRequestId = async (requestId) => {
+  return axiosInstance.get(path.getRequestByRequestId + `/${requestId}`)
 }
 
-const changeRequestStatus = async (requestId, status, jwtToken) => {
-    return axios.put(path.changeRequestStatus + `/${requestId}`, status, {
-        headers: {
-          'Authorization' : `Bearer ${jwtToken}` 
-        }
-      })
+const changeRequestStatus = async (requestId, status) => {
+  return axiosInstance.put(path.changeRequestStatus + `/${requestId}`, status)
 }
 
-const getByUserId = async (userId, jwtToken) => {
-    return axios.get(path.getRequestByUserId + `/${userId}`, {
-        headers: {
-          'Authorization' : `Bearer ${jwtToken}` 
-        }
-      })
+const getByUserId = async (userId) => {
+  return axiosInstance.get(path.getRequestByUserId + `/${userId}`)
 }
 
-const addCommentInRequest = async (requestId, comment, jwtToken) => {
-    return axios.put(path.addCommentInRequest + `/${requestId}`, comment, {
-        headers: {
-          'Authorization' : `Bearer ${jwtToken}` 
-        }
-      })
+const addCommentInRequest = async (requestId, comment) => {
+  return axiosInstance.put(path.addCommentInRequest + `/${requestId}`, comment)
 }
 
-const getRequestByStatus = async (userId, jwtToken) => {
-    return axios.get(path.getRequestByStatus + `/${userId}`, {
-        headers: {
-          'Authorization' : `Bearer ${jwtToken}` 
-        }
-      })
+const getRequestByStatus = async (userId) => {
+  return axiosInstance.get(path.getRequestByStatus + `/${userId}`)
 }
 
-const getCompensantoryRequest = async (managerId, jwtToken) => {
-    return axios.get(path.getCompensantoryRequest + `/${managerId}`, {
-        headers: {
-          'Authorization' : `Bearer ${jwtToken}` 
-        }
-      })
+const getCompensantoryRequest = async (managerId) => {
+  return axiosInstance.get(path.getCompensantoryRequest + `/${managerId}`)
 }
 
-const getByManagerIdAndStatus = async (requestId, status, jwtToken) => {
-    return axios.post(path.getRequestByManagerIdAndStatus + `/${requestId}`, status, {
-        headers: {
-          'Authorization' : `Bearer ${jwtToken}` 
-        }
-      })
+const getByManagerIdAndStatus = async (requestId, status) => {
+  return axiosInstance.post(path.getRequestByManagerIdAndStatus + `/${requestId}`, status)
 }
 
 export default { getRequestByManagerId, getUser, getByRequestId, changeRequestStatus, getByUserId, addCommentInRequest, getRequestByStatus, getCompensantoryRequest, getByManagerIdAndStatus };

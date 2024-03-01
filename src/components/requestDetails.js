@@ -22,17 +22,16 @@ function RequestDetails() {
     const [request, setRequest] = useState({});
     const [comment, setComment] = useState({});
     const [leaveType, setLeaveType] = useState('');
-    const jwtToken = localStorage.getItem('authToken');
     const [user, setUser] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await requestService.getByRequestId(requestId, jwtToken);
+                const result = await requestService.getByRequestId(requestId);
                 setRequest(result.data[0]);
-                const leaveTypeResult = await leaveTypeService(result.data[0].leaveId, jwtToken);
+                const leaveTypeResult = await leaveTypeService(result.data[0].leaveId);
                 setLeaveType(leaveTypeResult.data[0].leaveName);
-                const user = await profileService.loggedInUser(jwtToken);
+                const user = await profileService.loggedInUser();
                 setUser(user.data[0]);
             } catch (error) {
                 const toastOptions = configureToastOptions();
@@ -57,16 +56,16 @@ function RequestDetails() {
 
     const changeRequestStatus = async () => {
         try {
-            await requestService.changeRequestStatus(request._id, { status: 1 }, jwtToken);
-            await requestService.addCommentInRequest(request._id, comment, jwtToken);
-            const result = await leaveTrackerService.getParticularRecord({ userId: request.userId, leaveId: request.leaveId }, jwtToken);
+            await requestService.changeRequestStatus(request._id, { status: 1 });
+            await requestService.addCommentInRequest(request._id, comment);
+            const result = await leaveTrackerService.getParticularRecord({ userId: request.userId, leaveId: request.leaveId });
             const leaveRecord = {
                 userId: request.userId,
                 balance: result.data[0].balance - request.totalDays,
                 booked: result.data[0].booked + request.totalDays,
                 updatedBy: request.userId
             }
-            await leaveTrackerService.updateLeaveRecord(result.data[0].leaveId, leaveRecord, jwtToken);
+            await leaveTrackerService.updateLeaveRecord(result.data[0].leaveId, leaveRecord);
 
             const notification = new FormData();
             notification.append('userId', request.userId);
@@ -78,7 +77,7 @@ function RequestDetails() {
             notification.append('isSeen', false);
             notification.append('addedByEmployeeId', user.employeeId);
 
-            await notificationService.createNotification(notification, jwtToken);
+            await notificationService.createNotification(notification);
             navigate('/request')
         } catch (error) {
             const toastOptions = configureToastOptions();
@@ -89,8 +88,8 @@ function RequestDetails() {
 
     const declineRequest = async () => {
         try {
-            await requestService.changeRequestStatus(request._id, { status: 2 }, jwtToken);
-            await requestService.addCommentInRequest(request._id, comment, jwtToken);
+            await requestService.changeRequestStatus(request._id, { status: 2 });
+            await requestService.addCommentInRequest(request._id, comment);
             const notification = new FormData();
             notification.append('userId', request.userId);
             notification.append('avatar', user.avatar);
@@ -101,7 +100,7 @@ function RequestDetails() {
             notification.append('isSeen', false);
             notification.append('addedByEmployeeId', user.employeeId);
 
-            await notificationService.createNotification(notification, jwtToken);
+            await notificationService.createNotification(notification);
             navigate('/request')
         } catch (error) {
             console.log(error)

@@ -1,20 +1,19 @@
-import axios from 'axios';
 import path from '../../config/path';
 import axiosInstance from './axiosInterceptor-service';
 
 const login = async (inputData) => {
-    return axios.post(path.login, inputData);
+    return axiosInstance.post(path.login, inputData);
 };
 
 const setPassword = async (inputData, id) => {
-    return axios.put(path.setPassword + `/${id}`, inputData)
+    return axiosInstance.put(path.setPassword + `/${id}`, inputData)
 };
 
 const varifyEmail = async (inputData) => {
-    return axios.post(path.varifyEmail, inputData);
+    return axiosInstance.post(path.varifyEmail, inputData);
 };
 
-const register = async (formData, jwtToken) => {
+const register = async (formData) => {
     return axiosInstance.post(path.register, formData, {
         headers: {
             'content-type': 'multipart/form-data',

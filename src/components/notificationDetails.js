@@ -18,16 +18,15 @@ function NotificationDetails() {
     const [request, setRequest] = useState({});
     const [leaveType, setLeaveType] = useState('');
     const [managerDetail, setManagerDetail] = useState({ managerName: '', managerEmployeeId: '' });
-    const jwtToken = localStorage.getItem('authToken');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await requestService.getByRequestId(requestId, jwtToken);
+                const result = await requestService.getByRequestId(requestId);
                 setRequest(result.data[0]);
-                const managerInfo = await profileService.getManagerDetail(result.data[0].managerId, jwtToken);
+                const managerInfo = await profileService.getManagerDetail(result.data[0].managerId);
                 setManagerDetail({ managerName: managerInfo.data[0].name, managerEmployeeId: managerInfo.data[0].employeeId })
-                const leaveTypeResult = await leaveTypeService(result.data[0].leaveId, jwtToken);
+                const leaveTypeResult = await leaveTypeService(result.data[0].leaveId);
                 setLeaveType(leaveTypeResult.data[0].leaveName);
             } catch (error) {
                 const toastOptions = configureToastOptions();

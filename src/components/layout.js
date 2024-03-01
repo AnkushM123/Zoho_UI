@@ -17,7 +17,6 @@ import defaultUser from './user_3177440.png'
 function Layout() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-  const jwtToken = localStorage.getItem('authToken');
   const id = decodeJwt().id;
   const [notification, setNotification] = useState([]);
   const [count, setCount] = useState(0)
@@ -26,7 +25,7 @@ function Layout() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await notificationService.getNotification(id, jwtToken);
+        const result = await notificationService.getNotification(id);
         const sortedData = result.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setNotification(sortedData);
         increment = 0;
@@ -43,7 +42,7 @@ function Layout() {
       }
     };
     fetchData();
-  }, [jwtToken]);
+  }, []);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -56,7 +55,7 @@ function Layout() {
   const handleNotificationClick = async (notificationId, requestId, seenByManager) => {
     try {
       if (!seenByManager) {
-        await notificationService.updateNotification(notificationId, { isSeen: true }, jwtToken);
+        await notificationService.updateNotification(notificationId, { isSeen: true });
         navigate(`/requestDetail/${requestId}`);
       } else {
         navigate(`/notificationDetails/${requestId}`);
@@ -71,7 +70,7 @@ function Layout() {
 
   const markAllRead = async () => {
     try {
-      await notificationService.updateAllNotification(id, { isSeen: true }, jwtToken);
+      await notificationService.updateAllNotification(id, { isSeen: true });
       handleClose();
       window.location.reload()
     } catch (error) {

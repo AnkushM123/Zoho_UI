@@ -95,11 +95,11 @@
 }
 
 .square::-webkit-scrollbar-track {
-    border-radius: 0 !important;
+    border-radius: 0
 }
 
 .square::-webkit-scrollbar-thumb {
-    border-radius: 0 !important;
+    border-radius: 0
 }
 
 .thin::-webkit-scrollbar {
@@ -148,7 +148,7 @@ div.content {
 
 @media (min-width: 768px) {
     .gradient-form {
-        height: 100vh !important;
+        height: 100vh
     }
 }
 
@@ -165,9 +165,8 @@ div.content {
 }
 
 .react-datepicker-wrapper {
-    display: block !important;
+    display: block
 }
-
 
 #section1 {
     height: 60px;
@@ -189,7 +188,7 @@ div.content {
 }
 
 .logoWidth {
-   width: 120px ;
+    width: 120px;
 }
 
 .homeCardSize {
@@ -217,4 +216,13 @@ div.content {
 
 .homeCss {
     padding: 40px;
+}
+
+.employeesImage {
+    border-radius: 50%;
+}
+
+.profileImage {
+    width: 200px;
+    height: 200px;
 }

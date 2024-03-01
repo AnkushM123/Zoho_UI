@@ -25,9 +25,9 @@ const loggedInUser = async (jwtToken) => {
     })
 }
 
-const updateLeaveRecord = async (leaveId,leaveRecord,jwtToken) => {
-    console.log(path.updateLeaveRecord +`${leaveId}`)
-    return axios.put(path.updateLeaveRecord +`/${leaveId}`,leaveRecord, {
+const updateLeaveRecord = async (leaveId, leaveRecord, jwtToken) => {
+    console.log(path.updateLeaveRecord + `${leaveId}`)
+    return axios.put(path.updateLeaveRecord + `/${leaveId}`, leaveRecord, {
         headers: {
             'Authorization': `Bearer ${jwtToken}`
         }
@@ -43,4 +43,4 @@ const applyLeaveRequest = async (formData, jwtToken) => {
     })
 }
 
-export default { getLeaveRecords, getParticularRecord, loggedInUser , updateLeaveRecord , applyLeaveRequest};
+export default { getLeaveRecords, getParticularRecord, loggedInUser, updateLeaveRecord, applyLeaveRequest };

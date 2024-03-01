@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import '../App.css';
 
 function Request() {
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     const id = decodeJwt().id;
     const jwtToken = localStorage.getItem('authToken');
     const [request, setRequest] = useState([]);
@@ -36,8 +36,8 @@ function Request() {
         return `${year}-${month}-${day}`;
     }
 
-    const navigateToRequest=()=>{
-navigate('/requestDetails')
+    const navigateToRequest = () => {
+        navigate('/requestDetails')
     }
 
     return (
@@ -58,7 +58,7 @@ navigate('/requestDetails')
                 </thead>
                 <tbody>
                     {request.map((requestItem, index) => (
-                        <tr key={index} onClick={()=>{navigateToRequest(requestItem)}} className="table-row-hover">
+                        <tr key={index} onClick={() => { navigateToRequest(requestItem) }} className="table-row-hover">
                             <th scope="row">{index + 1}</th>
                             <td>{requestItem.name}</td>
                             <td>{convertToDate(requestItem.startDate)}-{convertToDate(requestItem.endDate)}</td>

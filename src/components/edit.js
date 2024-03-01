@@ -17,10 +17,9 @@ function Edit() {
     const [user, setUser] = useState({ 'name': '', 'age': '', 'mobile': '', 'email': '', 'addressLine1': '', 'addressLine2': '', 'city': '', 'state': '', 'country': '', 'postalCode': '' });
     const [avatar, setAvatar] = useState('');
     const [error, setError] = useState({})
-    const [emailMessage, setEmailMessage] = useState('');
     const jwtToken = localStorage.getItem('authToken');
     const [manager, setManager] = useState([]);
-    const id=decodeJwt().id;
+    const id = decodeJwt().id;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -179,7 +178,7 @@ function Edit() {
                     <div class="col-lg-4">
                         <div class="card mb-4">
                             <div class="card-body text-center">
-                                <img src={process.env.REACT_APP_DOMAIN_URL + `/${avatar}`} alt="avatar" class="rounded-circle img-fluid" style={{ width: "200px", height: "200px" }} />
+                                <img src={process.env.REACT_APP_DOMAIN_URL + `/${avatar}`} alt="avatar" class="rounded-circle profileImage" />
                                 <h5 class="my-3">{user.name}</h5>
                                 <p class="text-muted mb-4">{user.city}</p>
                             </div>
@@ -189,7 +188,7 @@ function Edit() {
                                 <div className="card-body text-center" key={manager._id}>
                                     <h5 className="my-3">Reporting To:</h5>
                                     <p>
-                                        <img src={process.env.REACT_APP_DOMAIN_URL + `/${manager.avatar}`} alt="Manager" height="30px" width="30px" style={{ borderRadius: "50%" }} /> {manager.name}
+                                        <img className="employeesImage" src={process.env.REACT_APP_DOMAIN_URL + `/${manager.avatar}`} alt="Manager" height="30px" width="30px" /> {manager.name}
                                     </p>
                                 </div>
                             )}
@@ -215,8 +214,7 @@ function Edit() {
                                     </div>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" id="email" name="email" onChange={handleChange} value={user.email} />
-                                        {error.email && <p className="errorColor">{error.email}</p>}
-                                        <p className="errorColor">{emailMessage}</p>
+                                        {error.email && <p className='errorColor'>{error.email}</p>}
                                     </div>
                                 </div>
                                 <div class="row">
@@ -308,7 +306,7 @@ function Edit() {
                                         {error.postalCode && <p className="errorColor">{error.postalCode}</p>}
                                     </div>
                                 </div>
-                                <button style={{ margin: "10px" }} type="submit" class="btn btn-dark">Save</button>
+                                <button type="submit" class="btn btn-dark mx-2">Save</button>
                                 <button class="btn btn-dark" onClick={navigateToProfile}>Cancel</button>
                             </div>
                         </div>

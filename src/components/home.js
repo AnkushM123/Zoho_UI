@@ -15,7 +15,7 @@ function Home() {
         const fetchData = async () => {
             try {
                 const result = await homeService(jwtToken);
-                if (result.data.length > 0) {
+                if (result.data && result.data.length > 0) {
                     setEmployees(result.data);
                 }
                 else {
@@ -44,7 +44,7 @@ function Home() {
                     <br></br>
                     {
                         employees.map((employee, index) =>
-                            <p>{index + 1}. <img src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`} alt="Employee" height="30px" width="30px" style={{ borderRadius: "50%" }} /> {employee.name}</p>
+                            <p>{index + 1}. <img className="employeesImage" src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`} alt="Employee" height="30px" width="30px" /> {employee.name}</p>
                         )
                     }
                 </div>

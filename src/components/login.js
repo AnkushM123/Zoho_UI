@@ -83,13 +83,11 @@ function Login() {
                                                     placeholder="enter email address" name="email" onChange={handleChange} />
                                                 {error.email && <p className="errorColor">{error.email}</p>}
                                             </div>
-
                                             <div class="form-outline mb-4">
                                                 <label class="form-label">Password</label>
                                                 <input type="password" id="password" class="form-control" name="password" placeholder="enter password" onChange={handleChange} />
                                                 {error.password && <p className="errorColor">{error.password}</p>}
                                             </div>
-
                                             <div class="text-center pt-1 mb-5 pb-1">
                                                 <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Log
                                                     in</button>

@@ -29,22 +29,23 @@ function Home() {
         fetchData();
     }, [jwtToken]);
 
-    return (<>
-        <Layout></Layout>
-        <div class="col-md-11 mb-11 homeCss">
-            <div class="card example-1 scrollbar-ripe-malinka">
-                <div class="card-body">
-                    <h4><strong>Employee:</strong></h4>
-                    <br></br>
-                    {
-                        employees.map((employee, index) =>
-                            <p>{index + 1}. <img src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`} alt="Employee" height="30px" width="30px" style={{ borderRadius: "50%" }} /> {employee.name}</p>
-                        )
-                    }
+    return (
+        <div >
+            <Layout></Layout>
+            <div class="col-md-11 mb-11 homeCss">
+                <div class="card example-1 scrollbar-ripe-malinka">
+                    <div class="card-body">
+                        <h4><strong>Employee:</strong></h4>
+                        <br></br>
+                        {
+                            employees.map((employee, index) =>
+                                <p>{index + 1}. <img className="employeesImage" src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`} alt="Employee" height="30px" width="30px" /> {employee.name}</p>
+                            )
+                        }
+                    </div>
                 </div>
             </div>
         </div>
-    </>
     )
 }
 

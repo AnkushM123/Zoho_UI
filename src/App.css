@@ -95,11 +95,11 @@
 }
 
 .square::-webkit-scrollbar-track {
-    border-radius: 0 !important;
+    border-radius: 0
 }
 
 .square::-webkit-scrollbar-thumb {
-    border-radius: 0 !important;
+    border-radius: 0
 }
 
 .thin::-webkit-scrollbar {
@@ -148,7 +148,7 @@ div.content {
 
 @media (min-width: 768px) {
     .gradient-form {
-        height: 100vh !important;
+        height: 100vh
     }
 }
 
@@ -157,4 +157,68 @@ div.content {
         border-top-right-radius: .3rem;
         border-bottom-right-radius: .3rem;
     }
+}
+
+.table-row-hover:hover {
+    background-color: #00bcd4;
+    cursor: pointer;
+}
+
+.react-datepicker-wrapper {
+    display: block
+}
+
+
+#section1 {
+    height: 60px;
+}
+
+.iconmargin {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.forgotPassword {
+    text-align: center;
+    max-width: 600px;
+    margin-top: 60px;
+}
+
+.errorColor {
+    color: red;
+}
+
+.logoWidth {
+    width: 120px;
+}
+
+.homeCardSize {
+    margin-left: 40px;
+    margin-top: 40px;
+}
+
+.loginLogo {
+    width: 185px;
+}
+
+.loginTextColor {
+    color: blueviolet;
+}
+
+.registerLine {
+    background-color: darkslategray;
+    height: 0.2px;
+    width: 900px;
+}
+
+.requestCard {
+    min-height: 450px;
+}
+
+.homeCss {
+    padding: 40px;
+}
+
+.employeesImage {
+    border-radius: 50%;
 }

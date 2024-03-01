@@ -7,6 +7,7 @@ import Login from "./components/login";
 import { ToastContainer } from "react-toastify";
 import VarifyEmail from "./components/varifyEmail";
 import SetPassword from "./components/setPassword";
+import Home from "./components/home";
 
 function App() {
     return (
@@ -19,8 +20,6 @@ function App() {
                         path="/"
                         element={<Login />}
                     />
-                </Routes>
-                <Routes>
                     <Route
                         exact
                         path="/varifyEmail"
@@ -30,6 +29,11 @@ function App() {
                         exact
                         path="/setPassword"
                         element={<SetPassword />}
+                    />
+                    <Route
+                        exact
+                        path="/home"
+                        element={<Home />}
                     />
                 </Routes>
             </Router>

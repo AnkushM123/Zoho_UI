@@ -51,7 +51,7 @@ function VarifyEmail() {
     return (
         <>
             <center>
-                <div class="card text-center" style={{ width: "600px", marginTop: "60px" }}>
+                <div class="card forgotPassword" >
                     <div class="card-header h5 text-white bg-primary gradient-custom-2">Email Varification</div>
                     <div class="card-body px-5">
                         <p class="card-text py-2">
@@ -59,9 +59,11 @@ function VarifyEmail() {
                         </p>
                         <form action="#" method="post" onSubmit={varifyEmail}>
                             <div class="form-outline">
-                                <label class="form-label font-weight-bold" style={{ marginRight: "340px" }}>Email input:</label>
-                                <input type="text" id="typeEmail" class="form-control my-3" name="email" placeholder="Enter email address" onChange={handleChange} />
-                                {error.email && <p class="form-label font-weight-bold" style={{ color: "red" }}>{error.email}</p>}
+                                <div className="text-start">
+                                    <label class="form-label font-weight-bold">Email input:</label>
+                                </div>
+                                <input type="text" id="email" class="form-control my-3" name="email" placeholder="Enter email address" onChange={handleChange} />
+                                {error.email && <p class="form-label font-weight-bold errorColor">{error.email}</p>}
                             </div>
                             <br></br>
                             <button type="submit" class="btn btn-primary w-100 gradient-custom-2">Varify</button>

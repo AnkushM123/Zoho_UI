@@ -20,6 +20,7 @@ import ProtectedRoute from "./components/protectedRoute";
 import AddLeave from "./components/addLeave";
 import ChangePassword from "./components/changePassword";
 import AllRequestDetails from "./components/allRequestDetails";
+import NotificationDetails from "./components/notificationDetails";
 
 function App() {
     return (
@@ -87,6 +88,10 @@ function App() {
                     <Route
                         path="/allRequestDetails/:requestId"
                         element={<ProtectedRoute Component={AllRequestDetails} />}
+                    />
+                    <Route
+                        path="/notificationDetails/:requestId"
+                        element={<ProtectedRoute Component={NotificationDetails} />}
                     />
                 </Routes>
             </Router>

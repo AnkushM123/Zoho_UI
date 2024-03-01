@@ -12,6 +12,8 @@ import decodeJwt from "../core/services/decodedJwtData-service";
 import AdminLayout from "./adminLayout";
 import Layout from "./layout";
 import requestService from "../core/services/request-service";
+import notificationService from '../core/services/notification-service';
+import notificationMessage from "../core/constants/notification";
 
 function ApplyLeave() {
     const navigate = useNavigate();
@@ -28,6 +30,7 @@ function ApplyLeave() {
     const [employeeId, setEmployeeId] = useState(0);
     const [commonDates, setCommonDates] = useState([]);
     const jwtToken = localStorage.getItem('authToken');
+    const [avatar, setAvatar] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -35,7 +38,8 @@ function ApplyLeave() {
                 const result = await leaveTrackerService.loggedInUser(jwtToken);
                 setManagerId(result.data[0].managerId);
                 setName(result.data[0].name);
-                setEmployeeId(result.data[0].employeeId)
+                setEmployeeId(result.data[0].employeeId);
+                setAvatar(result.data[0].avatar);
                 const requestData = await requestService.getRequestByStatus(id, jwtToken);
                 const disabledDates = requestData.data.map((range) => {
                     return {
@@ -178,12 +182,24 @@ function ApplyLeave() {
                 formData.append('createdBy', id);
                 formData.append('updatedBy', id);
 
-                await leaveTrackerService.applyLeaveRequest(formData, jwtToken);
+                const requestData = await leaveTrackerService.applyLeaveRequest(formData, jwtToken);
+                const notification = new FormData();
+                notification.append('userId', managerId);
+                notification.append('avatar', avatar);
+                notification.append('addedByName', name);
+                notification.append('leaveId', requestData.data._id);
+                notification.append('message', notificationMessage.requestSent);
+                notification.append('addedBy', id);
+                notification.append('isSeen', false);
+                notification.append('addedByEmployeeId', employeeId);
+
+                await notificationService.createNotification(notification, jwtToken);
                 setTimeout(function () {
                     const toastOptions = configureToastOptions();
                     toast.options = toastOptions;
                     toast.success(messages.applyLeave.success.requestSuccess);
                 });
+
                 navigate('/leaveTracker')
             }
         } catch (error) {

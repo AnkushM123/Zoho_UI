@@ -11,14 +11,19 @@ import leaveTrackerService from "../core/services/leaveTracker-service";
 import EmployeeLayout from "./employeeLayout";
 import AdminLayout from "./adminLayout";
 import leaveTypeService from '../core/services/leaveType-service';
+import profileService from "../core/services/profile-service";
+import notificationService from "../core/services/notification-service";
+import notificationMessage from "../core/constants/notification";
 
 function RequestDetails() {
     const navigate = useNavigate();
+    const id = decodeJwt().id;
     const { requestId } = useParams();
     const [request, setRequest] = useState({});
     const [comment, setComment] = useState({});
     const [leaveType, setLeaveType] = useState('');
     const jwtToken = localStorage.getItem('authToken');
+    const [user, setUser] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,6 +32,8 @@ function RequestDetails() {
                 setRequest(result.data[0]);
                 const leaveTypeResult = await leaveTypeService(result.data[0].leaveId, jwtToken);
                 setLeaveType(leaveTypeResult.data[0].leaveName);
+                const user = await profileService.loggedInUser(jwtToken);
+                setUser(user.data[0]);
             } catch (error) {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
@@ -52,7 +59,7 @@ function RequestDetails() {
         try {
             await requestService.changeRequestStatus(request._id, { status: 1 }, jwtToken);
             await requestService.addCommentInRequest(request._id, comment, jwtToken);
-            const result = await leaveTrackerService.getParticularRecord({ userId: request.userId, leaveId: request.leaveId });
+            const result = await leaveTrackerService.getParticularRecord({ userId: request.userId, leaveId: request.leaveId }, jwtToken);
             const leaveRecord = {
                 userId: request.userId,
                 balance: result.data[0].balance - request.totalDays,
@@ -60,6 +67,18 @@ function RequestDetails() {
                 updatedBy: request.userId
             }
             await leaveTrackerService.updateLeaveRecord(result.data[0].leaveId, leaveRecord, jwtToken);
+
+            const notification = new FormData();
+            notification.append('userId', request.userId);
+            notification.append('avatar', user.avatar);
+            notification.append('addedByName', user.name);
+            notification.append('leaveId', requestId);
+            notification.append('message', notificationMessage.approvedRequest);
+            notification.append('addedBy', id);
+            notification.append('isSeen', false);
+            notification.append('addedByEmployeeId', user.employeeId);
+
+            await notificationService.createNotification(notification, jwtToken);
             navigate('/request')
         } catch (error) {
             const toastOptions = configureToastOptions();
@@ -72,8 +91,20 @@ function RequestDetails() {
         try {
             await requestService.changeRequestStatus(request._id, { status: 2 }, jwtToken);
             await requestService.addCommentInRequest(request._id, comment, jwtToken);
+            const notification = new FormData();
+            notification.append('userId', request.userId);
+            notification.append('avatar', user.avatar);
+            notification.append('addedByName', user.name);
+            notification.append('leaveId', requestId);
+            notification.append('message', notificationMessage.rejectedRequest);
+            notification.append('addedBy', id);
+            notification.append('isSeen', false);
+            notification.append('addedByEmployeeId', user.employeeId);
+
+            await notificationService.createNotification(notification, jwtToken);
             navigate('/request')
         } catch (error) {
+            console.log(error)
             const toastOptions = configureToastOptions();
             toast.options = toastOptions;
             toast.error(error);

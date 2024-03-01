@@ -109,7 +109,7 @@ function AddLeave() {
             return;
         }
         try {
-            const result = await leaveTrackerService.getParticularRecord({ userId: selectedUser, leaveId: '659bc36c01e2f1640c26260e'}, jwtToken);
+            const result = await leaveTrackerService.getParticularRecord({ userId: selectedUser, leaveId: '659bc36c01e2f1640c26260e' }, jwtToken);
             const leaveRecord = {
                 userId: selectedUser,
                 balance: parseInt(result.data[0].balance) + parseInt(totalDays),

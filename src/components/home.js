@@ -52,11 +52,11 @@ function Home() {
                         {employees.map((employee, index) => (
                             <p key={index}>
                                 <img
+                                    className="image"
                                     src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`}
                                     alt="Employee"
                                     height="30px"
                                     width="30px"
-                                    style={{ borderRadius: "50%" }}
                                     onError={handleImageError}
                                 />{' '}
                                 {employee.employeeId}-<span className="font-weight-bold">{employee.name}</span>

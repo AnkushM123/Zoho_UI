@@ -189,7 +189,7 @@ div.content {
 }
 
 .logoWidth {
-   width: 120px ;
+    width: 120px;
 }
 
 .homeCardSize {
@@ -217,4 +217,86 @@ div.content {
 
 .bell {
     margin-top: 2px;
+}
+
+.bell:hover {
+    cursor: pointer;
+    color: #007bff;
+}
+
+.cursorPointer {
+    cursor: pointer;
+}
+
+.notification-item {
+    cursor: pointer;
+}
+
+.notification-item p {
+    margin-bottom: 0;
+}
+
+.notification-item hr {
+    margin: 5px 0;
+    border: 0;
+    border-top: 1px solid #ccc;
+}
+
+.notification-item {
+    cursor: pointer;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.modal-dialog-end {
+    margin-inline-start: auto;
+}
+
+.unseen {
+    background-color: #e1f5fe;
+}
+
+.modalBodyCss {
+    max-height: 60vh;
+    height: 60vh;
+    overflow-y: auto;
+}
+
+.modalTitle {
+    font-size: 1.25rem;
+}
+
+.notificationDivStyle {
+    display: flex;
+    align-items: center;
+}
+
+.notificationMsg {
+    font-size: 14px;
+    margin: 0;
+}
+
+.notificationTime {
+    font-size: small;
+    color: rgba(0, 0, 0, 0.5);
+    margin: 0;
+}
+
+.image {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profileImage {
+    width: 200px;
+    height: 200px;
+}
+
+.divStyle {
+    margin-top: 40px;
+    cursor: pointer;
 }

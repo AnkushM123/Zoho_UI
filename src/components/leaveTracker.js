@@ -55,7 +55,8 @@ function LeaveTracker() {
 
         });
         const requests = await requestService.getByUserId(id, jwtToken);
-        setRequest(requests.data);
+        const sortedData = requests.data.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+        setRequest(sortedData);
         const leaveTypesData = {};
         for (const requestItem of requests.data) {
           const leaveType = await getLeaveTypeById(requestItem.leaveId, jwtToken);
@@ -111,11 +112,6 @@ function LeaveTracker() {
       toast.options = toastOptions;
       toast.error(error);
     }
-  };
-
-  const divStyle = {
-    marginTop: "40px",
-    cursor: "pointer",
   };
 
   return (
@@ -209,7 +205,7 @@ function LeaveTracker() {
         </div>
         <br></br><br></br>
         <h4><strong> Leave History:</strong></h4>
-        <div class="col-md-12 mb-12" style={{ marginTop: "40px", ...divStyle }}>
+        <div class="col-md-12 mb-12 divStyle">
           <div class="card example-1 scrollbar-ripe-malinka" style={{ height: "400px" }}>
             {request.length > 0 ? (
               <table className="table table-hover">

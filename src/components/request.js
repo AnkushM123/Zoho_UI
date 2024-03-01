@@ -28,7 +28,8 @@ function Request() {
         const fetchData = async () => {
             try {
                 const result = await requestService.getRequestByManagerId(id, jwtToken);
-                setRequest(result.data);
+                const sortedData = result.data.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+                setRequest(sortedData);
             } catch (error) {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
@@ -85,7 +86,8 @@ function Request() {
                     await requestService.getRequestByManagerId(id, jwtToken) :
                     await requestService.getByManagerIdAndStatus(id, { status: requestStatus }, jwtToken);
 
-                setRequest(result.data);
+                const sortedData = result.data.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+                setRequest(sortedData);
 
             } catch (error) {
                 setRequest([]);
@@ -139,8 +141,7 @@ function Request() {
                             name="requestStatus"
                             required
                             value={requestStatus}
-                            onChange={(e) => handleRequestTypeChange(e)}
-                        >
+                            onChange={(e) => handleRequestTypeChange(e)}>
                             <option value={4}>All</option>
                             <option value={0}>Pending</option>
                             <option value={3}>Compensatory Off</option>

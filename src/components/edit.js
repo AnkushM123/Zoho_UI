@@ -208,7 +208,7 @@ function Edit() {
                                 <div class="card mb-4">
                                     <div class="card-body text-center">
                                         <img src={process.env.REACT_APP_DOMAIN_URL + `/${avatar}`} alt="avatar"
-                                            class="rounded-circle img-fluid my-1" onError={handleImageError} style={{ width: "200px", height: "200px" }} />
+                                            className="rounded-circle profileImage my-1" onError={handleImageError} />
                                         <div>
                                             <button onClick={handleUploadClick}>Upload Image</button>
                                             <input
@@ -230,11 +230,11 @@ function Edit() {
                                             <h5 className="my-3">Reporting To:</h5>
                                             <p>
                                                 <img
+                                                    className="image"
                                                     src={process.env.REACT_APP_DOMAIN_URL + `/${manager.avatar}`}
                                                     alt="Employee"
                                                     height="30px"
                                                     width="30px"
-                                                    style={{ borderRadius: "50%" }}
                                                     onError={handleImageError}
                                                 />  {manager.employeeId}-<span className="font-weight-bold">{manager.name}</span>
                                             </p>

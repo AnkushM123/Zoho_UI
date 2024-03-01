@@ -22,7 +22,11 @@ const urlPath = {
     changePassword: process.env.REACT_APP_DOMAIN_URL + '/user/changePassword',
     getCompensantoryRequest: process.env.REACT_APP_DOMAIN_URL + '/leaveRequest/getCompensantoryRequest',
     getRequestByManagerIdAndStatus: process.env.REACT_APP_DOMAIN_URL + `/leaveRequest/getByManagerIdAndStatus`,
-    getByRole: process.env.REACT_APP_DOMAIN_URL + `/user/getByRole`
+    getByRole: process.env.REACT_APP_DOMAIN_URL + `/user/getByRole`,
+    getNotification: process.env.REACT_APP_DOMAIN_URL + `/notification`,
+    createNotification: process.env.REACT_APP_DOMAIN_URL + `/notification`,
+    updateNotification: process.env.REACT_APP_DOMAIN_URL + `/notification`,
+    updateAllNotification: process.env.REACT_APP_DOMAIN_URL + `/notification/updateAll`,
 }
 
 export default urlPath;

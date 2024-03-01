@@ -33,7 +33,7 @@ function Profile() {
                         }
                     }
 
-                    const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId,jwtToken);
+                    const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId, jwtToken);
                     setManager(managerDetailsResponse.data)
                 });
                 await Promise.all(managerPromises);
@@ -57,14 +57,14 @@ function Profile() {
 
     const getGenderString = (gender) => {
         switch (gender) {
-          case 0:
-            return 'Male';
-          case 1:
-            return 'Female';
-          default:
-            return '';
+            case 0:
+                return 'Male';
+            case 1:
+                return 'Female';
+            default:
+                return '';
         }
-      };
+    };
 
     const navigateToEdit = () => {
         navigate('/edit');
@@ -99,7 +99,7 @@ function Profile() {
                             {user.map((userData) =>
                                 <div className="card-body text-center" key={userData.employeeId}>
                                     <img src={process.env.REACT_APP_DOMAIN_URL + `/${userData.avatar}`} alt="avatar"
-                                        className="rounded-circle img-fluid" onError={handleImageError} style={{ width: "200px", height: "200px" }} />
+                                        className="rounded-circle profileImage" onError={handleImageError} />
                                     <h5 className="my-3">{userData.name}</h5>
                                     <p className="text-muted mb-1">{role}</p>
                                     <p className="text-muted mb-4">{userData.address.city}</p>
@@ -113,11 +113,11 @@ function Profile() {
                                     <h5 className="my-3">Reporting To:</h5>
                                     <p>
                                         <img
+                                            className="image"
                                             src={process.env.REACT_APP_DOMAIN_URL + `/${manager.avatar}`}
                                             alt="Employee"
                                             height="30px"
                                             width="30px"
-                                            style={{ borderRadius: "50%" }}
                                             onError={handleImageError}
                                         />  {manager.employeeId}-<span className="font-weight-bold">{manager.name}</span>
                                     </p>

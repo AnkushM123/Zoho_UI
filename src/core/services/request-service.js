@@ -10,7 +10,11 @@ const getRequestByManagerId = async (managerId, jwtToken) => {
 }
 
 const getUser = async (id, jwtToken) => {
-    return axios.get(path.getUserById + `/${id}`)
+    return axios.get(path.getUserById + `/${id}`, {
+      headers: {
+        'Authorization' : `Bearer ${jwtToken}` 
+      }
+    })
 }
 
 const getByRequestId = async (requestId, jwtToken) => {

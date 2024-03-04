@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import notificationService from "../core/services/notification-service";
 import defaultUser from './user_3177440.png'
 
-function Layout() {
+function AdminLayout() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const id = decodeJwt().id;
@@ -43,6 +43,7 @@ function Layout() {
     };
     fetchData();
   }, []);
+
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -185,4 +186,4 @@ function Layout() {
   )
 }
 
-export default Layout;
+export default AdminLayout;

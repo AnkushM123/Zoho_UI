@@ -6,6 +6,7 @@ import '../App.css';
 import messages from "../core/constants/messages";
 import auth from '../core/services/auth-service';
 import { configureToastOptions } from "../core/services/toast-service";
+import decodeJwt from "../core/services/decodedJwtData-service";
 import logo from './zoho-logo-web.png';
 
 function Login() {
@@ -40,11 +41,9 @@ function Login() {
         if (validation()) {
             return;
         }
-
         try {
             const result = await auth.login(inputData);
             localStorage.setItem('authToken', result.data.token);
-
             setTimeout(function () {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
@@ -53,7 +52,13 @@ function Login() {
             if (localStorage.getItem('id')) {
                 localStorage.removeItem('id');
             }
-            navigate('/home');
+
+            if (decodeJwt().role === 'Employee') {
+                navigate('/profile');
+            }
+            else {
+                navigate('/home');
+            }
         } catch (error) {
             const toastOptions = configureToastOptions();
             toast.options = toastOptions;
@@ -78,14 +83,16 @@ function Login() {
                                         </div>
                                         <form method="post" onSubmit={loginData}>
                                             <div class="form-outline mb-4">
-                                                <label class="form-label">Email</label>
+                                                <label class="form-label">Username</label>
                                                 <input type="text" id="email" class="form-control"
                                                     placeholder="enter email address" name="email" onChange={handleChange} />
+                                                {error.email && <p className="errorColor">{error.email}</p>}
                                                 {error.email && <p className="errorColor">{error.email}</p>}
                                             </div>
                                             <div class="form-outline mb-4">
                                                 <label class="form-label">Password</label>
                                                 <input type="password" id="password" class="form-control" name="password" placeholder="enter password" onChange={handleChange} />
+                                                {error.password && <p className="errorColor">{error.password}</p>}
                                                 {error.password && <p className="errorColor">{error.password}</p>}
                                             </div>
                                             <div class="text-center pt-1 mb-5 pb-1">

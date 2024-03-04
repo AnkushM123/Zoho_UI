@@ -13,8 +13,9 @@ import { configureToastOptions } from "../core/services/toast-service";
 import { toast } from 'react-toastify';
 import notificationService from "../core/services/notification-service";
 import defaultUser from './user_3177440.png'
+import '../App.css'
 
-function Layout() {
+function EmployeeLayout() {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const id = decodeJwt().id;
@@ -44,6 +45,7 @@ function Layout() {
     fetchData();
   }, []);
 
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -52,15 +54,11 @@ function Layout() {
     navigate('/');
   }
 
-  const handleNotificationClick = async (notificationId, requestId, seenByManager) => {
+  const markAllRead = async () => {
     try {
-      if (!seenByManager) {
-        await notificationService.updateNotification(notificationId, { isSeen: true });
-        navigate(`/requestDetail/${requestId}`);
-      } else {
-        navigate(`/notificationDetails/${requestId}`);
-      }
+      await notificationService.updateAllNotification(id, { isSeen: true });
       handleClose();
+      window.location.reload()
     } catch (error) {
       const toastOptions = configureToastOptions();
       toast.options = toastOptions;
@@ -68,11 +66,15 @@ function Layout() {
     }
   };
 
-  const markAllRead = async () => {
+  const handleNotificationClick = async (notificationId, requestId, seenByManager) => {
     try {
-      await notificationService.updateAllNotification(id, { isSeen: true });
+      if (!seenByManager) {
+        await notificationService.updateNotification(notificationId, { isSeen: true });
+        navigate(`/notificationDetails/${requestId}`);
+      } else {
+        navigate(`/notificationDetails/${requestId}`);
+      }
       handleClose();
-      window.location.reload()
     } catch (error) {
       const toastOptions = configureToastOptions();
       toast.options = toastOptions;
@@ -127,19 +129,10 @@ function Layout() {
                 )}
               </li>
               <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/home">Home</Link>
-              </li>
-              <li className="nav-item">
                 <Link className="nav-link font-weight-bold" to="/profile">Profile</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/request">Leave Request</Link>
-              </li>
-              <li className="nav-item">
                 <Link className="nav-link font-weight-bold" to="/leaveTracker">Leave Tracker</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/addLeave">Add Leave</Link>
               </li>
             </ul>
           </div>
@@ -185,4 +178,4 @@ function Layout() {
   )
 }
 
-export default Layout;
+export default EmployeeLayout;

@@ -211,9 +211,9 @@ function Edit() {
                                         <div>
                                             <button onClick={handleUploadClick}>Upload Image</button>
                                             <input
+                                                className='uploadImage'
                                                 type="file"
                                                 ref={fileInputRef}
-                                                style={{ display: 'none' }}
                                                 onChange={handleFileChange}
                                                 accept="image/png, image/gif, image/jpeg"
                                             />

@@ -123,7 +123,7 @@ function EmployeeLayout() {
               <li className="nav-item mx-1">
                 <BiBell color="blue" className="bell" size={28} onClick={handleShow} />
                 {count !== 0 && (
-                  <span className="badge rounded-pill badge-notification bg-danger" style={{ pointerEvents: "none" }}>
+                  <span className="badge rounded-pill badge-notification bg-danger notificationCount">
                     {count}
                   </span>
                 )}

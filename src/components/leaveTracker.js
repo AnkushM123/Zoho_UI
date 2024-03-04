@@ -205,7 +205,7 @@ function LeaveTracker() {
         <br></br><br></br>
         <h4><strong> Leave History:</strong></h4>
         <div class="col-md-12 mb-12 divStyle">
-          <div class="card example-1 scrollbar-ripe-malinka" style={{ height: "400px" }}>
+          <div class="card example-1 scrollbar-ripe-malinka employeeList">
             {request.length > 0 ? (
               <table className="table table-hover">
                 <thead>

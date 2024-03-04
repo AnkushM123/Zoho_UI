@@ -4,13 +4,11 @@ import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './zoho-logo-web.png';
 
-function Layout() {
+function EmployeeLayout() {
   const navigate = useNavigate();
 
   const navigateToLogin = () => {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('id');
-    localStorage.removeItem('role');
     navigate('/');
   }
 
@@ -24,22 +22,13 @@ function Layout() {
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse" >
+          <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/home">Home</Link>
-              </li>
               <li className="nav-item">
                 <Link className="nav-link font-weight-bold" to="/profile">Profile</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/request">Leave Request</Link>
-              </li>
-              <li className="nav-item">
                 <Link className="nav-link font-weight-bold" to="/leaveTracker">Leave Tracker</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/addLeave">Add Leave</Link>
               </li>
             </ul>
           </div>
@@ -50,4 +39,4 @@ function Layout() {
   )
 }
 
-export default Layout;
+export default EmployeeLayout;

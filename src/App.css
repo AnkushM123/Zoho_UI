@@ -168,7 +168,6 @@ div.content {
     display: block
 }
 
-
 #section1 {
     height: 60px;
 }
@@ -221,4 +220,9 @@ div.content {
 
 .employeesImage {
     border-radius: 50%;
+}
+
+.profileImage {
+    width: 200px;
+    height: 200px;
 }

@@ -48,8 +48,7 @@ function VarifyEmail() {
         }
     }
 
-    return (
-        <>
+    return (<>
             <center>
                 <div class="card forgotPassword" >
                     <div class="card-header h5 text-white bg-primary gradient-custom-2">Email Varification</div>

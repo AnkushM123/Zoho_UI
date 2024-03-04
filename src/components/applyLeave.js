@@ -262,7 +262,7 @@ function ApplyLeave() {
                                             {error.reasonForLeave && <p className="errorColor">{error.reasonForLeave}</p>}
                                         </div>
                                     </div>
-                                    <button style={{ margin: "10px" }} type="submit" class="btn btn-dark">Apply</button>
+                                    <button type="submit" class="btn btn-dark mx-2">Apply</button>
                                     <button class="btn btn-dark" onClick={navigateToLeaveTracker}>Back</button>
                                 </div>
                             </div>

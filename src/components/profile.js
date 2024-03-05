@@ -5,6 +5,7 @@ import profileService from '../core/services/profile-service';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { configureToastOptions } from "../core/services/toast-service";
+import roleId from '../core/constants/roleId';
 
 function Profile() {
     const [user, setUser] = useState([]);
@@ -18,10 +19,10 @@ function Profile() {
                 const result = await profileService.loggedInUser(jwtToken);
                 setUser(result.data);
                 const managerPromises = result.data.map(async (currentUser) => {
-                    if (currentUser.roles.includes("658eacbb510f63f754e68d02")) {
+                    if (currentUser.roles.includes(roleId.adminId)) {
                         setRole('Admin');
                     } else {
-                        if (currentUser.roles.includes("658eac9e510f63f754e68cfe")) {
+                        if (currentUser.roles.includes(roleId.managerId)) {
                             setRole('Manager');
                         } else {
                             setRole('Employee');
@@ -80,110 +81,98 @@ function Profile() {
                             <div class="card mb-4">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0">Full Name</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0">{user.name}</p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0">Email</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0">{user.email}</p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0">Age</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0">{user.age}</p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0">Mobile</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0">{user.mobile}</p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0">Gender</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0">{user.gender}</p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0 font-weight-bold">Address:</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0"></p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0">address Line1</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0">{user.address.addressLine1}</p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0">address Line2</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0">{user.address.addressLine2}</p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0">city</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0">{user.address.city}</p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0">state</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0">{user.address.state}</p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0">country</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0">{user.address.country}</p>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-3 my-2">
                                             <p class="mb-0">postal code</p>
-                                            <br></br>
                                         </div>
-                                        <div class="col-sm-9">
+                                        <div class="col-sm-9 my-2">
                                             <p class="text-muted mb-0">{user.address.postalCode}</p>
                                         </div>
                                     </div>

@@ -160,8 +160,8 @@ function Edit() {
     }
 
     return (<>
+        <Layout></Layout>
         <form action="#" method="post" encType="multipart/form-data" onSubmit={updateUser}>
-            <Layout></Layout>
             <div class="container py-5">
                 <div class="row">
                     <div class="col-lg-4">
@@ -187,111 +187,99 @@ function Edit() {
                         <div class="card mb-4">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 my-2">
                                         <p class="mb-0">Full Name</p>
-                                        <br></br>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 my-2">
                                         <input type="text" class="form-control" id="name" name="name" onChange={handleChange} value={user.name} />
                                         {error.name && <p className="errorColor">{error.name}</p>}
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 my-2">
                                         <p class="mb-0">Email</p>
-                                        <br></br>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 my-2">
                                         <input type="text" class="form-control" id="email" name="email" onChange={handleChange} value={user.email} />
                                         {error.email && <p className='errorColor'>{error.email}</p>}
                                     </div>
                                 </div>
-
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 my-2">
                                         <p class="mb-0">Age</p>
-                                        <br></br>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 my-2">
                                         <input type="number" class="form-control" id="age" name="age" onChange={handleChange} value={user.age} />
                                         {error.age && <p className="errorColor">{error.age}</p>}
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 my-2">
                                         <p class="mb-0">Mobile</p>
-                                        <br></br>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 my-2">
                                         <input type="tel" class="form-control" id="mobile" name="mobile" onChange={handleChange} value={user.mobile} />
                                         {error.mobile && <p className="errorColor">{error.mobile}</p>}
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 my-2">
                                         <p class="mb-0 font-weight-bold">Address:</p>
-                                        <br></br>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 my-2">
                                         <p class="text-muted mb-0"></p>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 my-2">
                                         <p class="mb-0">address Line1</p>
-                                        <br></br>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 my-2">
                                         <input type="text" class="form-control" id="addressLine1" name="addressLine1" onChange={handleChange} value={user.addressLine1} />
                                         {error.addressLine1 && <p className="errorColor">{error.addressLine1}</p>}
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 my-2">
                                         <p class="mb-0">address Line2</p>
-                                        <br></br>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 my-2">
                                         <input type="text" class="form-control" id="addressLine2" name="addressLine2" onChange={handleChange} value={user.addressLine2} />
                                         {error.addressLine2 && <p className="errorColor">{error.addressLine2}</p>}
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 my-2">
                                         <p class="mb-0">city</p>
-                                        <br></br>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 my-2">
                                         <input type="text" class="form-control" id="city" name="city" onChange={handleChange} value={user.city} />
                                         {error.city && <p className="errorColor">{error.city}</p>}
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 my-2">
                                         <p class="mb-0">state</p>
-                                        <br></br>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 my-2">
                                         <input type="text" class="form-control" id="state" name="state" onChange={handleChange} value={user.state} />
                                         {error.state && <p className="errorColor">{error.state}</p>}
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 my-2">
                                         <p class="mb-0">country</p>
-                                        <br></br>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 my-2">
                                         <input type="text" class="form-control" id="country" name="country" onChange={handleChange} value={user.country} />
                                         {error.country && <p className="errorColor">{error.country}</p>}
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-3 my-2">
                                         <p class="mb-0">postal code</p>
-                                        <br></br>
                                     </div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 my-2">
                                         <input type="text" class="form-control" id="postalCode" name="postalCode" onChange={handleChange} value={user.postalCode} />
                                         {error.postalCode && <p className="errorColor">{error.postalCode}</p>}
                                     </div>

@@ -53,7 +53,16 @@ function Login() {
             if (localStorage.getItem('id')) {
                 localStorage.removeItem('id');
             }
-            navigate('/home');
+            let jwtData = result.data.token.split('.')[1]
+            let decodedJwtJsonData = window.atob(jwtData)
+            let decodedJwtData = JSON.parse(decodedJwtJsonData)
+            localStorage.setItem('id', decodedJwtData.id);
+            localStorage.setItem('role', decodedJwtData.role);
+            if (decodedJwtData.role === 'Manager') {
+                navigate('/home');
+            } else {
+                navigate('/profile');
+            }
         } catch (error) {
             const toastOptions = configureToastOptions();
             toast.options = toastOptions;
@@ -73,7 +82,6 @@ function Login() {
                                         <div class="text-center">
                                             <img src={logo}
                                                 className="loginLogo" alt="logo" />
-                                            <br></br>
                                             <h2 class="mt-1 mb-5 pb-1 loginTextColor">Login</h2>
                                         </div>
                                         <form method="post" onSubmit={loginData}>

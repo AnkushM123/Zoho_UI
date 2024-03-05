@@ -13,4 +13,13 @@ const varifyEmail = async (inputData) => {
     return axios.post(path.varifyEmail, inputData);
 };
 
-export default { login, setPassword, varifyEmail };
+const register = async (formData, jwtToken) => {
+    return axios.post(path.register, formData, {
+        headers: {
+            'content-type': 'multipart/form-data',
+            'Authorization': `Bearer ${jwtToken}`,
+        },
+    })
+}
+
+export default { login, setPassword, varifyEmail, register };

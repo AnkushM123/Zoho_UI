@@ -48,8 +48,7 @@ function VarifyEmail() {
         }
     }
 
-    return (
-        <>
+    return (<>
             <center>
                 <div class="card forgotPassword" >
                     <div class="card-header h5 text-white bg-primary gradient-custom-2">Email Varification</div>
@@ -65,8 +64,7 @@ function VarifyEmail() {
                                 <input type="text" id="email" class="form-control my-3" name="email" placeholder="Enter email address" onChange={handleChange} />
                                 {error.email && <p class="form-label font-weight-bold errorColor">{error.email}</p>}
                             </div>
-                            <br></br>
-                            <button type="submit" class="btn btn-primary w-100 gradient-custom-2">Varify</button>
+                            <button type="submit" class="btn btn-primary w-100 gradient-custom-2 my-2">Varify</button>
                         </form>
                         <div class="d-flex justify-content-between mt-4">
                             <Link to="/">Login</Link>

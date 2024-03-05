@@ -222,3 +222,8 @@ div.content {
 .employeesImage {
     border-radius: 50%;
 }
+
+.profileImage {
+    width: 200px;
+    height: 200px;
+}

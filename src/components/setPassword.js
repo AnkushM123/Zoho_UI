@@ -84,8 +84,7 @@ function SetPassword() {
                             <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Enter confirm password" onChange={handleChange} />
                             {error.confirmPassword && <p class="form-label font-weight-bold errorColor">{error.confirmPassword}</p>}
                         </div>
-                        <br></br>
-                        <button type="submit" class="btn btn-primary w-100 gradient-custom-2">Change Password</button>
+                        <button type="submit" class="btn btn-primary w-100 gradient-custom-2 my-2">Change Password</button>
                     </form>
                     <div class="d-flex justify-content-between mt-4">
                         <Link to="/">Back to login</Link>

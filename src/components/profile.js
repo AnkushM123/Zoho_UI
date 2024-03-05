@@ -5,8 +5,8 @@ import profileService from '../core/services/profile-service';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { configureToastOptions } from "../core/services/toast-service";
+import roleId from '../core/constants/roleId';
 import EmployeeLayout from "./employeeLayout";
-import decodeJwt from "../core/services/decodedJwtData-service";
 import AdminLayout from "./adminLayout";
 import defaultUser from './user_3177440.png'
 
@@ -22,10 +22,10 @@ function Profile() {
                 const result = await profileService.loggedInUser();
                 setUser(result.data);
                 const managerPromises = result.data.map(async (currentUser) => {
-                    if (currentUser.roles.includes("658eacbb510f63f754e68d02")) {
+                    if (currentUser.roles.includes(roleId.adminId)) {
                         setRole('Admin');
                     } else {
-                        if (currentUser.roles.includes("658eac9e510f63f754e68cfe")) {
+                        if (currentUser.roles.includes(roleId.managerId)) {
                             setRole('Manager');
                         } else {
                             setRole('Employee');

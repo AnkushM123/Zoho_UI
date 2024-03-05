@@ -40,8 +40,7 @@ function Home() {
         <div class="col-md-11 mb-11 homeCss">
             <div class="card example-1 scrollbar-ripe-malinka">
                 <div class="card-body">
-                    <h4><strong>Employee:</strong></h4>
-                    <br></br>
+                    <h4 className="mb-3"><strong>Employee:</strong></h4>
                     {
                         employees.map((employee, index) =>
                             <p>{index + 1}. <img className="employeesImage" src={process.env.REACT_APP_DOMAIN_URL + `/${employee.avatar}`} alt="Employee" height="30px" width="30px" /> {employee.name}</p>

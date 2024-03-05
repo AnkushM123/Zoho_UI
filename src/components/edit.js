@@ -165,7 +165,6 @@ function Edit() {
     }
 
     return (<>
-        <Layout></Layout>
         <form action="#" method="post" encType="multipart/form-data" onSubmit={updateUser}>
             {localStorage.getItem('role') === 'Employee' ? (
                 <EmployeeLayout />
@@ -184,7 +183,7 @@ function Edit() {
                             </div>
                         </div>
                         <div className="card mb-4">
-                            {manager.map((manager) =>
+                        {manager.map((manager) =>
                                 <div className="card-body text-center" key={manager._id}>
                                     <h5 className="my-3">Reporting To:</h5>
                                     <p>

@@ -197,42 +197,37 @@ function Register() {
                             <div class="card-body">
                                 <form action="#" method="post" enctype="multipart/form-data" onSubmit={registerData}>
                                     <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <br></br>
+                                        <div class="col-md-6 my-2">
                                             <label class="form-label font-weight-bold">Full Name:</label>
                                             <input type="text" class="form-control" id="name" name="name" onChange={handleChange} placeholder="enter full name" />
                                             {error.name && <p className="errorColor">{error.name}</p>}
                                         </div>
-                                        <div class="col-md-6">
-                                            <br></br>
+                                        <div class="col-md-6 my-2">
                                             <label class="form-label font-weight-bold">Email:</label>
                                             <input type="text" class="form-control" id="email" name="email" onChange={handleChange} placeholder="enter email address" />
                                             {error.email && <p className="errorColor">{error.email}</p>}
                                             <p className="errorColor">{emailMessage}</p>
                                         </div>
                                     </div>
-                                    <br></br>
                                     <div class="row mb-3">
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 my-2">
                                             <label class="form-label font-weight-bold">Password:</label>
                                             <input type="password" class="form-control" id="password" name="password" onChange={handleChange} placeholder="enter password" />
                                             {error.password && <p className="errorColor">{error.password}</p>}
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 my-2">
                                             <label class="form-label font-weight-bold">Age:</label>
                                             <input type="number" class="form-control" id="age" name="age" onChange={handleChange} placeholder="enter your age" />
                                             {error.age && <p className="errorColor">{error.age}</p>}
                                         </div>
                                     </div>
-                                    <br></br>
                                     <div class="row mb-3">
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 my-2">
                                             <label class="form-label font-weight-bold">Mobile:</label>
                                             <input type="tel" class="form-control" id="mobile" name="mobile" onChange={handleChange} placeholder="enter mobile number" />
                                             {error.mobile && <p className="errorColor">{error.mobile}</p>}
                                         </div>
-                                        <div class="col-md-6">
-                                            <br></br>
+                                        <div class="col-md-6 my-2">
                                             <label class="form-label font-weight-bold">Role:</label>
                                             <select class="form-select" id="role"
                                                 name="role"
@@ -244,11 +239,9 @@ function Register() {
                                             {error.role && <p className="errorColor">{error.role}</p>}
                                         </div>
                                     </div>
-                                    <br></br>
                                     <div class="row mb-3">
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 my-2">
                                             <label class="form-label font-weight-bold">Address:</label>
-                                            <br></br>
                                             <label class="form-label">address Line 1:</label>
                                             <input type="text" class="form-control" id="name" name="address.addressLine1" onChange={handleChange} />
                                             {error.addressLine1 && <p className="errorColor">{error.addressLine1}</p>}
@@ -268,7 +261,7 @@ function Register() {
                                             <input type="text" class="form-control" id="name" name="address.postalCode" onChange={handleChange} />
                                             {error.postalCode && <p className="errorColor">{error.postalCode}</p>}
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 my-2">
                                             <label class="form-label font-weight-bold">Gender:</label>
                                             <select class="form-select" id="gender"
                                                 name="gender"
@@ -279,7 +272,6 @@ function Register() {
                                                 <option value="female">Female</option>
                                             </select>
                                             {error.gender && <p className="errorColor">{error.gender}</p>}
-                                            <br></br>
                                             <label class="form-label font-weight-bold">Upload Image:</label>
                                             <input type="file" class="form-control" id="file" name="avatar" onChange={handleFileChange} />
                                             {error.file && <p className="errorColor">{error.file}</p>}

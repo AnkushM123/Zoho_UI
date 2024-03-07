@@ -1,7 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './zoho-logo-web.png';
 
 function Layout() {
@@ -9,7 +8,7 @@ function Layout() {
 
   const navigateToLogin = () => {
     localStorage.removeItem('authToken');
-    navigate('/');
+    navigate('/login');
   }
 
   return (
@@ -44,6 +43,9 @@ function Layout() {
           <button className="btn btn-danger" onClick={navigateToLogin}>Log Out</button>
         </div>
       </nav>
+      <div>
+        <Outlet></Outlet>
+      </div>
     </>
   )
 }

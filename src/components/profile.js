@@ -1,11 +1,9 @@
-import Layout from "./managerLayout";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import profileService from '../core/services/profile-service';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { configureToastOptions } from "../core/services/toast-service";
-import roleId from '../core/constants/roleId';
 
 function Profile() {
     const [user, setUser] = useState([]);
@@ -18,16 +16,11 @@ function Profile() {
             try {
                 const result = await profileService.loggedInUser(jwtToken);
                 setUser(result.data);
+                const jwtData = jwtToken.split('.')[1]
+                const decodedJwtJsonData = window.atob(jwtData)
+                const decodedJwtData = JSON.parse(decodedJwtJsonData)
+                setRole(decodedJwtData.role)
                 const managerPromises = result.data.map(async (currentUser) => {
-                    if (currentUser.roles.includes(roleId.adminId)) {
-                        setRole('Admin');
-                    } else {
-                        if (currentUser.roles.includes(roleId.managerId)) {
-                            setRole('Manager');
-                        } else {
-                            setRole('Employee');
-                        }
-                    }
                     localStorage.setItem('id', currentUser._id);
                     const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId, jwtToken);
                     setManager(managerDetailsResponse.data)

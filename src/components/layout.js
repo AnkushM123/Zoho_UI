@@ -1,10 +1,9 @@
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './zoho-logo-web.png';
 
-function ManagerLayout() {
+function Layout() {
   const navigate = useNavigate();
 
   const navigateToLogin = () => {
@@ -51,4 +50,4 @@ function ManagerLayout() {
   )
 }
 
-export default ManagerLayout;
+export default Layout;

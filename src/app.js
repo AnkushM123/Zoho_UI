@@ -10,7 +10,7 @@ import SetPassword from "./components/setPassword";
 import Home from "./components/home";
 import Profile from "./components/profile";
 import Edit from "./components/edit";
-import ManagerLayout from "./components/managerLayout";
+import Layout from "./components/layout";
 
 function App() {
     return (
@@ -37,7 +37,7 @@ function App() {
                         path="/setPassword"
                         element={<SetPassword />}
                     />
-                    <Route element={<ManagerLayout/>}>
+                    <Route element={<Layout/>}>
                     <Route
                         index
                         path="/home"

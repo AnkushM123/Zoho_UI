@@ -1,4 +1,3 @@
-import Layout from "./managerLayout"
 import { useState, useEffect } from "react"
 import homeService from '../core/services/home-service';
 import { toast } from 'react-toastify';

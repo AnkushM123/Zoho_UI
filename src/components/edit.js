@@ -2,7 +2,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Layout from "./managerLayout";
 import profileService from '../core/services/profile-service';
 import { configureToastOptions } from "../core/services/toast-service";
 import messages from "../core/constants/messages";
@@ -84,10 +83,6 @@ function Edit() {
             }
         }
     })
-
-    const navigateToProfile = () => {
-        navigate('/profile');
-    }
 
     return (<>
         <form action="#" method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
@@ -214,7 +209,7 @@ function Edit() {
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-dark mx-2">Save</button>
-                                <button class="btn btn-dark" onClick={navigateToProfile}>Cancel</button>
+                                <button class="btn btn-dark" onClick={() => navigate('/profile')}>Cancel</button>
                             </div>
                         </div>
                     </div>

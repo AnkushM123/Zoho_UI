@@ -26,7 +26,7 @@ export const setPasswordSchema = Yup.object({
     confirmPassword: Yup.string()
     .required()
     .matches(passwordRegex, messages.setPassword.error.passwordValidation)
-    .oneOf([Yup.ref('password')], "Confirm password should match with password"),
+    .oneOf([Yup.ref('password')], messages.setPassword.error.passwordUnmatched),
 })
 
 export const varifyEmailSchema= Yup.object({

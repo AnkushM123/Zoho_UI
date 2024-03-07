@@ -1,11 +1,9 @@
-import Layout from "./layout"
 import { useState, useEffect } from "react"
 import homeService from '../core/services/home-service';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import '../App.css';
 import { configureToastOptions } from "../core/services/toast-service";
-import EmployeeLayout from "./employeeLayout";
 
 function Home() {
     const [employees, setEmployees] = useState([]);
@@ -31,12 +29,6 @@ function Home() {
     }, [jwtToken]);
 
     return (<>
-        {localStorage.getItem('role') === 'Employee' ? (
-            <EmployeeLayout />
-        ) : (
-            <Layout />
-        )
-        }
         <div class="col-md-11 mb-11 homeCss">
             <div class="card example-1 scrollbar-ripe-malinka">
                 <div class="card-body">

@@ -1,12 +1,9 @@
-import Layout from "./layout";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import profileService from '../core/services/profile-service';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { configureToastOptions } from "../core/services/toast-service";
-import roleId from '../core/constants/roleId';
-import EmployeeLayout from "./employeeLayout";
 import defaultUser from './user_3177440.png'
 
 function Profile() {
@@ -21,17 +18,11 @@ function Profile() {
             try {
                 const result = await profileService.loggedInUser(jwtToken);
                 setUser(result.data);
+                const jwtData = jwtToken.split('.')[1]
+                const decodedJwtJsonData = window.atob(jwtData)
+                const decodedJwtData = JSON.parse(decodedJwtJsonData)
+                setRole(decodedJwtData.role)
                 const managerPromises = result.data.map(async (currentUser) => {
-                    if (currentUser.roles.includes(roleId.adminId)) {
-                        setRole('Admin');
-                    } else {
-                        if (currentUser.roles.includes(roleId.managerId)) {
-                            setRole('Manager');
-                        } else {
-                            setRole('Employee');
-                        }
-                    }
-
                     const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId,jwtToken);
                     setManager(managerDetailsResponse.data)
                 });
@@ -79,12 +70,6 @@ function Profile() {
     };
 
     return (<>
-            {localStorage.getItem('role') === 'Employee' ? (
-                <EmployeeLayout />
-            ) : (
-                <Layout />
-            )
-            }
         <div>
             <div className="container py-1">
                 <div className="row">

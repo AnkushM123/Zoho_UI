@@ -24,7 +24,7 @@ const messages = {
             "passwordRequired": "Password is required",
             "confirmPasswordRequired": "Confirm password is required",
             "passwordValidation": "Password must contain at least 8 characters, one uppercase,one lowercase, one number and one special case character",
-            "passwordUnmatched": "Both passwords do not match"
+            "passwordUnmatched": "Confirm password should match with password"
         }
     },
     update: {

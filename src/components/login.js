@@ -7,6 +7,8 @@ import messages from "../core/constants/messages";
 import auth from '../core/services/auth-service';
 import { configureToastOptions } from "../core/services/toast-service";
 import logo from './zoho-logo-web.png';
+import { useFormik } from "formik";
+import { loginSchema } from '../core/validations/validations';
 
 function Login() {
     const navigate = useNavigate();
@@ -14,52 +16,31 @@ function Login() {
         email: '',
         password: ''
     });
-    const [error, setError] = useState({});
 
-    const validation = () => {
-        const error = {};
-        if (!inputData.email.trim()) {
-            error.email = messages.login.error.emailRequired;
-        }
+    const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+        initialValues: inputData,
+        validationSchema: loginSchema,
+        onSubmit: async (values) => {
+            try {
+                const result = await auth.login(values);
+                localStorage.setItem('authToken', result.data.token);
 
-        if (!inputData.password.trim()) {
-            error.password = messages.login.error.passwordRequired;
-        }
-        setError(error);
-        if (!inputData.email.trim() || !inputData.password.trim()) {
-            return true;
-        }
-    };
-
-    const handleChange = (e) => {
-        setInputData({ ...inputData, [e.target.name]: e.target.value });
-    }
-
-    const loginData = async (e) => {
-        e.preventDefault();
-        if (validation()) {
-            return;
-        }
-
-        try {
-            const result = await auth.login(inputData);
-            localStorage.setItem('authToken', result.data.token);
-
-            setTimeout(function () {
+                setTimeout(function () {
+                    const toastOptions = configureToastOptions();
+                    toast.options = toastOptions;
+                    toast.success(messages.login.success.toastSuccess);
+                })
+                if (localStorage.getItem('id')) {
+                    localStorage.removeItem('id');
+                }
+                navigate('/home');
+            } catch (error) {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
-                toast.success(messages.login.success.toastSuccess);
-            })
-            if (localStorage.getItem('id')) {
-                localStorage.removeItem('id');
+                toast.error(messages.login.error.toastError);
             }
-            navigate('/home');
-        } catch (error) {
-            const toastOptions = configureToastOptions();
-            toast.options = toastOptions;
-            toast.error(messages.login.error.toastError);
         }
-    }
+    })
 
     return (
         <section class="h-100 gradient-form">
@@ -75,17 +56,17 @@ function Login() {
                                                 className="loginLogo" alt="logo" />
                                             <h2 class="mt-1 mb-5 pb-1 loginTextColor">Login</h2>
                                         </div>
-                                        <form method="post" onSubmit={loginData}>
+                                        <form method="post" onSubmit={handleSubmit}>
                                             <div class="form-outline mb-4">
                                                 <label class="form-label">Email</label>
                                                 <input type="text" id="email" class="form-control"
-                                                    placeholder="enter email address" name="email" onChange={handleChange} />
-                                                {error.email && <p className="errorColor">{error.email}</p>}
+                                                    placeholder="enter email address" name="email" onChange={handleChange} value={values.email} onBlur={handleBlur} />
+                                                {errors.email && touched.email ? <p className='errorColor'>{errors.email}</p> : null}
                                             </div>
                                             <div class="form-outline mb-4">
                                                 <label class="form-label">Password</label>
-                                                <input type="password" id="password" class="form-control" name="password" placeholder="enter password" onChange={handleChange} />
-                                                {error.password && <p className="errorColor">{error.password}</p>}
+                                                <input type="password" id="password" class="form-control" name="password" placeholder="enter password" onChange={handleChange} value={values.password} onBlur={handleBlur} />
+                                                {errors.password && touched.password ? <p className='errorColor'>{errors.password}</p> : null}
                                             </div>
                                             <div class="text-center pt-1 mb-5 pb-1">
                                                 <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Log

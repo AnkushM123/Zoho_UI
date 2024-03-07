@@ -1,4 +1,4 @@
-import Layout from "./layout";
+import Layout from "./managerLayout";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import profileService from '../core/services/profile-service';
@@ -45,7 +45,6 @@ function Profile() {
     }, [jwtToken])
 
     return (<>
-        <Layout></Layout>
         <div class="container py-5">
             <div className="text-right">
                 <Link to="/edit" class="link-primary font-weight-bold">Edit</Link>

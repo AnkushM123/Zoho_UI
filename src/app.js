@@ -10,6 +10,7 @@ import SetPassword from "./components/setPassword";
 import Home from "./components/home";
 import Profile from "./components/profile";
 import Edit from "./components/edit";
+import ManagerLayout from "./components/managerLayout";
 
 function App() {
     return (
@@ -17,9 +18,13 @@ function App() {
             <ToastContainer></ToastContainer>
             <Router>
                 <Routes>
+                <Route
+                        index
+                        element={<Login />}
+                    />
                     <Route
                         exact
-                        path="/"
+                        path="/login"
                         element={<Login />}
                     />
                     <Route
@@ -32,8 +37,9 @@ function App() {
                         path="/setPassword"
                         element={<SetPassword />}
                     />
+                    <Route element={<ManagerLayout/>}>
                     <Route
-                        exact
+                        index
                         path="/home"
                         element={<Home />}
                     />
@@ -47,6 +53,7 @@ function App() {
                         path="/edit"
                         element={<Edit />}
                     />
+                    </Route>
                 </Routes>
             </Router>
         </>

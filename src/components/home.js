@@ -1,4 +1,4 @@
-import Layout from "./layout"
+import Layout from "./managerLayout"
 import { useState, useEffect } from "react"
 import homeService from '../core/services/home-service';
 import { toast } from 'react-toastify';
@@ -31,7 +31,6 @@ function Home() {
 
     return (
         <div >
-            <Layout></Layout>
             <div class="col-md-11 mb-11 homeCss">
                 <div class="card example-1 scrollbar-ripe-malinka">
                     <div class="card-body">

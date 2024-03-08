@@ -5,8 +5,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import LeaveTrackerService from '../core/services/leaveTracker-service';
 import { configureToastOptions } from "../core/services/toast-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
-import EmployeeLayout from "./employeeLayout";
-import Layout from "./layout";
 
 function LeaveTracker() {
   const navigate = useNavigate();
@@ -62,12 +60,6 @@ function LeaveTracker() {
 
   return (
     <>
-      {localStorage.getItem('role') === 'Employee' ? (
-        <EmployeeLayout />
-      ) : (
-        <Layout />
-      )
-      }
       <div class="container-fluid py-1">
         <div class="row">
           <div class="col-12">

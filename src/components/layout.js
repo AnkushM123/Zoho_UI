@@ -1,16 +1,15 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './zoho-logo-web.png';
+import decodeJwt from "../core/services/decodedJwtData-service";
 
 function Layout() {
   const navigate = useNavigate();
 
   const navigateToLogin = () => {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('id');
-    localStorage.removeItem('role');
+    navigate('/login');
     navigate('/');
   }
 
@@ -26,26 +25,47 @@ function Layout() {
           </button>
           <div className="collapse navbar-collapse" >
             <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/home">Home</Link>
-              </li>
+              {!(decodeJwt().role.toLowerCase() === 'employee') ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/home">Home</Link>
+                </li> : null
+              }
               <li className="nav-item">
                 <Link className="nav-link font-weight-bold" to="/profile">Profile</Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/request">Leave Request</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/leaveTracker">Leave Tracker</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/addLeave">Add Leave</Link>
-              </li>
+              {!(decodeJwt().role.toLowerCase() === 'employee') ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/request">Leave Request</Link>
+                </li> : null
+              }
+              {!(decodeJwt().role.toLowerCase() === 'admin') ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/leaveTracker">Leave Tracker</Link>
+                </li> : null
+              }
+              {!(decodeJwt().role.toLowerCase() === 'employee') ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/addLeave">Add Leave</Link>
+                </li> : null
+              }
+              {decodeJwt().role.toLowerCase() === 'admin' ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/register">Register</Link>
+                </li> : null
+              }
+              {!(decodeJwt().role.toLowerCase() === 'admin') ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/applyLeave">Apply Leave</Link>
+                </li> : null
+              }
             </ul>
           </div>
           <button className="btn btn-danger" onClick={navigateToLogin}>Log Out</button>
         </div>
       </nav>
+      <div>
+        <Outlet></Outlet>
+      </div>
     </>
   )
 }

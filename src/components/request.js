@@ -1,4 +1,3 @@
-import Layout from "./layout";
 import requestService from "../core/services/request-service";
 import { useState, useEffect } from "react";
 import { toast } from 'react-toastify';
@@ -42,7 +41,6 @@ function Request() {
 
     return (
         <>
-            <Layout></Layout>
             <table className="table table-bordered">
                 <thead>
                     <tr>

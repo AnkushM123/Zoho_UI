@@ -1,14 +1,11 @@
-import Layout from "./layout";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import profileService from '../core/services/profile-service';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { configureToastOptions } from "../core/services/toast-service";
-import EmployeeLayout from "./employeeLayout";
+import defaultUser from './user_3177440.png';
 import decodeJwt from "../core/services/decodedJwtData-service";
-import AdminLayout from "./adminLayout";
-import defaultUser from './user_3177440.png'
 
 function Profile() {
     const navigate = useNavigate();
@@ -21,22 +18,12 @@ function Profile() {
             try {
                 const result = await profileService.loggedInUser();
                 setUser(result.data);
+                setRole(decodeJwt().role)
                 const managerPromises = result.data.map(async (currentUser) => {
-                    if (currentUser.roles.includes("658eacbb510f63f754e68d02")) {
-                        setRole('Admin');
-                    } else {
-                        if (currentUser.roles.includes("658eac9e510f63f754e68cfe")) {
-                            setRole('Manager');
-                        } else {
-                            setRole('Employee');
-                        }
-                    }
-
                     const managerDetailsResponse = await profileService.getManagerDetail(currentUser.managerId);
                     setManager(managerDetailsResponse.data)
                 });
                 await Promise.all(managerPromises);
-
             } catch (error) {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
@@ -79,13 +66,6 @@ function Profile() {
     };
 
     return (<>
-        {decodeJwt().role === 'Employee' ? (
-            <EmployeeLayout />
-        ) : decodeJwt().role === 'Manager' ? (
-            <Layout />
-        ) : (
-            <AdminLayout />
-        )}
         <div>
             <div className="container py-1">
                 <div className="row">
@@ -118,7 +98,7 @@ function Profile() {
                                             height="30px"
                                             width="30px"
                                             onError={handleImageError}
-                                        />  {manager.employeeId}-<span className="font-weight-bold">{manager.name}</span>
+                                        /> {manager.name}
                                     </p>
                                 </div>
                             )}
@@ -130,118 +110,105 @@ function Profile() {
                             <div class="col-lg-8">
                                 <div class="card mb-4">
                                     <div class="card-body">
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Employee No</p>
-                                                <br></br>
+                                                <p>Employee No</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{user.employeeId}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Full Name</p>
-                                                <br></br>
+                                                <p>Full Name</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{user.name}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Email</p>
-                                                <br></br>
+                                                <p>Email</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{user.email}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Date Of Birth</p>
-                                                <br></br>
+                                                <p>Date Of Birth</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{convertToDate(user.dateOfBirth)}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Mobile</p>
-                                                <br></br>
+                                                <p>Mobile</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{user.mobile}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Gender</p>
-                                                <br></br>
+                                                <p>Gender</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{getGenderString(user.gender)}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0 font-weight-bold">Address:</p>
-                                                <br></br>
+                                                <p class=" font-weight-bold">Address:</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0"></p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Address Line 1</p>
-                                                <br></br>
+                                                <p>Address Line 1</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{user.address.addressLine1}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Address Line 2</p>
-                                                <br></br>
+                                                <p>Address Line 2</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{user.address.addressLine2}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">City</p>
-                                                <br></br>
+                                                <p>City</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{user.address.city}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">State</p>
-                                                <br></br>
+                                                <p>State</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{user.address.state}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Country</p>
-                                                <br></br>
+                                                <p>Country</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{user.address.country}</p>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row mb-3">
                                             <div class="col-sm-3">
-                                                <p class="mb-0">Postal Code</p>
-                                                <br></br>
+                                                <p>Postal Code</p>
                                             </div>
                                             <div class="col-sm-9">
                                                 <p class="text-muted mb-0">{user.address.postalCode}</p>

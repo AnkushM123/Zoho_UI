@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import EmployeeLayout from "./employeeLayout";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LeaveTrackerService from '../core/services/leaveTracker-service';
@@ -8,8 +7,6 @@ import { configureToastOptions } from "../core/services/toast-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
 import requestService from "../core/services/request-service";
 import { BiCalendarCheck } from 'react-icons/bi';
-import Layout from "./layout";
-import AdminLayout from "./adminLayout";
 import leaveTypeService from '../core/services/leaveType-service';
 
 function LeaveTracker() {
@@ -18,7 +15,7 @@ function LeaveTracker() {
   const [compensantoryOff, setCompensantoryOff] = useState({});
   const [forgotIdCard, setForgotIdCard] = useState({});
   const [outOfOfficeOnDuty, setOutOfOfficeOnDuty] = useState({});
-  const [paidLeave, setPaisLeave] = useState({});
+  const [paidLeave, setPaidLeave] = useState({});
   const [unpaidLeave, setUnpaidLeave] = useState({});
   const [workFromHome, setWorkFromHome] = useState({});
   const [request, setRequest] = useState([]);
@@ -40,7 +37,7 @@ function LeaveTracker() {
               setOutOfOfficeOnDuty(leave);
               break;
             case '659bc3c101e2f1640c262616':
-              setPaisLeave(leave);
+              setPaidLeave(leave);
               break;
             case '659bc3c601e2f1640c262618':
               setUnpaidLeave(leave);
@@ -115,20 +112,13 @@ function LeaveTracker() {
 
   return (
     <>
-      {decodeJwt().role === 'Employee' ? (
-        <EmployeeLayout />
-      ) : decodeJwt().role === 'Manager' ? (
-        <Layout />
-      ) : (
-        <AdminLayout />
-      )}
       <div class="container-fluid py-1">
         <div class="row">
           <div class="col-12">
             <button type="button" class="btn btn-success float-right my-3" onClick={navigateToApplyLeave}>Apply Leave</button>
           </div>
         </div>
-        <div className="row">
+        <div className="row my-3">
           <div className="col-lg-2 col-md-4 col-12 mb-2">
             <div className="card">
               <div className="card-body">
@@ -202,7 +192,6 @@ function LeaveTracker() {
             </div>
           </div>
         </div>
-        <br></br><br></br>
         <h4><strong> Leave History:</strong></h4>
         <div class="col-md-12 mb-12 divStyle">
           <div class="card example-1 scrollbar-ripe-malinka employeeList">

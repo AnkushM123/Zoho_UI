@@ -2,18 +2,14 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Layout from "./layout";
 import messages from "../core/constants/messages";
-import mobileRegex from "../core/constants/mobile-regex";
-import emailRegex from "../core/constants/email-regex";
-import passwordRegex from "../core/constants/password-regex";
 import { configureToastOptions } from "../core/services/toast-service";
 import authService from "../core/services/auth-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import EmployeeLayout from './employeeLayout';
-import AdminLayout from './adminLayout';
+import { useFormik } from "formik";
+import { registerSchema } from '../core/validations/validations';
 
 function Register() {
     const navigate = useNavigate();
@@ -22,30 +18,27 @@ function Register() {
         password: '',
         name: '',
         mobile: '',
-        address: {
-            addressLine1: '',
-            addressLine2: '',
-            city: '',
-            state: '',
-            country: '',
-            postalCode: '',
-        }
+        addressLine1: '',
+        addressLine2: '',
+        city: '',
+        state: '',
+        country: '',
+        postalCode: '',
+        managerId: '',
+        role: '',
+        gender: '',
+        dob: null,
     })
-    const [role, setRole] = useState('');
     const [file, setFile] = useState(null);
-    const [error, setError] = useState({})
-    const [emailMessage, setEmailMessage] = useState('')
-    const [gender, setGender] = useState('');
+    const [error, setError] = useState({email:'',age:'',file:''});
     const [leaveId, setLeaveId] = useState(["659bc36c01e2f1640c26260e", "659bc3ae01e2f1640c262612", "659bc3b501e2f1640c262614", "659bc3c101e2f1640c262616", "659bc3c601e2f1640c262618", "659bc3ce01e2f1640c26261a"])
     const adminId = decodeJwt().id;
-    const [dob, setDob] = useState(null);
     const [respondingTo, setRespondingTo] = useState([]);
-    const [managerId, setManagerId] = useState('');
     const [isFileImage, setIsFileImage] = useState(true);
 
     useEffect(() => {
         if (respondingTo.length === 1) {
-            setManagerId(respondingTo[0]._id);
+            setFieldValue('managerId',respondingTo[0]._id);
         }
     }, [respondingTo]);
 
@@ -66,11 +59,11 @@ function Register() {
 
     const checkEmail = async () => {
         try {
-            await authService.varifyEmail({ email: inputData.email });
-            setEmailMessage(messages.register.error.emailAlreadyExist);
+            await authService.varifyEmail({ email: values.email });
+            setError({email:messages.register.error.emailAlreadyExist});
             return true;
         } catch (error) {
-            setEmailMessage('');
+            setError({email:''});
         }
     }
 
@@ -86,192 +79,107 @@ function Register() {
         return age;
     };
 
-    const validation = async () => {
-        const error = {}
-        if (!inputData.name.trim()) {
-            error.name = messages.register.error.nameRequired;
-        }
+    const { values, errors, touched, setFieldValue, handleBlur, handleChange, handleSubmit } = useFormik({
+        initialValues: inputData,
+        validationSchema: registerSchema,
+        onSubmit: async (values) => {
 
-        if (!inputData.email.trim()) {
-            error.email = messages.register.error.emailRequired;
-        } else {
-            if (!emailRegex.test(inputData.email)) {
-                error.email = messages.register.error.invalidEmail;
+            if(calculateAge(values.dob)<18){
+                setError({age:messages.register.error.ageValidation}); 
+                return
             }
-        }
 
-        if (!inputData.password.trim()) {
-            error.password = messages.register.error.passwordRequired;
-        } else if (!passwordRegex.test(inputData.password)) {
-            error.password = messages.register.error.invalidPassword;
-        }
-
-        if (!dob) {
-            error.dob = messages.register.error.DobRequired;
-        } else if (calculateAge(dob) < 18) {
-            error.dob = messages.register.error.ageValidation;
-        }
-
-
-        if (!inputData.mobile.trim()) {
-            error.mobile = messages.register.error.mobileRequired;
-        } else if (!mobileRegex.test(inputData.mobile)) {
-            error.mobile = messages.register.error.invalidMobile;
-        }
-
-        if (!inputData.address.addressLine1.trim()) {
-            error.addressLine1 = messages.register.error.addressLine1Required;
-        } else if (inputData.address.addressLine1.length > 200) {
-            error.addressLine1 = messages.register.error.invalidAddressLine1;
-        }
-
-        if (!inputData.address.addressLine2.trim()) {
-            error.addressLine2 = messages.register.error.addressLine2Required;
-        } else if (inputData.address.addressLine1.length > 200) {
-            error.addressLine2 = messages.register.error.invalidAddressLine2;
-        }
-
-        if (!inputData.address.city.trim()) {
-            error.city = messages.register.error.cityRequired;
-        } else if (inputData.address.city.length > 200) {
-            error.city = messages.register.error.invalidCity;
-        }
-
-        if (!inputData.address.state.trim()) {
-            error.state = messages.register.error.stateRequired;
-        } else if (inputData.address.state.length > 200) {
-            error.state = messages.register.error.invalidState;
-        }
-
-        if (!inputData.address.country.trim()) {
-            error.country = messages.register.error.countryRequired;
-        } else if (inputData.address.country.length > 200) {
-            error.country = messages.register.error.invalidCountry;
-        }
-
-        if (!inputData.address.postalCode.trim()) {
-            error.postalCode = messages.register.error.postalCodeRequired;
-        } else if (inputData.address.postalCode.length > 200) {
-            error.postalCode = messages.register.error.invalidPostalCode;
-        }
-
-        if (!role) {
-            error.role = messages.register.error.roleRequired;
-        }
-
-        if (!managerId) {
-            error.respondingTo = messages.register.error.respondingToRequired;
-        }
-
-        if (!gender) {
-            error.gender = messages.register.error.genderRequired;
-        }
-
-        if (!file) {
-            error.file = messages.register.error.imageRequired;
-        } else if (isFileImage === false) {
-            error.file = messages.register.error.fileValidation;
-        }
-
-        setError(error);
-        if (await checkEmail()) {
-            return true;
-        }
-
-        if (!inputData.name || !inputData.email || !emailRegex.test(inputData.email) || !inputData.mobile || !mobileRegex.test(inputData.mobile) || !inputData.address.addressLine1 || inputData.address.addressLine1.length > 200 || !inputData.address.addressLine2 || inputData.address.addressLine2.length > 200 || !inputData.address.city || inputData.address.city.length > 200 || !inputData.address.state || inputData.address.state.length > 200 || !inputData.address.country || inputData.address.country.length > 200 || !inputData.address.postalCode || inputData.address.postalCode.length > 200 || !role || !gender || !file || !dob || !managerId || calculateAge(dob) < 18 || isFileImage === false) {
-            return true;
-        }
-    };
-
-    const handleChange = (e) => {
-        if (e.target.name.startsWith("address.")) {
-            const addressField = e.target.name.split('.')[1];
-            setInputData({
-                ...inputData,
-                address: {
-                    ...inputData.address,
-                    [addressField]: e.target.value,
+            if(!file){
+                if(isFileImage===false){
+                    setError({file:messages.register.error.fileValidation})
+                }else{
+                    setError({file:messages.register.error.imageRequired})
                 }
-            });
-        } else {
-            setInputData({ ...inputData, [e.target.name]: e.target.value });
-        }
-    }
+                return
+            }
 
-    const registerData = async (e) => {
-        e.preventDefault();
-        if (await validation()) {
-            return;
-        }
+            if(await checkEmail()){
+                return;
+            }
 
-        const formData = new FormData();
-        formData.append('avatar', file);
-        formData.append('name', inputData.name);
-        formData.append('address', JSON.stringify(inputData.address));
-        formData.append('email', inputData.email);
-        formData.append('password', inputData.password);
-        formData.append('dateOfBirth', dob);
-        formData.append('mobile', inputData.mobile);
-        formData.append('roles', role);
-        formData.append('gender', gender);
-        formData.append('managerId', managerId);
-        formData.append('createdBy', adminId);
-        formData.append('updatedBy', adminId);
+            const address = {
+                'addressLine1': values.addressLine1,
+                'addressLine2': values.addressLine2,
+                'city': values.city,
+                'state': values.state,
+                'country': values.country,
+                'postalCode': values.postalCode,
+            }
 
-        try {
-            const result = await authService.register(formData);
-            const userId = result.data._id;
+            const formData = new FormData();
+            formData.append('avatar', file);
+            formData.append('name', values.name);
+            formData.append('address', address);
+            formData.append('email', values.email);
+            formData.append('password', values.password);
+            formData.append('dateOfBirth', values.dob);
+            formData.append('mobile', values.mobile);
+            formData.append('roles', values.role);
+            formData.append('gender', values.gender);
+            formData.append('managerId', values.managerId);
+            formData.append('createdBy', adminId);
+            formData.append('updatedBy', adminId);
 
-            const leaveRecords = leaveId.map(async (id) => {
-                if (id === "659bc3c101e2f1640c262616") {
-                    return {
-                        userId: userId,
-                        leaveId: id,
-                        balance: 1.5,
-                        createdBy: adminId,
-                        updatedBy: adminId
-                    };
-                } else {
-                    if (id === "659bc3ce01e2f1640c26261a") {
+            try {
+                const result = await authService.register(formData);
+                const userId = result.data._id;
+
+                const leaveRecords = leaveId.map(async (id) => {
+                    if (id === "659bc3c101e2f1640c262616") {
                         return {
                             userId: userId,
                             leaveId: id,
-                            balance: 3,
+                            balance: 1.5,
                             createdBy: adminId,
                             updatedBy: adminId
                         };
                     } else {
-                        return {
-                            userId: userId,
-                            leaveId: id,
-                            balance: 0,
-                            createdBy: adminId,
-                            updatedBy: adminId
-                        };
+                        if (id === "659bc3ce01e2f1640c26261a") {
+                            return {
+                                userId: userId,
+                                leaveId: id,
+                                balance: 3,
+                                createdBy: adminId,
+                                updatedBy: adminId
+                            };
+                        } else {
+                            return {
+                                userId: userId,
+                                leaveId: id,
+                                balance: 0,
+                                createdBy: adminId,
+                                updatedBy: adminId
+                            };
+                        }
                     }
-                }
-            });
+                });
 
-            const leaveRecordsData = await Promise.all(leaveRecords);
-            await Promise.all(leaveRecordsData.map(record => authService.createLeaveRecord(record)));
+                const leaveRecordsData = await Promise.all(leaveRecords);
+                await Promise.all(leaveRecordsData.map(record => authService.createLeaveRecord(record)));
 
-            setTimeout(function () {
+                setTimeout(function () {
+                    const toastOptions = configureToastOptions();
+                    toast.options = toastOptions;
+                    toast.success(messages.register.success.employeeRegistered);
+                });
+                navigate('/home');
+            } catch (error) {
                 const toastOptions = configureToastOptions();
                 toast.options = toastOptions;
-                toast.success(messages.register.success.employeeRegistered);
-            });
-            navigate('/home');
-        } catch (error) {
-            const toastOptions = configureToastOptions();
-            toast.options = toastOptions;
-            toast.error(error);
+                toast.error(error);
+            }
         }
-    }
+    })
 
     const respondingToList = async (e) => {
         try {
             const selectedRole = e.target.value;
-            setRole(selectedRole);
+            setFieldValue('role',selectedRole);
 
             if (selectedRole === '658eac73510f63f754e68cf9') {
                 const result = await authService.getByRole('658eac9e510f63f754e68cfe');
@@ -295,49 +203,39 @@ function Register() {
 
     return (
         <>
-            {decodeJwt().role === 'Employee' ? (
-                <EmployeeLayout />
-            ) : decodeJwt().role === 'Manager' ? (
-                <Layout />
-            ) : (
-                <AdminLayout />
-            )}
             <div class="container py-5">
                 <div class="row justify-content-center">
                     <div class="col-lg-10">
                         <div class="card mb-6">
                             <div class="card-body">
-                                <form action="#" method="post" enctype="multipart/form-data" onSubmit={registerData}>
+                                <form action="#" method="post" enctype="multipart/form-data" onSubmit={handleSubmit}>
                                     <div class="row mb-3">
-                                        <div class="col-md-6">
-                                            <br></br>
+                                        <div class="col-md-6 mb-3">
                                             <label class="form-label font-weight-bold">Full Name:</label>
-                                            <input type="text" class="form-control" id="name" name="name" onChange={handleChange} placeholder="Enter full name" />
-                                            {error.name && <p className='errorColor'>{error.name}</p>}
+                                            <input type="text" class="form-control" id="name" name="name" onChange={handleChange} value={values.name} onBlur={handleBlur} placeholder="Enter full name" />
+                                            {errors.name && touched.name ? <p className='errorColor'>{errors.name}</p> : null}
                                         </div>
-                                        <div class="col-md-6">
-                                            <br></br>
+                                        <div class="col-md-6 mb-3">
                                             <label class="form-label font-weight-bold">Email:</label>
-                                            <input type="text" class="form-control" id="email" name="email" onChange={handleChange} placeholder="Enter email address" />
+                                            <input type="text" class="form-control" id="email" name="email" onChange={handleChange} value={values.email} onBlur={handleBlur} placeholder="Enter email address" />
+                                            {errors.email && touched.email ? <p className='errorColor'>{errors.email}</p> : null}
                                             {error.email && <p className='errorColor'>{error.email}</p>}
-                                            <p className='errorColor'>{emailMessage}</p>
                                         </div>
                                     </div>
-                                    <br></br>
                                     <div class="row mb-3">
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 mb-3">
                                             <label class="form-label font-weight-bold">Password:</label>
-                                            <input type="password" class="form-control" id="password" name="password" onChange={handleChange} placeholder="Enter password" />
-                                            {error.password && <p className='errorColor'>{error.password}</p>}
+                                            <input type="password" class="form-control" id="password" name="password" onChange={handleChange} value={values.password} onBlur={handleBlur} placeholder="Enter password" />
+                                            {errors.password && touched.password ? <p className='errorColor'>{errors.password}</p> : null}
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 mb-3">
                                             <label class="form-label font-weight-bold">Date Of Birth:</label>
-                                            <div style={{ width: '100%' }}>
+                                            <div className='w-100'>
                                                 <DatePicker
                                                     className="form-control"
-                                                    selected={dob}
+                                                    selected={values.dob}
                                                     onChange={(date) => {
-                                                        setDob(date);
+                                                        setFieldValue('dob', date);
                                                     }}
                                                     dateFormat="MM/dd/yyyy"
                                                     placeholderText="Select date of birth"
@@ -345,63 +243,58 @@ function Register() {
                                                     scrollableYearDropdown
                                                     yearDropdownItemNumber={40}
                                                     maxDate={new Date()}
+                                                    onBlur={handleBlur}
                                                 />
-                                                {error.dob && <p className='errorColor'>{error.dob}</p>}
+                                                {errors.dob && touched.dob ? <p className='errorColor'>{errors.dob}</p> : null}
                                             </div>
                                         </div>
                                     </div>
-                                    <br></br>
                                     <div class="row mb-3">
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 mb-3">
                                             <label class="form-label font-weight-bold">Mobile:</label>
-                                            <input type="tel" class="form-control" id="mobile" name="mobile" onChange={handleChange} placeholder="Enter mobile number" />
-                                            {error.mobile && <p className='errorColor'>{error.mobile}</p>}
+                                            <input type="tel" class="form-control" id="mobile" name="mobile" onChange={handleChange} value={values.mobile} onBlur={handleBlur} placeholder="Enter mobile number" />
+                                            {errors.mobile && touched.mobile ? <p className='errorColor'>{errors.mobile}</p> : null}
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 mb-3">
                                             <label class="form-label font-weight-bold">Gender:</label>
                                             <select class="form-select" id="gender"
                                                 name="gender"
-                                                required
-                                                value={gender} onChange={(e) => setGender(e.target.value)} >
+                                                value={values.gender} onBlur={handleBlur} onChange={(e) => setFieldValue('gender',e.target.value)} >
                                                 <option>Select gender</option>
                                                 <option value={0}>Male</option>
                                                 <option value={1}>Female</option>
                                             </select>
-                                            {error.gender && <p className='errorColor'>{error.gender}</p>}
+                                            {errors.gender && touched.gender ? <p className='errorColor'>{errors.gender}</p> : null}
                                         </div>
                                     </div>
-                                    <br></br>
                                     <div class="row mb-3">
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 mb-3">
                                             <label class="form-label font-weight-bold">Role:</label>
                                             <select class="form-select" id="role"
                                                 name="role"
-                                                required
-                                                value={role} onChange={async (e) => await respondingToList(e)} >
+                                                value={values.role} onBlur={handleBlur} onChange={async (e) => await respondingToList(e)} >
                                                 <option>Select role</option>
                                                 <option value="658eac73510f63f754e68cf9">Employee</option>
                                                 <option value="658eac9e510f63f754e68cfe">Manager</option>
                                             </select>
-                                            {error.role && <p className='errorColor'>{error.role}</p>}
-                                            <br></br><br></br>
-                                            <label class="form-label font-weight-bold">Upload Image:</label>
+                                            {errors.role && touched.role ? <p className='errorColor'>{errors.role}</p> : null}
+                                            <label class="form-label font-weight-bold mt-3">Upload Image:</label>
                                             <input type="file" class="form-control" id="file" name="avatar" accept="image/png, image/gif, image/jpeg" onChange={handleFileChange} />
                                             {error.file && <p className='errorColor'>{error.file}</p>}
-                                            <br></br>
                                             <hr className='registerLine' />
                                             <label class="form-label font-weight-bold">Address:</label>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-6 mb-3">
                                             <label class="form-label font-weight-bold">Reporting To:</label>
                                             {respondingTo.length !== 1 ? (
                                                 <select
                                                     className="form-select"
                                                     id="respondingTo"
                                                     name="respondingTo"
-                                                    required
-                                                    value={managerId}
-                                                    onChange={(e) => setManagerId(e.target.value)}
-                                                    disabled={!role}
+                                                    value={values.managerId}
+                                                    onChange={(e) => setFieldValue('managerId',e.target.value)}
+                                                    onBlur={handleBlur}
+                                                    disabled={!values.role}
                                                 >
                                                     <option>Select user</option>
                                                     {respondingTo.map((user) => (
@@ -415,10 +308,9 @@ function Register() {
                                                     className="form-select"
                                                     id="respondingTo"
                                                     name="respondingTo"
-                                                    required
-                                                    value={respondingTo[0]._id}
-                                                    onChange={(e) => { setManagerId(respondingTo[0]._id) }
-                                                    }
+                                                    value={values.managerId}
+                                                    onChange={() => { setFieldValue('managerId',respondingTo[0]._id) }}
+                                                    onBlur={handleBlur}
                                                     disabled
                                                 >
                                                     <option value={respondingTo[0]._id}>
@@ -426,48 +318,42 @@ function Register() {
                                                     </option>
                                                 </select>
                                             )}
-                                            {error.respondingTo && <p className='errorColor'>{error.respondingTo}</p>}
+                                            {errors.managerId && touched.managerId ? <p className='errorColor'>{errors.managerId}</p> : null}
                                         </div>
                                         <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <br></br>
+                                            <div class="col-md-6 mb-3">
                                                 <label class="form-label">Address Line 1:</label>
-                                                <input type="text" class="form-control" id="name" name="address.addressLine1" onChange={handleChange} placeholder='Enter address line 1' />
-                                                {error.addressLine1 && <p className='errorColor'>{error.addressLine1}</p>}
+                                                <input type="text" class="form-control" id="name" name="addressLine1" onChange={handleChange} value={values.addressLine1} onBlur={handleBlur} placeholder='Enter address line 1' />
+                                                {errors.addressLine1 && touched.addressLine1 ? <p className='errorColor'>{errors.addressLine1}</p> : null}
                                             </div>
-                                            <div class="col-md-6">
-                                                <br></br>
+                                            <div class="col-md-6 mb-3">
                                                 <label class="form-label">Address Line 2:</label>
-                                                <input type="text" class="form-control" id="name" name="address.addressLine2" onChange={handleChange} placeholder='Enter address line 2' />
-                                                {error.addressLine2 && <p className='errorColor'>{error.addressLine2}</p>}
+                                                <input type="text" class="form-control" id="name" name="addressLine2" onChange={handleChange} value={values.addressLine2} onBlur={handleBlur} placeholder='Enter address line 2' />
+                                                {errors.addressLine2 && touched.addressLine2 ? <p className='errorColor'>{errors.addressLine2}</p> : null}
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <br></br>
+                                            <div class="col-md-6 mb-3">
                                                 <label class="form-label">City:</label>
-                                                <input type="text" class="form-control" id="name" name="address.city" onChange={handleChange} placeholder='Enter city name' />
-                                                {error.city && <p className='errorColor'>{error.city}</p>}
+                                                <input type="text" class="form-control" id="name" name="city" onChange={handleChange} value={values.city} onBlur={handleBlur} placeholder='Enter city name' />
+                                                {errors.city && touched.city ? <p className='errorColor'>{errors.city}</p> : null}
                                             </div>
-                                            <div class="col-md-6">
-                                                <br></br>
+                                            <div class="col-md-6 mb-3">
                                                 <label class="form-label">State:</label>
-                                                <input type="text" class="form-control" id="name" name="address.state" onChange={handleChange} placeholder='Enter state name' />
-                                                {error.state && <p className='errorColor'>{error.state}</p>}
+                                                <input type="text" class="form-control" id="name" name="state" onChange={handleChange} value={values.state} onBlur={handleBlur} placeholder='Enter state name' />
+                                                {errors.state && touched.state ? <p className='errorColor'>{errors.state}</p> : null}
                                             </div>
                                         </div>
                                         <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <br></br>
+                                            <div class="col-md-6 mb-3">
                                                 <label class="form-label">Country:</label>
-                                                <input type="text" class="form-control" id="name" name="address.country" onChange={handleChange} placeholder='Enter country name' />
-                                                {error.country && <p className='errorColor'>{error.country}</p>}
+                                                <input type="text" class="form-control" id="name" name="country" onChange={handleChange} value={values.country} onBlur={handleBlur} placeholder='Enter country name' />
+                                                {errors.country && touched.country ? <p className='errorColor'>{errors.country}</p> : null}
                                             </div>
-                                            <div class="col-md-6">
-                                                <br></br>
+                                            <div class="col-md-6 mb-3">
                                                 <label class="form-label">Postal code:</label>
-                                                <input type="text" class="form-control" id="name" name="address.postalCode" onChange={handleChange} placeholder='Enter postal code' />
-                                                {error.postalCode && <p className='errorColor'>{error.postalCode}</p>}
+                                                <input type="text" class="form-control" id="name" name="postalCode" onChange={handleChange} value={values.postalCode} onBlur={handleBlur} placeholder='Enter postal code' />
+                                                {errors.postalCode && touched.postalCode ? <p className='errorColor'>{errors.postalCode}</p> : null}
                                             </div>
                                         </div>
                                     </div>

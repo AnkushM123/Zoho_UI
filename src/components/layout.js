@@ -1,7 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from './zoho-logo-web.png';
 import { BiBell } from 'react-icons/bi';
 import Button from 'react-bootstrap/Button';
@@ -12,7 +11,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { configureToastOptions } from "../core/services/toast-service";
 import { toast } from 'react-toastify';
 import notificationService from "../core/services/notification-service";
-import defaultUser from './user_3177440.png'
+import defaultUser from './user_3177440.png';
 
 function Layout() {
   const navigate = useNavigate();
@@ -118,7 +117,7 @@ function Layout() {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ml-auto">
-              <li className="nav-item mx-1">
+              <li className="nav-item me-1">
                 <BiBell color="blue" className="bell" size={28} onClick={handleShow} />
                 {count !== 0 && (
                   <span className="badge rounded-pill badge-notification bg-danger notificationCount">
@@ -126,21 +125,39 @@ function Layout() {
                   </span>
                 )}
               </li>
-              <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/home">Home</Link>
-              </li>
+              {!(decodeJwt().role.toLowerCase() === 'employee') ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/home">Home</Link>
+                </li> : null
+              }
               <li className="nav-item">
                 <Link className="nav-link font-weight-bold" to="/profile">Profile</Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/request">Leave Request</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/leaveTracker">Leave Tracker</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link font-weight-bold" to="/addLeave">Add Leave</Link>
-              </li>
+              {!(decodeJwt().role.toLowerCase() === 'employee') ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/request">Leave Request</Link>
+                </li> : null
+              }
+              {!(decodeJwt().role.toLowerCase() === 'admin') ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/leaveTracker">Leave Tracker</Link>
+                </li> : null
+              }
+              {!(decodeJwt().role.toLowerCase() === 'employee') ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/addLeave">Add Leave</Link>
+                </li> : null
+              }
+              {decodeJwt().role.toLowerCase() === 'admin' ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/register">Register</Link>
+                </li> : null
+              }
+              {!(decodeJwt().role.toLowerCase() === 'admin') ?
+                <li className="nav-item">
+                  <Link className="nav-link font-weight-bold" to="/applyLeave">Apply Leave</Link>
+                </li> : null
+              }
             </ul>
           </div>
           <button className="btn btn-danger" onClick={navigateToLogin}>Log Out</button>
@@ -181,6 +198,7 @@ function Layout() {
           <Button variant="primary" onClick={async () => await markAllRead()} disabled={count === 0}>Mark all as read</Button>
         </Modal.Footer>
       </Modal>
+        <Outlet></Outlet>
     </>
   )
 }

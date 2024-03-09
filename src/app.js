@@ -10,6 +10,7 @@ import SetPassword from "./components/setPassword";
 import Home from "./components/home";
 import Profile from "./components/profile";
 import Edit from "./components/edit";
+import Layout from "./components/layout";
 import Register from "./components/register";
 import LeaveTracker from "./components/leaveTracker";
 import ApplyLeave from "./components/applyLeave";
@@ -29,8 +30,12 @@ function App() {
             <Router>
                 <Routes>
                     <Route
+                        index
+                        element={<Login />}
+                    />
+                    <Route
                         exact
-                        path="/"
+                        path="/login"
                         element={<Login />}
                     />
                     <Route
@@ -41,7 +46,9 @@ function App() {
                         path="/setPassword"
                         element={<SetPassword />}
                     />
+                    <Route element={<Layout/>}>
                     <Route
+                        index
                         path="/home"
                         element={<ProtectedRoute Component={Home} />}
                     />
@@ -93,6 +100,7 @@ function App() {
                         path="/notificationDetails/:requestId"
                         element={<ProtectedRoute Component={NotificationDetails} />}
                     />
+                    </Route>
                 </Routes>
             </Router>
         </>

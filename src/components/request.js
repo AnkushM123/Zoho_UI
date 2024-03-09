@@ -1,4 +1,3 @@
-import Layout from "./layout";
 import requestService from "../core/services/request-service";
 import { useState, useEffect } from "react";
 import { toast } from 'react-toastify';
@@ -7,8 +6,6 @@ import { configureToastOptions } from "../core/services/toast-service";
 import decodeJwt from "../core/services/decodedJwtData-service";
 import { useNavigate } from "react-router-dom";
 import '../App.css';
-import EmployeeLayout from "./employeeLayout";
-import AdminLayout from "./adminLayout";
 import ReactPaginate from "react-paginate";
 import leaveTypeService from '../core/services/leaveType-service';
 
@@ -74,6 +71,9 @@ function Request() {
             setRequestStatus(selectedValue);
         } catch (error) {
             setRequestStatus(4);
+            const toastOptions = configureToastOptions();
+            toast.options = toastOptions;
+            toast.error(error);
         }
     };
 
@@ -124,13 +124,6 @@ function Request() {
 
     return (
         <>
-            {decodeJwt().role === 'Employee' ? (
-                <EmployeeLayout />
-            ) : decodeJwt().role === 'Manager' ? (
-                <Layout />
-            ) : (
-                <AdminLayout />
-            )}
             <div className="container">
                 <div className="row">
                     <div className="col-md-2 offset-md-10 py-3">

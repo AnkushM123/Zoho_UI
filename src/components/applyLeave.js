@@ -155,10 +155,9 @@ function ApplyLeave() {
                         <div class="col-lg-8">
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <div class="row">
+                                    <div class="row mb-3">
                                         <div class="col-sm-3">
                                             <p class="form-label font-weight-bold">Leave Type:</p>
-                                            <br></br>
                                         </div>
                                         <div class="col-sm-9">
                                             <select class="form-select" id="leaveType"
@@ -175,10 +174,9 @@ function ApplyLeave() {
                                             {errors.leaveType && touched.leaveType ? <p className="errorColor">{errors.leaveType}</p> : null}
                                         </div>
                                     </div>
-                                    <div className="row">
+                                    <div className="row mb-3">
                                         <div className="col-sm-3">
                                             <p className="form-label font-weight-bold">Start Date:</p>
-                                            <br />
                                         </div>
                                         <div className="col-sm-9">
                                             <DatePicker
@@ -193,10 +191,9 @@ function ApplyLeave() {
                                             {errors.startDate && touched.startDate ? <p className="errorColor">{errors.startDate}</p> : null}
                                         </div>
                                     </div>
-                                    <div className="row">
+                                    <div className="row mb-3">
                                         <div className="col-sm-3">
                                             <p className="form-label font-weight-bold">End Date:</p>
-                                            <br />
                                         </div>
                                         <div className="col-sm-9">
                                             <DatePicker
@@ -212,19 +209,17 @@ function ApplyLeave() {
                                             {errors.endDate && touched.endDate ? <p className="errorColor">{errors.endDate}</p> : null}
                                         </div>
                                     </div>
-                                    <div className="row">
+                                    <div className="row mb-3">
                                         <div className="col-sm-3">
                                             <p className="form-label font-weight-bold">Total Days:</p>
-                                            <br />
                                         </div>
                                         <div className="col-sm-9">
                                             <input type="text" className="form-control" value={totalDays} readOnly />
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row mb-3">
                                         <div class="col-sm-3">
                                             <p class="form-label font-weight-bold">Reason For Leave:</p>
-                                            <br></br>
                                         </div>
                                         <div class="col-sm-9">
                                             <textarea class="form-control" id="reason" name="reasonForLeave" value={values.reasonForLeave} onChange={handleChange} onBlur={handleBlur} />
